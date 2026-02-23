@@ -1,99 +1,196 @@
 <nav class="w-full bg-sky-100 border-b border-sky-200">
-    <div class="max-w-7xl mx-auto px-6">
-        <div class="flex items-center justify-between h-16">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="flex items-center justify-between h-20">
 
-            <!-- LEFT : LOGO -->
-            <a href="{{ route('home') }}" class="flex items-center gap-3">
-                <img src="{{ asset('images/logo-kemendikdasmen.png') }}"
-                     alt="Kemendikdasmen"
-                     class="h-10 w-auto">
+      {{-- LEFT: Brand / Logo --}}
+      <a href="{{ route('home') }}" class="flex items-center gap-3">
+        <img
+          src="{{ asset('image/header/kemendikdasmen.png') }}"
+          alt="Kemendikdasmen"
+          class="h-12 w-auto object-contain"
+        />
+        
+      </a>
 
-                <span class="text-2xl font-bold text-sky-800">
-                    Kemendikdasmen
-                </span>
+      {{-- CENTER: Main Navigation --}}
+      <ul class="hidden md:flex items-center gap-10 text-[16px] font-semibold text-slate-900">
+
+        {{-- Beranda --}}
+        <li>
+          <a href="{{ route('home') }}" class="hover:text-sky-700 transition">
+            Beranda
+          </a>
+        </li>
+
+        {{-- Lomba Dropdown --}}
+        <li class="relative group">
+          <button
+            type="button"
+            class="inline-flex items-center gap-2 hover:text-sky-700 transition focus:outline-none"
+          >
+            Lomba
+            <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd"
+                d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 011.08 1.04l-4.25 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z"
+                clip-rule="evenodd" />
+            </svg>
+          </button>
+
+          {{-- Dropdown Panel --}}
+          <div
+            class="absolute left-0 top-full mt-3 w-64 rounded-xl bg-white border border-slate-200 shadow-lg z-50
+                   opacity-0 invisible translate-y-1
+                   group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
+                   group-focus-within:opacity-100 group-focus-within:visible group-focus-within:translate-y-0
+                   transition-all duration-150"
+          >
+            <a href="{{ route('lomba.panduan') }}"
+              class="block px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 rounded-t-xl">
+              Panduan Lomba
             </a>
+            <a href="{{ route('lomba.tahapan') }}"
+              class="block px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 rounded-b-xl">
+              Tahapan Kegiatan Lomba
+            </a>
+          </div>
+        </li>
 
-            <!-- CENTER : MENU -->
-            <div class="hidden md:flex items-center gap-10 font-semibold text-black">
+        {{-- Pengumuman Dropdown --}}
+        <li class="relative group">
+          <button
+            type="button"
+            class="inline-flex items-center gap-2 hover:text-sky-700 transition focus:outline-none"
+          >
+            Pengumuman
+            <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd"
+                d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 011.08 1.04l-4.25 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z"
+                clip-rule="evenodd" />
+            </svg>
+          </button>
 
-                <a href="{{ route('home') }}" class="hover:text-sky-700 transition">
-                    Beranda
-                </a>
+          {{-- Dropdown Panel --}}
+          <div
+            class="absolute left-0 top-full mt-3 w-72 rounded-xl bg-white border border-slate-200 shadow-lg z-50
+                   opacity-0 invisible translate-y-1
+                   group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
+                   group-focus-within:opacity-100 group-focus-within:visible group-focus-within:translate-y-0
+                   transition-all duration-150"
+          >
+            <a href="{{ route('pengumuman.3besar') }}"
+              class="block px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 rounded-t-xl">
+              Pengumuman 3 Besar
+            </a>
+            <a href="{{ route('pengumuman.lolos') }}"
+              class="block px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 rounded-b-xl">
+              Lolos Seleksi Proposal
+            </a>
+          </div>
+        </li>
 
-                <!-- DROPDOWN LOMBA -->
-                <div class="relative group">
-                    <button class="hover:text-sky-700 transition flex items-center gap-1">
-                        Lomba
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                  d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"
-                                  clip-rule="evenodd"/>
-                        </svg>
-                    </button>
+        {{-- FAQ --}}
+        <li>
+          <a href="{{ route('faq') }}" class="hover:text-sky-700 transition">
+            FAQ
+          </a>
+        </li>
+      </ul>
 
-                    <div class="absolute left-0 mt-3 w-52 bg-white shadow-lg rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition">
-                        <a href="{{ route('lomba.panduan') }}"
-                           class="block px-4 py-3 text-sm hover:bg-gray-100 rounded-t-xl">
-                            Panduan Lomba
-                        </a>
-                        <a href="{{ route('lomba.tahapan') }}"
-                           class="block px-4 py-3 text-sm hover:bg-gray-100 rounded-b-xl">
-                            Tahapan Kegiatan
-                        </a>
-                    </div>
-                </div>
+      {{-- RIGHT: Search + Rumah Pendidikan --}}
+      <div class="hidden md:flex items-center gap-3">
 
-                <!-- DROPDOWN PENGUMUMAN -->
-                <div class="relative group">
-                    <button class="hover:text-sky-700 transition flex items-center gap-1">
-                        Pengumuman
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                  d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"
-                                  clip-rule="evenodd"/>
-                        </svg>
-                    </button>
+        {{-- Search --}}
+        <form action="#" method="GET" class="relative">
+          <input
+            type="text"
+            name="q"
+            placeholder="Cari..."
+            class="w-44 h-9 rounded-full border border-slate-300 bg-white px-4 pr-9 text-xs
+                   focus:outline-none focus:ring-2 focus:ring-sky-300"
+          />
+          <button
+            type="submit"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700"
+            aria-label="Cari"
+          >
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="M21 21l-4.3-4.3"></path>
+            </svg>
+          </button>
+        </form>
 
-                    <div class="absolute left-0 mt-3 w-60 bg-white shadow-lg rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition">
-                        <a href="{{ route('pengumuman.3besar') }}"
-                           class="block px-4 py-3 text-sm hover:bg-gray-100 rounded-t-xl">
-                            Pengumuman 3 Besar
-                        </a>
-                        <a href="{{ route('pengumuman.lolos') }}"
-                           class="block px-4 py-3 text-sm hover:bg-gray-100 rounded-b-xl">
-                            Lolos Seleksi Proposal
-                        </a>
-                    </div>
-                </div>
+        {{-- Rumah Pendidikan --}}
+        <img
+          src="{{ asset('image/header/rumah-pendidikan.png') }}"
+          alt="Rumah Pendidikan"
+          class="h-8 w-auto object-contain"
+        />
+      </div>
 
-                <a href="{{ route('faq') }}" class="hover:text-sky-700 transition">
-                    FAQ
-                </a>
-            </div>
+      {{-- Mobile Menu Button (opsional) --}}
+      <button
+        type="button"
+        class="md:hidden inline-flex items-center justify-center p-2 rounded-lg hover:bg-sky-200"
+        onclick="document.getElementById('mobileNav').classList.toggle('hidden')"
+        aria-label="Buka Menu"
+      >
+        <svg class="w-6 h-6 text-slate-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
 
-            <!-- RIGHT : SEARCH -->
-            <div class="hidden md:block">
-                <form action="#" method="GET" class="relative">
-                    <input
-                        type="text"
-                        name="q"
-                        class="w-64 h-10 rounded-full border-2 border-gray-400 bg-white pl-6 pr-12 focus:outline-none focus:ring-2 focus:ring-sky-300 transition"
-                    />
-                    <button type="submit"
-                            class="absolute right-4 top-1/2 -translate-y-1/2 text-black">
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                             class="w-5 h-5"
-                             fill="none"
-                             viewBox="0 0 24 24"
-                             stroke="currentColor"
-                             stroke-width="2">
-                            <circle cx="11" cy="11" r="8" />
-                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                        </svg>
-                    </button>
-                </form>
-            </div>
-
-        </div>
     </div>
+
+    {{-- MOBILE NAV (simple, tanpa dropdown hover) --}}
+    <div id="mobileNav" class="md:hidden hidden pb-4">
+      <div class="space-y-2">
+        <a href="{{ route('home') }}" class="block px-2 py-2 font-semibold text-slate-900">Beranda</a>
+
+        <div class="px-2 pt-2">
+          <div class="font-semibold text-slate-900">Lomba</div>
+          <div class="mt-1 pl-3 space-y-1 text-sm text-slate-700">
+            <a href="{{ route('lomba.panduan') }}" class="block py-1">Panduan Lomba</a>
+            <a href="{{ route('lomba.tahapan') }}" class="block py-1">Tahapan Kegiatan Lomba</a>
+          </div>
+        </div>
+
+        <div class="px-2 pt-2">
+          <div class="font-semibold text-slate-900">Pengumuman</div>
+          <div class="mt-1 pl-3 space-y-1 text-sm text-slate-700">
+            <a href="{{ route('pengumuman.3besar') }}" class="block py-1">Pengumuman 3 Besar</a>
+            <a href="{{ route('pengumuman.lolos') }}" class="block py-1">Lolos Seleksi Proposal</a>
+          </div>
+        </div>
+
+        <a href="{{ route('faq') }}" class="block px-2 py-2 font-semibold text-slate-900">FAQ</a>
+
+        <div class="px-2 pt-2">
+          <form action="#" method="GET" class="relative">
+            <input
+              type="text"
+              name="q"
+              placeholder="Cari..."
+              class="w-full h-10 rounded-full border border-slate-300 bg-white px-4 pr-10 text-sm
+                     focus:outline-none focus:ring-2 focus:ring-sky-300"
+            />
+            <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500" aria-label="Cari">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="7"></circle>
+                <path d="M21 21l-4.3-4.3"></path>
+              </svg>
+            </button>
+          </form>
+          <div class="mt-3">
+            <img
+              src="{{ asset('image/header/rumah-pendidikan.png') }}"
+              alt="Rumah Pendidikan"
+              class="h-8 w-auto object-contain"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </nav>
