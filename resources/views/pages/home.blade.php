@@ -5,29 +5,45 @@
 @section('content')
 
 <!-- HERO SECTION -->
-<section class="relative">
-  <div class="h-[420px] bg-gray-300"></div>
+<section
+  class="relative w-full overflow-hidden rounded-none"
+  style="background-image: url('{{ asset('images/hero-bg.jpg') }}'); background-size: cover; background-position: center;"
+>
+  {{-- overlay gelap biar teks kebaca --}}
+  <div class="absolute inset-0 bg-black/45"></div>
 
-  <div class="absolute inset-0 bg-black/50"></div>
+  {{-- tinggi banner (dipanjangin) --}}
+  <div class="relative min-h-[520px] md:min-h-[560px] lg:min-h-[600px]">
 
-  <div class="absolute inset-0 flex items-center">
-    <div class="max-w-6xl mx-auto px-4 text-white">
-      <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">
-        HACKATHON RUMAH <br> PENDIDIKAN 2025
+    {{-- BLOK TEKS: JANGAN UBAH POSISI (kiri) --}}
+    <div class="absolute left-6 top-1/2 -translate-y-1/2 md:left-10 lg:left-14 text-white max-w-2xl">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight drop-shadow">
+        HACKATHON RUMAH<br>
+        PENDIDIKAN 2025
       </h1>
 
-      <p class="mt-4 text-lg">
-        Wujudkan Indonesia Cerdas <br>
-        “Gim Edukasi untuk Pembelajaran Seru”
+      <p class="mt-4 text-lg md:text-xl font-bold drop-shadow">
+        <span class="font-extrabold">Wujudkan Indonesia Cerdas</span>
       </p>
 
-      <button class="mt-6 bg-white text-black px-6 py-2 rounded-full font-semibold">
+      <p class="mt-1 text-sm md:text-base font-semibold opacity-95 drop-shadow">
+        “<span class="font-extrabold">Gim Edukasi</span> untuk Pembelajaran Seru”
+      </p>
+
+      <a href="#"
+         class="mt-6 inline-block rounded-full bg-white px-5 py-2 text-sm font-extrabold text-slate-900 shadow hover:bg-slate-100">
         Info Selengkapnya
-      </button>
+      </a>
     </div>
+
+    {{-- Badge bulat ungu di kanan (seperti prototype) --}}
+    <div class="absolute right-6 top-1/2 -translate-y-1/2">
+      <div class="h-10 w-10 rounded-full bg-purple-600 flex items-center justify-center shadow-lg">
+        <span class="text-white font-bold">a</span>
+      </div>
+    </div>
+
   </div>
-
-
 </section>
 
 <!-- DESKRIPSI SECTION -->
