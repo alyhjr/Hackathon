@@ -21,8 +21,7 @@
     background-repeat: no-repeat;
   "
 >
-  <div class="absolute inset-0 bg-black/55"></div>
-
+  <div class="abs<section id="hero"> ... </section>
   <div class="relative min-h-[520px] md:min-h-[580px] lg:min-h-[640px]">
     <div class="absolute left-6 md:left-10 lg:left-14 top-1/2 -translate-y-1/2 text-white max-w-2xl">
       <h1 class="text-3xl md:text-5xl lg:text-6xl font-extrabold leading-tight drop-shadow">
