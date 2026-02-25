@@ -7,7 +7,7 @@ Route::view('/', 'pages.home')->name('home');
 
 // LOMBA
 Route::prefix('lomba')->name('lomba.')->group(function () {
-    Route::view('/panduan', 'pages.lomba.panduan')->name('panduan');
+    Route::view('/ketentuan', 'pages.lomba.ketentuan')->name('ketentuan');
     Route::view('/tahapan', 'pages.lomba.tahapan')->name('tahapan');
 });
 
