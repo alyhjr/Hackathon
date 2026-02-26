@@ -17,16 +17,16 @@
                 ['name' => 'SRIKANDI',                   'school' => 'TK Dharma Wanita, Prov. Jawa Barat'],
             ],
             'all' => [
-                ['name' => 'Tim GPG (Guru PAUD Cacor)',     'school' => 'TK IT AL-BUSYRA HASYIMIYAH, Prov. Nusa Tenggara Barat'],
-                ['name' => 'PIONER DIGITAL',                'school' => 'TK Cendekia, Prov. Jawa Barat'],
-                ['name' => 'SRIKANDI',                      'school' => 'TK Dharma Wanita, Prov. Jawa Barat'],
-                ['name' => 'TIM INSAN MADANI',              'school' => 'TK Islam Terpadu Insan Madani, Prov. Sulawesi Selatan'],
-                ['name' => 'The S.E.A PROJECT',             'school' => 'TK. SURYA BUANA, Prov. Jawa Timur'],
-                ['name' => 'TIM BAWI HABARING HURUNG',      'school' => 'TK BAKTI IBU SAMPIT, Prov. Kalimantan Tengah'],
-                ['name' => 'MUMON',                         'school' => 'TK MUTIARA, Prov. Jawa Barat'],
-                ['name' => 'Tim Bu Guru Ceria',             'school' => 'TAUD SaQu Al Umm Barabai, Prov. Kalimantan Selatan'],
-                ['name' => 'BHAYANGKARI 47 FUTURE MAKERS',  'school' => 'TK KEMALA BHAYANGKARI 47 KOTA SUKABUMI, Prov. Jawa Barat'],
-                ['name' => 'IZVI TEAM (ITA IZA SILVI)',     'school' => 'TK Alkhairiyah Surabaya, Prov. Jawa Timur'],
+                ['name' => 'Tim GPG (Guru PAUD Cacor)',    'school' => 'TK IT AL-BUSYRA HASYIMIYAH, Prov. Nusa Tenggara Barat'],
+                ['name' => 'PIONER DIGITAL',               'school' => 'TK Cendekia, Prov. Jawa Barat'],
+                ['name' => 'SRIKANDI',                     'school' => 'TK Dharma Wanita, Prov. Jawa Barat'],
+                ['name' => 'TIM INSAN MADANI',             'school' => 'TK Islam Terpadu Insan Madani, Prov. Sulawesi Selatan'],
+                ['name' => 'THE S.E.A PROJECT',            'school' => 'TK SURYA BUANA, Prov. Jawa Timur'],
+                ['name' => 'TIM BAWI HABARING HURUNG',     'school' => 'TK BAKTI IBU SAMPIT, Prov. Kalimantan Tengah'],
+                ['name' => 'MUMON',                        'school' => 'TK MUTIARA, Prov. Jawa Barat'],
+                ['name' => 'Tim Bu Guru Ceria',            'school' => 'TAUD SaQu Al Umm Barabai, Prov. Kalimantan Selatan'],
+                ['name' => 'BHAYANGKARI 47 FUTURE MAKERS', 'school' => 'TK KEMALA BHAYANGKARI 47 KOTA SUKABUMI, Prov. Jawa Barat'],
+                ['name' => 'IZVI TEAM (ITA IZA SILVI)',    'school' => 'TK Alkhairiyah Surabaya, Prov. Jawa Timur'],
             ],
         ],
         [
@@ -146,7 +146,7 @@
                         <span style="font-size:0.73rem;font-weight:700;color:#1e293b;flex-shrink:0;">{{ $rank + 1 }}.</span>
                         <div>
                             <p style="font-size:0.73rem;font-weight:800;color:#1e293b;line-height:1.4;text-transform:uppercase;">{{ $team['name'] }}</p>
-                            <p style="font-size:0.66rem;color:#475569;margin-top:2px;line-height:1.4;">{{ $team['school'] }}</p>
+                            <p style="font-size:0.66rem;color:#color:#1e293;margin-top:2px;line-height:1.4;">{{ $team['school'] }}</p>
                         </div>
                     </div>
                     @endforeach
@@ -157,7 +157,7 @@
                     <button onclick="showDetail('{{ $col['slug'] }}')" style="
                         padding:7px 22px;
                         background:#FFD93D;
-                        color:#1e293b;
+                        color:#FFFFFF;
                         border:none;
                         border-radius:9999px;
                         font-size:0.72rem;
@@ -180,28 +180,42 @@
     <div id="detail-{{ $col['slug'] }}" style="display:none;">
 
         {{-- Judul --}}
-        <div style="text-align:center;margin-bottom:40px;">
+        <div style="text-align:center;margin-bottom:48px;">
             <h1 style="font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:800;color:#0f172a;line-height:1.2;">
                 {{ $col['title'] }} {{ $col['sub'] }}
             </h1>
         </div>
 
-        {{-- Kotak 2 kolom persis Figma --}}
-        <div style="max-width:860px;margin:0 auto;background:#dce8f0;border-radius:16px;border:1.5px solid #b8d4e0;padding:36px 44px;">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px 48px;">
-                @foreach($col['all'] as $rank => $team)
-                <div style="display:flex;gap:10px;align-items:flex-start;">
-                    {{-- Nomor --}}
-                    <span style="font-size:0.8rem;font-weight:700;color:#64748b;flex-shrink:0;min-width:28px;padding-top:1px;">
-                        {{ str_pad($rank + 1, 2, '0', STR_PAD_LEFT) }}.
-                    </span>
-                    {{-- Nama & Sekolah --}}
-                    <div>
-                        <p style="font-size:0.82rem;font-weight:800;color:#1e293b;line-height:1.4;">{{ $team['name'] }}</p>
-                        <p style="font-size:0.72rem;color:#475569;margin-top:3px;line-height:1.4;">{{ $team['school'] }}</p>
+        {{-- Kotak 2 kolom --}}
+        <div style="max-width:900px;margin:0 auto;background:#dce8f0;border-radius:20px;border:1.5px solid #b8d4e0;padding:40px 48px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px 56px;align-items:start;">
+
+                {{-- Kolom kiri: 1-5 --}}
+                <div style="display:flex;flex-direction:column;gap:22px;">
+                    @foreach(array_slice($col['all'], 0, 5) as $rank => $team)
+                    <div style="display:flex;gap:12px;align-items:flex-start;">
+                        <span style="font-size:0.82rem;font-weight:800;color:#1e293b;flex-shrink:0;min-width:24px;">{{ $rank + 1 }}.</span>
+                        <div>
+                            <p style="font-size:0.82rem;font-weight:800;color:#1e293b;line-height:1.4;text-transform:uppercase;">{{ $team['name'] }}</p>
+                            <p style="font-size:0.72rem;color:#64748b;margin-top:3px;line-height:1.4;">{{ $team['school'] }}</p>
+                        </div>
                     </div>
+                    @endforeach
                 </div>
-                @endforeach
+
+                {{-- Kolom kanan: 6-10 --}}
+                <div style="display:flex;flex-direction:column;gap:22px;">
+                    @foreach(array_slice($col['all'], 5, 5) as $rank => $team)
+                    <div style="display:flex;gap:12px;align-items:flex-start;">
+                        <span style="font-size:0.82rem;font-weight:800;color:#1e293b;flex-shrink:0;min-width:24px;">{{ $rank + 6 }}.</span>
+                        <div>
+                            <p style="font-size:0.82rem;font-weight:800;color:#1e293b;line-height:1.4;text-transform:uppercase;">{{ $team['name'] }}</p>
+                            <p style="font-size:0.72rem;color:#64748b;margin-top:3px;line-height:1.4;">{{ $team['school'] }}</p>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+
             </div>
         </div>
 
@@ -210,7 +224,7 @@
             <button onclick="showMain()" style="
                 padding:10px 40px;
                 background:#FFD93D;
-                color:#1e293b;
+                color:#FFFFFF;
                 border:none;
                 border-radius:9999px;
                 font-size:0.85rem;

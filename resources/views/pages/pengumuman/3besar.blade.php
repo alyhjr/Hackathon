@@ -64,7 +64,7 @@
                         <p class="pg-tschool">{{ $team['school'] }}</p>
                     </div>
                     @endforeach
-                    <button class="pg-btn">Lihat Detail</button>
+
                 </div>
             </div>
         </div>
@@ -146,14 +146,9 @@
 
 /* Aktif: konten muncul */
 .pg-card.active .pg-body {
-    display: block;
-}
-
-
-/* Aktif: konten muncul */
-.pg-card.active .pg-body {
     max-height: 400px;
     opacity: 1;
+    display: block;
 }
 
 .pg-body-inner { padding: 10px 0 20px; }
