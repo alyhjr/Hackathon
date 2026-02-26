@@ -47,7 +47,7 @@
                      transition-all duration-150"
             >
               <div class="w-64 rounded-xl bg-white border border-slate-200 shadow-lg overflow-hidden">
-                <a href="{{ route('lomba.panduan') }}"
+                <a href="{{ route('lomba.ketentuan') }}"
                   class="block px-4 py-3 text-sm text-slate-700 hover:bg-slate-50">
                   Panduan Lomba
                 </a>
@@ -160,7 +160,7 @@
         <div class="px-2 pt-2">
           <div class="font-semibold text-slate-900">Lomba</div>
           <div class="mt-1 pl-3 space-y-1 text-sm text-slate-700">
-            <a href="{{ route('lomba.panduan') }}" class="block py-1">Panduan Lomba</a>
+            <a href="{{ route('lomba.ketentuan') }}" class="block py-1">Ketentuan Lomba</a>
             <a href="{{ route('lomba.tahapan') }}" class="block py-1">Tahapan Kegiatan Lomba</a>
           </div>
         </div>
