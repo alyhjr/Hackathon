@@ -49,7 +49,7 @@
               <div class="w-64 rounded-xl bg-white border border-slate-200 shadow-lg overflow-hidden">
                 <a href="{{ route('lomba.ketentuan') }}"
                   class="block px-4 py-3 text-sm text-slate-700 hover:bg-slate-50">
-                  Panduan Lomba
+                  Ketentuan Lomba
                 </a>
                 <a href="{{ route('lomba.tahapan') }}"
                   class="block px-4 py-3 text-sm text-slate-700 hover:bg-slate-50">
@@ -106,9 +106,14 @@
       {{-- RIGHT --}}
       <div class="hidden md:flex flex-1 items-center justify-end gap-3 whitespace-nowrap">
 
-        {{-- Search (kecil) --}}
-        <form action="#" method="GET" class="relative">
+        {{-- ───────────────────────────────────────────
+             SEARCH — hanya bagian ini yang diubah
+             Tidak ada route/controller baru.
+             JS mencocokkan keyword lalu redirect langsung.
+        _______________________________________________ --}}
+        <form id="navSearchForm" action="#" method="GET" class="relative" autocomplete="off">
           <input
+            id="navSearchInput"
             type="text"
             name="q"
             placeholder="Cari..."
@@ -176,8 +181,10 @@
         <a href="{{ route('faq') }}" class="block px-2 py-2 font-semibold text-slate-900">FAQ</a>
 
         <div class="px-2 pt-2">
-          <form action="#" method="GET" class="relative">
+          {{-- Mobile search — sama, pakai ID berbeda --}}
+          <form id="mobileSearchForm" action="#" method="GET" class="relative" autocomplete="off">
             <input
+              id="mobileSearchInput"
               type="text"
               name="q"
               placeholder="Cari..."
@@ -205,3 +212,102 @@
 
   </div>
 </nav>
+
+{{-- ═══════════════════════════════════════════════════════════════
+     SMART SEARCH SCRIPT
+     - Daftar halaman disesuaikan dengan route yang ada di web.php
+     - Keyword dicocokkan ke title + tags (alias kata kunci)
+     - Jika cocok → redirect langsung ke halaman tersebut
+     - Jika tidak cocok → tetap di halaman yang sama (tidak error)
+════════════════════════════════════════════════════════════════ --}}
+<script>
+(function () {
+  // ── Daftar halaman beserta kata kunci pencariannya ──────────────
+  // Tambah / ubah sesuai halaman yang ada di web Anda
+  var pages = [
+    {
+      title : 'Beranda',
+      url   : '{{ route("home") }}',
+      tags  : ['beranda', 'home', 'utama', 'depan']
+    },
+    {
+      title : 'FAQ',
+      url   : '{{ route("faq") }}',
+      tags  : ['faq', 'pertanyaan', 'tanya', 'jawab', 'frequently', 'asked']
+    },
+    {
+      title : 'Ketentuan Lomba',
+      url   : '{{ route("lomba.ketentuan") }}',
+      tags  : ['ketentuan', 'lomba', 'syarat', 'aturan', 'persyaratan', 'peraturan']
+    },
+    {
+      title : 'Tahapan Kegiatan Lomba',
+      url   : '{{ route("lomba.tahapan") }}',
+      tags  : ['tahapan', 'kegiatan', 'lomba', 'jadwal', 'alur', 'proses',
+               'pendaftaran', 'pelatihan', 'proposal', 'inkubasi', 'penjurian', 'hadiah']
+    },
+    {
+      title : 'Pengumuman 3 Besar',
+      url   : '{{ route("pengumuman.3besar") }}',
+      tags  : ['pengumuman', '3 besar', 'tiga besar', 'pemenang', 'juara', 'winner']
+    },
+    {
+      title : 'Lolos Seleksi Proposal',
+      url   : '{{ route("pengumuman.lolos") }}',
+      tags  : ['lolos', 'seleksi', 'proposal', 'pengumuman', 'finalis']
+    },
+  ];
+
+  // ── Fungsi utama: cari & redirect ───────────────────────────────
+  function doSearch(query) {
+    var q = query.trim().toLowerCase();
+    if (q === '') return;  // kosong, abaikan
+
+    var matched = null;
+    var bestScore = 0;
+
+    for (var i = 0; i < pages.length; i++) {
+      var page = pages[i];
+      var score = 0;
+
+      // Cocokkan ke setiap tag
+      for (var j = 0; j < page.tags.length; j++) {
+        var tag = page.tags[j].toLowerCase();
+        if (tag === q) {
+          score += 10;          // exact match → skor tertinggi
+        } else if (tag.includes(q) || q.includes(tag)) {
+          score += 5;           // partial match
+        }
+      }
+
+      // Cocokkan juga ke title halaman
+      if (page.title.toLowerCase().includes(q)) {
+        score += 7;
+      }
+
+      if (score > bestScore) {
+        bestScore = score;
+        matched = page;
+      }
+    }
+
+    if (matched) {
+      window.location.href = matched.url;
+    }
+    // Jika tidak ada yang cocok, tidak terjadi apa-apa
+    // (user tetap di halaman saat ini)
+  }
+
+  // ── Pasang handler ke form desktop & mobile ─────────────────────
+  ['navSearchForm', 'mobileSearchForm'].forEach(function (formId) {
+    var form = document.getElementById(formId);
+    if (!form) return;
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var input = form.querySelector('input[name="q"]');
+      if (input) doSearch(input.value);
+    });
+  });
+})();
+</script>
