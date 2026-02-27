@@ -1,330 +1,272 @@
 @extends('layouts.app')
 
+@section('title', 'Ketentuan Lomba')
+
 @section('content')
 <style>
-  :root{
-    --bg: #ffffff;
-    --card: #eaf6ff;
-    --text: #111111;
-    --shadow: 0 14px 34px rgba(0,0,0,.08);
-    --radius: 18px;
+  .kb-wrap{
+    padding: 56px 16px 90px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
   }
 
-  .k-wrap{
-    padding: 56px 16px 90px; /* ditambah dikit biar panah bawah ga kepotong */
-    background: var(--bg);
-    display:flex;
-    justify-content:center;
+  .kb-shell{
+    width: min(960px, 100%);
   }
 
-  .k-shell{
-    width: min(1100px, 100%);
-    position: relative;
+  .kb-title{
+    text-align: center !important;
+    font-weight: 900 !important;
+    font-size: clamp(22px,2.2vw,32px) !important;
+    margin: 0 0 6px !important;
+    color: #111 !important;
   }
 
-  .k-stage{
-    position: relative;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    gap: 14px;
-    margin-top: 18px;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: pan-y;
+  .kb-sub{
+    text-align: center !important;
+    font-size: 13px !important;
+    color: #111 !important;
+    margin: 0 0 36px !important;
   }
 
-  /* ===== CARD ===== */
-  .k-card{
-    width: 270px;
-    height: 440px;
-    border-radius: var(--radius);
-    background: var(--card);
-    box-shadow: var(--shadow);
-    padding: 18px 16px;
-    text-align:left;
-    display:flex;
-    flex-direction: column;
-    transition: all .35s cubic-bezier(.2,.8,.2,1);
+  /* TAB NAV */
+  .kb-tabs{
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
   }
 
-  .k-card:not(.is-center){
-    transform: scale(.92);
-    opacity: .55;
-    filter: blur(2px);
+  .kb-tab{
+    padding: 8px 22px;
+    border-radius: 999px;
+    border: 1.5px solid #e2e8f0;
+    background: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    transition: all .2s ease;
   }
 
-  .k-card.is-center{
-    transform: scale(1);
-    opacity: 1;
-    filter: blur(0);
+  .kb-tab:hover{
+    border-color: #94a3b8;
+    color: #111;
   }
 
-  .k-head{
+  .kb-tab.active{
+    background: #0b2a5b;
+    border-color: #0b2a5b;
+    color: #fff;
+  }
+
+  /* CARD */
+  .kb-panel{
+    display: none;
+    animation: kb-fadeIn .3s ease;
+  }
+
+  .kb-panel.active{
+    display: block;
+  }
+
+  @keyframes kb-fadeIn{
+    from{ opacity:0; transform:translateY(6px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  .kb-card{
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 36px 40px;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .kb-card-title{
     font-size: 18px;
     font-weight: 800;
-    margin-bottom: 12px;
-    border-bottom: 3px solid #111;
-    padding-bottom: 8px;
-    text-align: center;
-    color: var(--text);
-    flex: 0 0 auto;
+    color: #0b2a5b;
+    margin: 0 0 20px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid #e2e8f0;
   }
 
-  .k-body{
-    font-size: 13px;
-    color: var(--text);
-    line-height: 1.55;
-    flex: 1 1 auto;
-  }
-
-  .k-body ol{
-    counter-reset: item;
-    padding-left: 0;
-    margin: 0;
+  .kb-list{
     list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: item;
   }
 
-  .k-body li{
+  .kb-list li{
     counter-increment: item;
-    margin-bottom: 10px;
-    position: relative;
-    padding-left: 22px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+    color: #334155;
+    line-height: 1.6;
   }
 
-  .k-body li::before{
-    content: counter(item) ".";
-    position: absolute;
-    left: 0;
-    font-weight: 700;
+  .kb-list li:last-child{
+    border-bottom: none;
   }
 
-  /* ===== PANAH (DESKTOP) ===== */
-  .k-arrow{
-    position:absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 46px;
-    height: 46px;
+  .kb-list li::before{
+    content: counter(item);
+    min-width: 26px;
+    height: 26px;
+    background: #0b2a5b;
+    color: #fff;
     border-radius: 50%;
-    border: 2px solid #111;
-    background:#fff;
-    font-size: 22px;
-    cursor:pointer;
-    transition: .18s ease;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    flex-shrink: 0;
+    margin-top: 1px;
   }
 
-  .k-arrow:hover{
-    background:#111;
-    color:#fff;
+  /* KATEGORI GRID */
+  .kb-cat-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
   }
 
-  .k-arrow.left{ left: -10px; }
-  .k-arrow.right{ right: -10px; }
-
-  /* ✅ WRAPPER PANAH MOBILE */
-  .k-arrows-mobile{
-    display:none;
-  }
-
-  /* ===== KATEGORI ===== */
-  .k-cat-grid{
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    justify-items: center;
-  }
-
-  .k-cat-item{
-    width: 100%;
-    max-width: 170px;
-    display:flex;
+  .kb-cat-item{
+    display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
-    text-align:center;
+    gap: 10px;
+    padding: 16px 12px;
+    background: #fff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 14px;
+    transition: border-color .2s, box-shadow .2s;
   }
 
-  .k-cat-img{
-    height: 70px;
-    width: 100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background: rgba(255,255,255,.6);
-    border-radius: 12px;
+  .kb-cat-item:hover{
+    border-color: #93c5fd;
+    box-shadow: 0 4px 14px rgba(14,116,144,0.08);
   }
 
-  .k-cat-img img{
-    max-width:100%;
-    max-height:100%;
-    object-fit:contain;
+  .kb-cat-img{
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .k-cat-pill{
-    background:#0f172a;
-    color:#fff;
-    font-size: 9px;
-    padding: 6px 10px;
-    border-radius: 999px;
-    width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .kb-cat-img img{
+    max-height: 60px;
+    max-width: 100%;
+    object-fit: contain;
   }
 
-  .k-cat-item.full{
-    grid-column: 1 / -1;
-    max-width: 180px;
+  .kb-cat-label{
+    font-size: 11px;
+    font-weight: 700;
+    color: #0b2a5b;
+    text-align: center;
+    line-height: 1.3;
   }
 
-  /* ===== MOBILE ===== */
-  @media(max-width:900px){
-    .k-card{ display:none; }
-
-    .k-card.is-center{
-      display:flex;
-      width: min(92%, 360px);
-      height: 460px;
-      filter: none;
-      opacity:1;
-      transform: scale(1);
-    }
-
-    /* desktop arrows disembunyiin */
-    .k-arrow{
-      display:none;
-    }
-
-    /* panah versi mobile muncul */
-    .k-arrows-mobile{
-      display:flex;
-      gap: 14px;
-      justify-content:center;
-      margin-top: 18px;
-    }
-
-    .k-arrows-mobile .k-arrow{
-      display:flex;
-      position: static;
-      transform:none;
-    }
+  .kb-cat-item.full{
+    grid-column: 2 / 3;
   }
 
+  @media(max-width:600px){
+    .kb-card{ padding: 24px 20px; }
+    .kb-cat-grid{ grid-template-columns: repeat(2, 1fr); }
+    .kb-cat-item.full{ grid-column: 1 / -1; }
+  }
 </style>
 
-<div class="k-wrap">
-  <div class="k-shell">
+<div class="kb-wrap">
+  <div class="kb-shell">
 
-    <!-- PANAH DESKTOP -->
-    <button class="k-arrow left" id="btnPrev" aria-label="Sebelumnya">&#8249;</button>
-    <button class="k-arrow right" id="btnNext" aria-label="Berikutnya">&#8250;</button>
+    <h2 class="kb-title">Ketentuan Lomba</h2>
+    <p class="kb-sub">Baca ketentuan secara lengkap sebelum mendaftar</p>
 
-    <div class="k-stage">
-      <div class="k-card" id="cardLeft"></div>
-      <div class="k-card is-center" id="cardCenter"></div>
-      <div class="k-card" id="cardRight"></div>
+    <!-- TABS -->
+    <div class="kb-tabs">
+      <button class="kb-tab active" onclick="switchTab(0, this)">Kategori</button>
+      <button class="kb-tab" onclick="switchTab(1, this)">Persyaratan</button>
+      <button class="kb-tab" onclick="switchTab(2, this)">Pendaftaran</button>
     </div>
 
-    <!-- ✅ PANAH MOBILE -->
-    <div class="k-arrows-mobile">
-      <button class="k-arrow" id="btnPrevMobile" aria-label="Sebelumnya">&#8249;</button>
-      <button class="k-arrow" id="btnNextMobile" aria-label="Berikutnya">&#8250;</button>
+    <!-- PANEL: Kategori -->
+    <div class="kb-panel active" id="panel-0">
+      <div class="kb-card">
+        <div class="kb-card-title">Kategori Lomba</div>
+        <div class="kb-cat-grid">
+          <div class="kb-cat-item">
+            <div class="kb-cat-img"><img src="/image/kategori/paud.png" alt="PAUD"></div>
+            <div class="kb-cat-label">PAUD / Sederajat</div>
+          </div>
+          <div class="kb-cat-item">
+            <div class="kb-cat-img"><img src="/image/kategori/sd.png" alt="SD"></div>
+            <div class="kb-cat-label">SD / Sederajat</div>
+          </div>
+          <div class="kb-cat-item">
+            <div class="kb-cat-img"><img src="/image/kategori/smp.png" alt="SMP"></div>
+            <div class="kb-cat-label">SMP / Sederajat</div>
+          </div>
+          <div class="kb-cat-item">
+            <div class="kb-cat-img"><img src="/image/kategori/sma.png" alt="SMA"></div>
+            <div class="kb-cat-label">SMA / Sederajat</div>
+          </div>
+          <div class="kb-cat-item full">
+            <div class="kb-cat-img"><img src="/image/kategori/smk.png" alt="SMK"></div>
+            <div class="kb-cat-label">SMK / Sederajat</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL: Persyaratan -->
+    <div class="kb-panel" id="panel-1">
+      <div class="kb-card">
+        <div class="kb-card-title">Persyaratan Peserta</div>
+        <ul class="kb-list">
+          <li>Warga Negara Indonesia</li>
+          <li>Peserta bersifat tim: 1 (satu) tim terdiri dari 3 (tiga) orang (guru dan/atau tenaga kependidikan) dari satu sekolah yang sama.</li>
+          <li>Setiap orang peserta hanya dapat terdaftar pada 1 (satu) tim.</li>
+          <li>Peserta (tim) merupakan pendidik dan atau tenaga kependidikan aktif dibuktikan dengan surat keterangan dari Kepala Sekolah.</li>
+          <li>Seluruh anggota tim diutamakan memiliki akun belajar.id</li>
+          <li>Satu sekolah dapat mengirim lebih dari satu tim.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PANEL: Pendaftaran -->
+    <div class="kb-panel" id="panel-2">
+      <div class="kb-card">
+        <div class="kb-card-title">Cara Pendaftaran</div>
+        <ul class="kb-list">
+          <li>Tim (perwakilan) melakukan pendaftaran melalui superaplikasi Rumah Pendidikan dan mengunggah surat keterangan dari Kepala Sekolah.</li>
+          <li>Tim yang telah mendaftar berhak untuk mengikuti pelatihan yang diselenggarakan oleh Pusdatin.</li>
+        </ul>
+      </div>
     </div>
 
   </div>
 </div>
 
 <script>
-  const slides = [
-    {
-      title: "Kategori",
-      content: `
-        <div class="k-cat-grid">
-          <div class="k-cat-item">
-            <div class="k-cat-img"><img src="/image/kategori/paud.png"></div>
-            <div class="k-cat-pill">PAUD / Sederajat</div>
-          </div>
-
-          <div class="k-cat-item">
-            <div class="k-cat-img"><img src="/image/kategori/sd.png"></div>
-            <div class="k-cat-pill">SD / Sederajat</div>
-          </div>
-
-          <div class="k-cat-item">
-            <div class="k-cat-img"><img src="/image/kategori/smp.png"></div>
-            <div class="k-cat-pill">SMP / Sederajat</div>
-          </div>
-
-          <div class="k-cat-item">
-            <div class="k-cat-img"><img src="/image/kategori/sma.png"></div>
-            <div class="k-cat-pill">SMA / Sederajat</div>
-          </div>
-
-          <div class="k-cat-item full">
-            <div class="k-cat-img"><img src="/image/kategori/smk.png"></div>
-            <div class="k-cat-pill">SMK / Sederajat</div>
-          </div>
-        </div>
-      `
-    },
-    {
-      title: "Persyaratan",
-      content: `
-        <ol>
-          <li>Warga Negara Indonesia</li>
-          <li>Peserta bersifat tim: 1 tim terdiri dari 3 orang dari satu sekolah yang sama</li>
-          <li>Setiap orang peserta hanya dapat terdaftar pada 1 tim</li>
-          <li>Peserta (tim) merupakan pendidik/tenaga kependidikan aktif dibuktikan surat keterangan Kepala Sekolah</li>
-          <li>Seluruh anggota tim diutamakan memiliki akun belajar.id</li>
-          <li>Satu sekolah dapat mengirim lebih dari satu tim</li>
-        </ol>
-      `
-    },
-    {
-      title: "Pendaftaran",
-      content: `
-        <ol>
-          <li>Tim (perwakilan) mendaftar via superaplikasi Rumah Pendidikan + unggah surat keterangan Kepala Sekolah</li>
-          <li>Tim yang telah mendaftar berhak mengikuti pelatihan yang diselenggarakan oleh Pusdatin</li>
-        </ol>
-      `
-    }
-  ];
-
-  let active = 0;
-
-  const left = document.getElementById("cardLeft");
-  const center = document.getElementById("cardCenter");
-  const right = document.getElementById("cardRight");
-
-  function idx(i){ return (i + slides.length) % slides.length; }
-
-  function render(){
-    const l = slides[idx(active - 1)];
-    const c = slides[idx(active)];
-    const r = slides[idx(active + 1)];
-
-    left.innerHTML   = `<div class="k-head">${l.title}</div><div class="k-body">${l.content}</div>`;
-    center.innerHTML = `<div class="k-head">${c.title}</div><div class="k-body">${c.content}</div>`;
-    right.innerHTML  = `<div class="k-head">${r.title}</div><div class="k-body">${r.content}</div>`;
+  function switchTab(index, el) {
+    document.querySelectorAll('.kb-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.kb-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + index).classList.add('active');
+    el.classList.add('active');
   }
-
-  function next(){ active = idx(active + 1); render(); }
-  function prev(){ active = idx(active - 1); render(); }
-
-  // desktop btn
-  document.getElementById("btnNext").onclick = next;
-  document.getElementById("btnPrev").onclick = prev;
-
-  // mobile btn
-  document.getElementById("btnNextMobile").onclick = next;
-  document.getElementById("btnPrevMobile").onclick = prev;
-
-  render();
 </script>
 @endsection
