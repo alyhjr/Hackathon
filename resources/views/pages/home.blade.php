@@ -24,23 +24,23 @@
   <div class="absolute inset-0 bg-black/55"></div>
 
   <div class="relative min-h-[520px] md:min-h-[580px] lg:min-h-[640px]">
-    <div class="absolute left-6 md:left-10 lg:left-14 top-1/2 -translate-y-1/2 text-white max-w-2xl">
-      <h1 class="text-3xl md:text-5xl lg:text-6xl font-extrabold leading-tight drop-shadow">
-        HACKATHON RUMAH<br>
-        PENDIDIKAN 2026
-      </h1>
+  <div class="absolute left-10 md:left-16 lg:left-24 top-[45%] -translate-y-1/2 text-white max-w-2xl">
 
-      <p class="mt-3 text-lg md:text-xl lg:text-2xl font-extrabold leading-tight drop-shadow">
-        Wujudkan Indonesia Cerdas
-      </p>
+    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight drop-shadow">
+      HACKATHON RUMAH<br>
+      PENDIDIKAN 2026
+    </h1>
 
-      <p class="mt-1 text-sm md:text-base lg:text-lg font-semibold leading-snug opacity-95 drop-shadow">
-        “<span class="font-extrabold">Gim Edukasi untuk Pembelajaran Seru</span>”
-      </p>
+    <p class="mt-1 text-lg md:text-xl lg:text-2xl font-extrabold leading-tight drop-shadow">
+  Wujudkan Indonesia Cerdas
+</p>
 
-      
-    </div>
+    <p class="mt-2 text-sm md:text-base lg:text-lg font-semibold leading-snug opacity-90 drop-shadow">
+      "<span class="font-extrabold">Gim Edukasi untuk Pembelajaran Seru</span>"
+    </p>
+
   </div>
+</div>
 </section>
 
 
@@ -123,7 +123,7 @@
 </section>
 
 <!-- INFORMASI PENTING -->
-<section class="{{ $bleed }} py-24 bg-gradient-to-b from-blue-50 to-blue-100/40">
+<section class="{{ $bleed }} py-24 bg-gradient-to-b from-sky-50 to-sky-100/40">
   <div class="{{ $inner }}">
 
     <!-- Heading -->
@@ -167,7 +167,7 @@
               <!-- Item 1 -->
               <div class="flex gap-5">
                 <div class="shrink-0">
-                  <div class="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center border border-blue-100">
+                  <div class="w-14 h-14 rounded-2xl bg-sky-50 flex items-center justify-center border border-sky-100">
                     <!-- Email tertutup -->
                     <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M4 6h16v12H4z"/>
@@ -187,7 +187,7 @@
               <!-- Item 2 -->
               <div class="flex gap-5">
                 <div class="shrink-0">
-                  <div class="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center border border-blue-100">
+                  <div class="w-14 h-14 rounded-2xl bg-sky-50 flex items-center justify-center border border-sky-100">
                     <!-- Email terbuka -->
                     <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M3 10l9 5 9-5"/>
@@ -218,14 +218,55 @@
   </div>
 </section>
 
-<!-- TIMELINE (FIX: DOT DI DALAM GARIS + ANIMASI) -->
-<section class="py-20 md:py-24">
+
+<!-- TIMELINE -->
+<section class="py-20 md:py-24 px-4">
+<style>
+  .tl-line {
+    background: linear-gradient(to bottom, transparent, #c8c27e 8%, #c8c27e 92%, transparent);
+    width: 2px;
+  }
+  .tl-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: #FFF9BF;
+    border: 2px solid #c8c27e;
+    box-shadow: 0 0 0 4px rgba(255, 249, 191, 0.4);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  .tl-group:hover .tl-dot {
+    box-shadow: 0 0 0 6px rgba(255, 249, 191, 0.6);
+    transform: scale(1.2);
+  }
+  .tl-card {
+    background-color: #FFF9BF;
+    border: 1.5px solid #ddd880;
+    border-radius: 14px;
+    padding: 16px 24px;
+    box-shadow: 2px 3px 12px rgba(180, 174, 60, 0.15);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    isolation: isolate;
+  }
+  .tl-group:hover .tl-card {
+    transform: translateY(-3px);
+    box-shadow: 2px 8px 24px rgba(180, 174, 60, 0.22);
+  }
+  @keyframes tl-fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .tl-item {
+    animation: tl-fadeUp 0.5s ease both;
+  }
+</style>
+
   <!-- Heading -->
-  <div class="text-center">
+  <div class="text-center mb-14">
     <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
       Timeline Kegiatan
     </h2>
-    <p class="mt-3 text-slate-800">
+    <p class="mt-2 text-sm text-slate-500">
       Jadwal dapat berubah sesuai ketentuan panitia.
     </p>
   </div>
@@ -233,74 +274,58 @@
   @php
     $timeline = [
       ['date' => "18\nNov, 2025",         'title' => 'Kickoff Meeting'],
-      ['date' => "18 - 25\nNov, 2025",    'title' => 'Pendaftaran Peserta'],
-      ['date' => "27 - 28\nNov, 2025",    'title' => 'Pelatihan Peserta dengan Tools (daring)', 'desc' => 'Cek email (yang terdaftar) untuk mendapatkan tautan zoom'],
-      ['date' => "28 Nov -\n3 Des, 2025", 'title' => 'Unggah Proposal Ide Karya'],
-      ['date' => "5 - 6\nDes, 2025",      'title' => 'Penilaian Proposal Ide Karya'],
+      ['date' => "18 – 25\nNov, 2025",    'title' => 'Pendaftaran Peserta'],
+      ['date' => "27 – 28\nNov, 2025",    'title' => 'Pelatihan Peserta dengan Tools (daring)', 'desc' => 'Cek email (yang terdaftar) untuk mendapatkan tautan zoom'],
+      ['date' => "28 Nov –\n3 Des, 2025", 'title' => 'Unggah Proposal Ide Karya'],
+      ['date' => "5 – 6\nDes, 2025",      'title' => 'Penilaian Proposal Ide Karya'],
       ['date' => "7\nDes, 2025",          'title' => 'Pengumuman Peserta Lolos Seleksi Proposal'],
       ['date' => "9\nDes, 2025",          'title' => 'Inkubasi Peserta (daring)'],
       ['date' => "10\nDes, 2025",         'title' => 'Unggah Karya Peserta'],
-      ['date' => "12 - 13\nDes, 2025",    'title' => 'Presentasi Karya', 'desc' => 'Penilaian dan Penentuan Pemenang'],
+      ['date' => "12 – 13\nDes, 2025",    'title' => 'Presentasi Karya', 'desc' => 'Penilaian dan Penentuan Pemenang'],
     ];
   @endphp
 
-  <div class="mt-14 max-w-5xl mx-auto">
-    <div class="space-y-6">
+  <div class="max-w-3xl mx-auto">
+    @foreach ($timeline as $i => $item)
+      <div class="tl-group tl-item flex gap-6 items-stretch"
+           style="animation-delay: {{ $i * 0.06 }}s">
 
-      @foreach ($timeline as $i => $item)
-        <div class="group grid grid-cols-[92px_40px_1fr] md:grid-cols-[130px_44px_1fr] gap-4 md:gap-6 items-stretch">
-
-          <!-- DATE -->
-          <div class="text-right flex items-center justify-end">
-            <div class="text-xs md:text-sm font-extrabold text-slate-900 leading-tight whitespace-pre-line">
-              {{ $item['date'] }}
-            </div>
-          </div>
-
-          <!-- DOT + GARIS (SATU KOLOM YANG SAMA => PASTI SEGARIS) -->
-          <div class="relative flex items-stretch justify-center">
-            <!-- garis hitam -->
-            <span class="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[6px] rounded-full bg-slate-900"></span>
-
-            <!-- dot kuning (tengah tiap kotak) -->
-            <div class="relative z-10 flex items-center justify-center w-full">
-              <!-- glow/ping halus saat hover -->
-              <span class="absolute w-6 h-6 rounded-full bg-yellow-300/30 opacity-0 group-hover:opacity-100 group-hover:animate-ping"></span>
-
-              <!-- dot utama -->
-              <span class="w-3.5 h-3.5 rounded-full bg-yellow-300 border-2 border-slate-900 shadow-sm"></span>
-            </div>
-          </div>
-
-          <!-- CARD -->
-          <div>
-            <div class="rounded-2xl bg-yellow-300/95 border border-yellow-400/60 px-6 py-4
-                        shadow-[0_10px_22px_rgba(0,0,0,0.06)]
-                        transition duration-200
-                        group-hover:-translate-y-[2px]
-                        group-hover:shadow-[0_16px_32px_rgba(0,0,0,0.10)]">
-              <div class="font-extrabold text-slate-900">
-                {{ $item['title'] }}
-              </div>
-
-              @if(!empty($item['desc']))
-                <div class="mt-1 text-sm font-semibold text-slate-900/80">
-                  {{ $item['desc'] }}
-                </div>
-              @endif
-            </div>
-          </div>
-
+        <!-- DATE -->
+        <div class="w-28 flex-shrink-0 flex items-center justify-end py-3">
+         <span class="text-right text-sm font-extrabold leading-snug whitespace-pre-line"
+      style="color:#1c1917;">{{ $item['date'] }}</span>
         </div>
-      @endforeach
 
-    </div>
+        <!-- LINE + DOT -->
+        <div class="relative flex flex-col items-center flex-shrink-0" style="width:28px;">
+          <div class="tl-line flex-1"></div>
+          <div class="tl-dot flex-shrink-0 my-1 z-10"></div>
+          <div class="tl-line flex-1"></div>
+        </div>
+
+        <!-- CARD -->
+        <div class="flex-1 py-2">
+          <div class="tl-card">
+            <div class="text-base font-bold text-slate-900 leading-snug">
+              {{ $item['title'] }}
+            </div>
+            @if(!empty($item['desc']))
+              <div class="mt-1 text-sm font-medium leading-relaxed text-slate-700">
+                {{ $item['desc'] }}
+              </div>
+            @endif
+          </div>
+        </div>
+
+      </div>
+    @endforeach
   </div>
+
 </section>
 
 
 <!-- TOOLS (BALANCED LOGO SIZE) -->
-<section class="{{ $bleed }} py-20 md:py-24 bg-slate-50">
+<section class="{{ $bleed }} py-20 md:py-24 bg-white-100">
   <div class="{{ $inner }} text-center">
 
     <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900">
@@ -321,7 +346,7 @@
       >
         <div
           class="w-40 h-40 md:w-48 md:h-48
-                 bg-blue-50 border border-blue-100
+                bg-sky-50 border border-sky-100
                  rounded-full
                  shadow-sm flex items-center justify-center
                  transition duration-300
@@ -353,7 +378,7 @@
       >
         <div
           class="w-40 h-40 md:w-48 md:h-48
-                 bg-blue-50 border border-blue-100
+                 bg-sky-50 border border-sky-100
                  rounded-full
                  shadow-sm flex items-center justify-center
                  transition duration-300
@@ -382,15 +407,14 @@
 
 
 <!-- FAQ + PANDUAN (FULL BLEED BG) -->
-<section class="{{ $bleed }} py-16 md:py-20 bg-blue-50">
+<section class="{{ $bleed }} py-14 md:py-16 bg-sky-50">
   <div class="{{ $inner }}">
     <div class="grid md:grid-cols-2 gap-10 items-start">
 
       <!-- LEFT: FAQ -->
       <div>
         <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900">
-          Pertanyaan yang Sering Diajukan
-          <span class="text-yellow-400">(FAQ)</span>.
+          Pertanyaan yang Sering Diajukan (FAQ).
         </h2>
         <p class="mt-2 text-slate-600 text-sm md:text-base">
           Beberapa pertanyaan yang paling sering ditanyakan peserta.
@@ -399,24 +423,24 @@
         @php
           $faqs = [
             [
-              'q' => 'Bagaimana cara mendaftarkan diri pada kegiatan ini?',
-              'a' => 'Pendaftaran dilakukan melalui halaman resmi kegiatan. Pastikan Anda mengisi data dengan benar dan mengikuti instruksi pendaftaran.'
+              'q' => 'Bagaimana cara mendaftarnya?',
+              'a' => 'Kunjungi Superaplikasi Rumah Pendidikan, kemudian klik banner Hackathon Rumah Pendidikan 2026. Pilih “DAFTAR SEKARANG” dan isi formulir pendaftaran.'
             ],
             [
-              'q' => 'Apakah guru SLB diperbolehkan mengikuti Hackathon?',
+              'q' => 'Apakah disediakan format khusus untuk proposal?',
+              'a' => 'Format proposal akan diinformasikan dan disediakan oleh panitia saat memasuki masa unggah proposal.'
+            ],
+            [
+              'q' => 'Apakah dalam satu tim wajib terdiri dari tiga orang?',
+              'a' => 'Satu tim terdiri dari 3 guru dan/atau tenaga kependidikan dari sekolah yang sama.'
+            ],
+            [
+              'q' => 'Bagaimana jika peserta tidak memiliki akun belajar.id karena berasal dari madrasah?',
+              'a' => 'Pendaftar dari Madrasah dapat menggunakan akun @madrasah.kemenag.go.id atau akun Gmail.'
+            ],
+            [
+              'q' => 'Apakah guru SLB diperbolehkan mengikuti kegiatan ini?',
               'a' => 'Diperbolehkan.'
-            ],
-            [
-              'q' => 'Apakah terdapat format proposal ide karya yang harus digunakan?',
-              'a' => 'Ya, format proposal tersedia pada menu Panduan. Silakan unduh dan ikuti struktur yang ditetapkan.'
-            ],
-            [
-              'q' => 'Berapa jumlah anggota dalam 1 tim?',
-              'a' => 'Jumlah anggota mengikuti ketentuan yang tercantum dalam dokumen Panduan.'
-            ],
-            [
-              'q' => 'Apakah setiap tim wajib membuat 2 gim edukasi?',
-              'a' => 'Ya, setiap tim diwajibkan membuat 2 gim edukasi sesuai ketentuan.'
             ],
           ];
         @endphp
@@ -443,7 +467,9 @@
                          w-7 h-7 rounded-lg
                          border border-slate-200 bg-slate-50
                          transition
-                         group-open:bg-slate-900 group-open:border-slate-900"
+                         group-open:border-slate-900"
+                  style="--tw-open-bg: #FFF9BF;"
+                  :class="open ? 'bg-[#FFF9BF]' : ''"
                   aria-hidden="true"
                 >
                   <!-- plus -->
@@ -451,7 +477,7 @@
                     <path d="M12 5v14M5 12h14" stroke-linecap="round"/>
                   </svg>
                   <!-- minus -->
-                  <svg class="w-4 h-4 text-white hidden group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <svg class="w-4 h-4 text-slate-900 hidden group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M5 12h14" stroke-linecap="round"/>
                   </svg>
                 </span>
@@ -469,36 +495,43 @@
           <!-- Button Pertanyaan Lainnya -->
           <a href="#"
              class="inline-flex mt-3 items-center justify-center
-                    rounded-full bg-yellow-300
+                    rounded-full
                     px-5 py-2
                     text-sm font-extrabold text-slate-900
-                    hover:bg-yellow-400 transition">
+                    transition"
+             style="background-color:#FFF9BF;"
+             onmouseover="this.style.backgroundColor='#f5ef9a'"
+             onmouseout="this.style.backgroundColor='#FFF9BF'">
             Pertanyaan lainnya
           </a>
         </div>
       </div>
 
-      <!-- RIGHT: PANDUAN + KONTAK (TURUNIN BIAR DI TENGAH, TETAP STABIL) -->
+      <!-- RIGHT: PANDUAN + KONTAK -->
       <div class="space-y-5 md:pl-6 md:mt-32">
-        {{-- kalau masih kurang turun, ganti md:mt-10 jadi md:mt-12 / md:mt-14 --}}
 
         <!-- Butuh Panduan -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-7">
           <h3 class="text-lg md:text-xl font-extrabold text-slate-900">
-            Butuh Panduan?
+            Butuh Pedoman?
           </h3>
-          <p class="mt-2 text-sm md:text-base text-slate-600 leading-relaxed">
+          <p class="mt-2 text-sm md:text-base text-slate-700 leading-relaxed">
             Akses pedoman resmi dan informasi penting lainnya di sini.
           </p>
 
-          <a href="#"
-             class="inline-flex mt-4 items-center justify-center
-                    rounded-full bg-yellow-300
-                    px-5 py-2
-                    text-sm font-extrabold text-slate-900
-                    hover:bg-yellow-400 transition">
-            Lihat Panduan
-          </a>
+          <a href="https://drive.google.com/file/d/1LuQ8j2MEuPMePAEccTWSw-7OQaS5GAyS/view"
+   target="_blank"
+   rel="noopener noreferrer"
+   class="inline-flex mt-4 items-center justify-center
+          rounded-full
+          px-5 py-2
+          text-sm font-extrabold text-slate-900
+          transition"
+   style="background-color:#FFF9BF;"
+   onmouseover="this.style.backgroundColor='#f5ef9a'"
+   onmouseout="this.style.backgroundColor='#FFF9BF'">
+  Lihat Pedoman
+</a>
         </div>
 
         <!-- Kontak Kami -->
@@ -523,65 +556,51 @@
       from { opacity: 0; transform: translateY(-4px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+    details[open] summary span[aria-hidden] {
+      background-color: #FFF9BF;
+      border-color: #c8c27e;
+    }
   </style>
 </section>
 
 
-<!-- YOUTUBE (ALIGNED VERSION - RAPIH & SEJAJAR) -->
-<section class="{{ $bleed }} py-20 md:py-24 bg-white">
+
+      <!-- YOUTUBE -->
+<section class="{{ $bleed }} py-24 md:py-32 bg-white">
   <div class="{{ $inner }}">
 
-    <div class="grid lg:grid-cols-2 gap-14 items-start">
+    <div class="mb-8">
+      <p class="text-xs font-semibold tracking-widest uppercase text-slate-400 mb-2">Dokumentasi Kegiatan</p>
+      <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 leading-snug">
+        Simak Kick-off Hackathon Rumah Pendidikan 2025</span><br>
+        Wujudkan Indonesia Cerdas.
+      </h2>
+    </div>
 
-      <!-- LEFT: Image (TINGGI IKUT KANAN) -->
-      <div class="h-full">
-        <div class="h-full overflow-hidden rounded-2xl">
-          <img
-            src="{{ asset('image/header/sekolah.jpg') }}"
-            alt="Kick-off Hackathon Rumah Pendidikan"
-            class="w-full h-full object-cover"
-            loading="lazy"
-          />
-        </div>
+    <div class="grid md:grid-cols-2 gap-6 items-start">
+
+      <!-- Video 1 -->
+      <div class="aspect-video rounded-2xl overflow-hidden shadow-lg ring-1 ring-slate-200">
+        <iframe
+          class="w-full h-full"
+          src="https://www.youtube.com/embed/L02cYTuljK0"
+          title="Kick-off Hackathon Rumah Pendidikan - Video 1"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
       </div>
 
-      <!-- RIGHT: Title + Youtube -->
-      <div class="flex flex-col">
-
-        <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 leading-tight">
-          Simak Kick-off<br>
-          Hackathon Rumah Pendidikan 2025<br>
-          Wujudkan Indonesia Cerdas.
-        </h2>
-
-        <div class="mt-10 space-y-8 flex-1">
-
-          <!-- Video 1 -->
-          <div class="aspect-video rounded-2xl overflow-hidden shadow-sm">
-            <iframe
-              class="w-full h-full"
-              src="https://www.youtube.com/embed/VIDEO_ID_1"
-              title="Kick-off Hackathon Rumah Pendidikan - Video 1"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen>
-            </iframe>
-          </div>
-
-          <!-- Video 2 -->
-          <div class="aspect-video rounded-2xl overflow-hidden shadow-sm">
-            <iframe
-              class="w-full h-full"
-              src="https://www.youtube.com/embed/VIDEO_ID_2"
-              title="Kick-off Hackathon Rumah Pendidikan - Video 2"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen>
-            </iframe>
-          </div>
-
-        </div>
-
+      <!-- Video 2 -->
+      <div class="aspect-video rounded-2xl overflow-hidden shadow-lg ring-1 ring-slate-200 ">
+        <iframe
+          class="w-full h-full"
+          src="https://www.youtube.com/embed/hYhSnf3t4u4"
+          title="Kick-off Hackathon Rumah Pendidikan - Video 2"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
       </div>
 
     </div>
