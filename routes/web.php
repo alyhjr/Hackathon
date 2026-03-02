@@ -21,6 +21,8 @@ Route::prefix('pengumuman')->name('pengumuman.')->group(function () {
 Route::view('/faq', 'pages.faq')->name('faq');
 
 // DAPODIK  
-Route::get('/registrasi', function () {
-    return view('pages.registrasi');
-})->name('registrasi');
+use App\Http\Controllers\RegistrasiController;
+
+Route::get('/registrasi', [RegistrasiController::class, 'index'])->name('registrasi');
+Route::post('/registrasi/cek', [RegistrasiController::class, 'cek'])->name('registrasi.cek');
+Route::post('/registrasi/simpan', [RegistrasiController::class, 'simpan'])->name('registrasi.simpan');
