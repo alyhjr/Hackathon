@@ -1,19 +1,19 @@
 @extends('layouts.app')
 
 @section('content')
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Poppins:wght@700;900&display=swap" rel="stylesheet">
 
 <div class="min-h-screen w-full bg-white py-20 px-8" style="font-family:'Plus Jakarta Sans',sans-serif;">
 
     {{-- Title --}}
     <div class="text-center mb-16">
-        <h1 class="text-5xl font-extrabold text-black-900 mb-4">
+        <h1 style="font-family:'Poppins',sans-serif;font-size:37px;font-weight:900;color:#000000;margin-bottom:1rem;">
             PENGUMUMAN 3 BESAR
         </h1>
-        <h2 class="text-2xl font-semibold text-black-800">
+        <h2 style="font-family:'Poppins',sans-serif;font-size:22px;font-weight:600;color:#1e293b;margin-bottom:0.5rem;">
             Hackathon Rumah Pendidikan 2026
         </h2>
-        <p class="text-lg font-medium text-black-700 mt-2">
+        <p style="font-family:'Poppins',sans-serif;font-size:16px;font-weight:500;color:#475569;">
             Wujudkan Indonesia Cerdas
         </p>
     </div>
@@ -24,29 +24,29 @@
         @php
         $categories = [
             ['label' => 'Paud / Sederajat', 'teams' => [
-                ['name' => 'THE S.E.A PROJECT', 'school' => 'TK Surya Buana, Kota Malang, Jawa Timur'],
-                ['name' => 'Tim Bu Guru Ceria',  'school' => 'TAUD SaQu Al Umm Barabai, Hulu Sungai Tengah, Kalimantan Selatan'],
-                ['name' => 'Tim GPG',            'school' => 'TK IT Al-Busyra Hasyimiyah, Lombok Tengah, Nusa Tenggara Barat'],
+                ['name' => 'TIM GPG (GURU PAUD GACOR)', 'school' => 'TK IT AL-BUSYRA HASYIMIYAH, Prov. Nusa Tenggara Barat'],
+                ['name' => 'PIONER DIGITAL',             'school' => 'TK Cendekia, Prov. Jawa Barat'],
+                ['name' => 'SRIKANDI',                   'school' => 'TK Dharma Wanita, Prov. Jawa Barat'],
             ]],
             ['label' => 'SD / Sederajat', 'teams' => [
-                ['name' => 'THE S.E.A PROJECT', 'school' => 'SDN Sokaraja Kidul, Banyumas, Jawa Tengah'],
-                ['name' => 'Tim Bu Guru Ceria',  'school' => 'SD Negeri Kradenan 01, Kabupaten Semarang, Jawa Tengah'],
-                ['name' => 'Tim GPG',            'school' => 'SDN 3 Sukahurip, Ciamis'],
+                ['name' => 'DEADLINE DEFENDERS JADUL',   'school' => 'SDN SOKARAJA KIDUL, Prov. Jawa Tengah'],
+                ['name' => 'DOKTOR GAME AI',             'school' => 'SD 1 Yayasan Pupuk Kaltim, Prov. Kalimantan Timur'],
+                ['name' => 'SNELOVERSE',                 'school' => 'SD NEGERI SELOHARJO, Prov. D.I. Yogyakarta'],
             ]],
             ['label' => 'SMP / Sederajat', 'teams' => [
-                ['name' => 'THE S.E.A PROJECT', 'school' => 'SMP Islam As-Shofa, Pekanbaru, Riau'],
-                ['name' => 'Tim Bu Guru Ceria',  'school' => 'SMP Negeri 4 Satu Atap Kragan, Rembang, Jawa Tengah'],
-                ['name' => 'Tim GPG',            'school' => 'SMP Negeri 1 Nglipar, Gunungkidul, DI Yogyakarta'],
+                ['name' => 'SPANSAKU',                   'school' => 'SMP NEGERI 1 KEBUN TEBU, Prov. Lampung'],
+                ['name' => 'THE SAPARS',                 'school' => 'SMP Negeri 1 Nglipar, Prov. D.I. Yogyakarta'],
+                ['name' => 'BESTARIAU',                  'school' => 'SMP ISLAM AS-SHOFA, Prov. Riau'],
             ]],
             ['label' => 'SMA / Sederajat', 'teams' => [
-                ['name' => 'THE S.E.A PROJECT', 'school' => 'SMA Negeri 75 Jakarta, Jakarta Utara, DKI Jakarta'],
-                ['name' => 'Tim Bu Guru Ceria',  'school' => 'SMAN 1 Bintan Pesisir, Bintan, Kepulauan Riau'],
-                ['name' => 'Tim GPG',            'school' => 'SMA Negeri 6 Bandung, Kota Bandung, Jawa Barat'],
+                ['name' => 'GAMEBUS',                    'school' => 'SMA NEGERI 10 MANDAU, Prov. Riau'],
+                ['name' => 'THE WINNER',                 'school' => 'SMA Negeri 1 Kabila, Prov. Gorontalo'],
+                ['name' => 'INSPIRATECH EDUCATORS',      'school' => 'SMAN 1 INDRAMAYU, Prov. Jawa Barat'],
             ]],
             ['label' => 'SMK / Sederajat', 'teams' => [
-                ['name' => 'THE S.E.A PROJECT', 'school' => 'SMK-IT As-Syifa Boarding School, Subang, Jawa Barat'],
-                ['name' => 'Tim Bu Guru Ceria',  'school' => 'SMK Negeri 2 Bangkalan, Bangkalan, Jawa Timur'],
-                ['name' => 'Tim GPG',            'school' => 'SMK Telkom Banjarbaru, Banjarbaru, Kalimantan Selatan'],
+                ['name' => 'SKATEL GAME SQUAD',          'school' => 'SMK Telkom Banjarbaru, Prov. Kalimantan Selatan'],
+                ['name' => 'LEVEL UP',                   'school' => 'SMK-IT AS-SYIFA BOARDING SCHOOL, Prov. Jawa Barat'],
+                ['name' => 'SIKANDAU G CENTER',          'school' => 'SMKN 2 MANDAU, Prov. Riau'],
             ]],
         ];
         @endphp
@@ -64,7 +64,6 @@
                         <p class="pg-tschool">{{ $team['school'] }}</p>
                     </div>
                     @endforeach
-
                 </div>
             </div>
         </div>
@@ -123,11 +122,11 @@
     min-height: 180px;
 }
 .pg-label-wrap h3 {
-    font-size: 1rem;
-    font-weight: 800;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 900;
     color: #1e293b;
     text-align: center;
-    font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 /* Aktif: label naik ke atas */
@@ -154,26 +153,25 @@
 .pg-body-inner { padding: 10px 0 20px; }
 
 .pg-team-mb { margin-bottom: 14px; }
-.pg-tname   { font-weight:700; font-size:0.78rem; color:#1e293b; line-height:1.4; font-family:'Plus Jakarta Sans',sans-serif; }
-.pg-tschool { font-size:0.69rem; color:#475569; margin-top:2px; line-height:1.4; font-family:'Plus Jakarta Sans',sans-serif; }
 
-.pg-btn {
-    display: block;
-    width: 100%;
-    margin-top: 18px;
-    padding: 10px 0;
-    background: #2563eb;
-    color: #fff;
-    border: none;
-    border-radius: 9999px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    box-shadow: 0 2px 8px rgba(37,99,235,0.25);
-    transition: background 0.2s;
+/* Nama tim: bold, uppercase, seperti gambar referensi */
+.pg-tname {
+    font-weight: 900;
+    font-size: 13px;
+    color: #0f172a;
+    line-height: 1.4;
+    font-family: 'Poppins', sans-serif;
+    text-transform: uppercase;
 }
-.pg-btn:hover { background: #1d4ed8; }
+
+/* Nama sekolah */
+.pg-tschool {
+    font-size: 0.69rem;
+    color: #475569;
+    margin-top: 2px;
+    line-height: 1.4;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
 </style>
 
 <script>
