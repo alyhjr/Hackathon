@@ -9,6 +9,7 @@ Route::view('/', 'pages.home')->name('home');
 Route::prefix('lomba')->name('lomba.')->group(function () {
     Route::view('/panduan', 'pages.lomba.panduan')->name('panduan');
     Route::view('/tahapan', 'pages.lomba.tahapan')->name('tahapan');
+    Route::view('/ketentuan', 'pages.lomba.ketentuan')->name('ketentuan');
 });
 
 // PENGUMUMAN
