@@ -7,7 +7,7 @@ Route::view('/', 'pages.home')->name('home');
 
 // LOMBA
 Route::prefix('lomba')->name('lomba.')->group(function () {
-    Route::view('/panduan', 'pages.lomba.panduan')->name('panduan');
+    Route::view('/ketentuan', 'pages.lomba.ketentuan')->name('ketentuan'); // ✅ balik lagi
     Route::view('/tahapan', 'pages.lomba.tahapan')->name('tahapan');
 });
 
@@ -15,8 +15,12 @@ Route::prefix('lomba')->name('lomba.')->group(function () {
 Route::prefix('pengumuman')->name('pengumuman.')->group(function () {
     Route::view('/3besar', 'pages.pengumuman.3besar')->name('3besar');
     Route::view('/lolos-seleksi-proposal', 'pages.pengumuman.lolos')->name('lolos');
-    
 });
 
 // FAQ
 Route::view('/faq', 'pages.faq')->name('faq');
+
+// DAPODIK  
+Route::get('/registrasi', function () {
+    return view('pages.registrasi');
+})->name('registrasi');

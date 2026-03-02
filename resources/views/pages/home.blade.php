@@ -39,6 +39,18 @@
       "<span class="font-extrabold">Gim Edukasi untuk Pembelajaran Seru</span>"
     </p>
 
+    <a href="{{ route('registrasi') }}"
+   class="inline-flex items-center justify-center mt-6 px-5 py-2
+          text-white text-sm font-bold
+          rounded-full shadow-sm hover:shadow-md
+          transition-all duration-200"
+   style="background-color:#0072BC;"
+   onmouseover="this.style.backgroundColor='#005fa3'"
+   onmouseout="this.style.backgroundColor='#0072BC'">
+  Registrasi
+</a>
+
+
   </div>
 </div>
 </section>
