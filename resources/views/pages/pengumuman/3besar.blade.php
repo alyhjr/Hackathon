@@ -23,6 +23,7 @@
         @php
         $categories = [
             ['label' => 'Paud / Sederajat', 'teams' => [
+
                 ['name' => 'THE S.E.A PROJECT', 'school' => 'TK Surya Buana, Kota Malang'],
                 ['name' => 'Tim Bu Guru Ceria',  'school' => 'TAUD SaQu Al Umm, Kalimantan Selatan'],
                 ['name' => 'Tim GPG',            'school' => 'TK IT Al-Busyra, Lombok Tengah'],
@@ -46,6 +47,30 @@
                 ['name' => 'THE S.E.A PROJECT', 'school' => 'SMK IT As-Syifa, Jawa Tengah'],
                 ['name' => 'Tim Bu Guru Ceria',  'school' => 'SMK Negeri 2 Bangkalan, Jawa Timur'],
                 ['name' => 'Tim GPG',            'school' => 'SMK Telkom Banjarbaru, Kalimantan Selatan'],
+
+                ['name' => 'THE S.E.A PROJECT', 'school' => 'TK Surya Buana, Kota Malang, Jawa Timur'],
+                ['name' => 'Tim Bu Guru Ceria',  'school' => 'TAUD SaQu Al Umm Barabai, Hulu Sungai Tengah, Kalimantan Selatan'],
+                ['name' => 'Tim GPG',            'school' => 'TK IT Al-Busyra Hasyimiyah, Lombok Tengah, Nusa Tenggara Barat'],
+            ]],
+            ['label' => 'SD / Sederajat', 'teams' => [
+                ['name' => 'THE S.E.A PROJECT', 'school' => 'SDN Sokaraja Kidul, Banyumas, Jawa Tengah'],
+                ['name' => 'Tim Bu Guru Ceria',  'school' => 'SD Negeri Kradenan 01, Kabupaten Semarang, Jawa Tengah'],
+                ['name' => 'Tim GPG',            'school' => 'SDN 3 Sukahurip, Ciamis'],
+            ]],
+            ['label' => 'SMP / Sederajat', 'teams' => [
+                ['name' => 'THE S.E.A PROJECT', 'school' => 'SMP Islam As-Shofa, Pekanbaru, Riau'],
+                ['name' => 'Tim Bu Guru Ceria',  'school' => 'SMP Negeri 4 Satu Atap Kragan, Rembang, Jawa Tengah'],
+                ['name' => 'Tim GPG',            'school' => 'SMP Negeri 1 Nglipar, Gunungkidul, DI Yogyakarta'],
+            ]],
+            ['label' => 'SMA / Sederajat', 'teams' => [
+                ['name' => 'THE S.E.A PROJECT', 'school' => 'SMA Negeri 75 Jakarta, Jakarta Utara, DKI Jakarta'],
+                ['name' => 'Tim Bu Guru Ceria',  'school' => 'SMAN 1 Bintan Pesisir, Bintan, Kepulauan Riau'],
+                ['name' => 'Tim GPG',            'school' => 'SMA Negeri 6 Bandung, Kota Bandung, Jawa Barat'],
+            ]],
+            ['label' => 'SMK / Sederajat', 'teams' => [
+                ['name' => 'THE S.E.A PROJECT', 'school' => 'SMK-IT As-Syifa Boarding School, Subang, Jawa Barat'],
+                ['name' => 'Tim Bu Guru Ceria',  'school' => 'SMK Negeri 2 Bangkalan, Bangkalan, Jawa Timur'],
+                ['name' => 'Tim GPG',            'school' => 'SMK Telkom Banjarbaru, Banjarbaru, Kalimantan Selatan'],
             ]],
         ];
         @endphp
@@ -63,6 +88,7 @@
                         <p class="pg-tschool">{{ $team['school'] }}</p>
                     </div>
                     @endforeach
+
                     <button class="pg-btn">Lihat Detail</button>
                 </div>
             </div>
@@ -92,6 +118,7 @@
     overflow: hidden;
     cursor: pointer;
     box-shadow: 0 3px 12px rgba(0,0,0,0.07);
+
     transform: scale(1);
     transform-origin: center center;
     transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
@@ -121,8 +148,9 @@
     justify-content: center;
     padding: 20px;
     min-height: 180px;
+
     transition: flex 0.3s ease, min-height 0.3s ease, padding 0.3s ease, align-items 0.3s ease;
-}
+
 .pg-label-wrap h3 {
     font-size: 1rem;
     font-weight: 800;
@@ -147,12 +175,20 @@
     flex-shrink: 0;
     padding: 0 20px;
     transition: max-height 0.35s ease, opacity 0.3s ease;
+
+    display: none;
+    padding: 0 20px;
+
 }
 
 /* Aktif: konten muncul */
 .pg-card.active .pg-body {
     max-height: 400px;
     opacity: 1;
+
+
+    display: block;
+
 }
 
 .pg-body-inner { padding: 10px 0 20px; }

@@ -24,9 +24,13 @@ Route::prefix('pengumuman')->name('pengumuman.')->group(function () {
 
     Route::view('/3besar', 'pages.pengumuman.3besar')->name('3besar');
 
+
     // Dua URL biar aman (lama & baru tetap jalan)
     Route::view('/lolos', 'pages.pengumuman.lolos')->name('lolos');
     Route::view('/lolos-seleksi-proposal', 'pages.pengumuman.lolos');
+
+    Route::view('/lolos-seleksi-proposal', 'pages.pengumuman.lolos')->name('lolos');
+    
 });
 
 
