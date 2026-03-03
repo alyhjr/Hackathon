@@ -1,24 +1,27 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>@yield('title', 'Hackathon')</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-white text-slate-900 overflow-x-hidden antialiased">
+<body class="antialiased bg-white text-slate-900" style="font-family: 'Poppins', sans-serif;">
 
-    {{-- NAVBAR --}}
     @include('partials.navbar')
 
-    {{-- MAIN CONTAINER (UKURAN WEB UMUM) --}}
-    <main class="mx-auto w-full max-w-6xl px-4 md:px-6">
+    {{-- INI YANG BALIKIN RAPINYA (container) --}}
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         @yield('content')
     </main>
 
-    {{-- FOOTER --}}
     @include('partials.footer')
 
 </body>
