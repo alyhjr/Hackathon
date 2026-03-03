@@ -72,11 +72,12 @@ $faq = [
 @endphp
 
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ✅ PERBAIKAN: Scoped ke .faq-page saja agar tidak merusak navbar & footer */
+.faq-page *, .faq-page *::before, .faq-page *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 .faq-page {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    background: #fff; /* ← putih bersih */
+    background: #fff;
     color: #0f172a;
 }
 
@@ -113,7 +114,7 @@ $faq = [
 .fwrap {
     max-width: 1040px;
     margin: 0 auto;
-    padding: 28px 24px 64px; /* ← padding bawah cukup, biar footer punya ruang */
+    padding: 28px 24px 64px;
     display: grid;
     grid-template-columns: 185px 1fr;
     gap: 28px;
