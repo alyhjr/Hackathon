@@ -34,9 +34,31 @@ Route::view('/registrasi', 'pages.registrasi')->name('registrasi');
 
 
 /*
-ADMIN - Site Settings (CMS)
+|--------------------------------------------------------------------------
+| ADMIN - Site Settings (CMS)
+|--------------------------------------------------------------------------
 */
+
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/site-settings', [SiteSettingController::class, 'edit'])->name('site-settings.edit');
-    Route::put('/site-settings', [SiteSettingController::class, 'update'])->name('site-settings.update');
+
+    // CMS utama
+    Route::get('/site-settings', [SiteSettingController::class, 'edit'])
+        ->name('site-settings.edit');
+
+    Route::put('/site-settings', [SiteSettingController::class, 'update'])
+        ->name('site-settings.update');
+
+    // =====================
+    // FAQ CRUD
+    // =====================
+
+    Route::post('/site-settings/faqs', [SiteSettingController::class, 'faqStore'])
+        ->name('site-settings.faqs.store');
+
+    Route::put('/site-settings/faqs/{faq}', [SiteSettingController::class, 'faqUpdate'])
+        ->name('site-settings.faqs.update');
+
+    Route::delete('/site-settings/faqs/{faq}', [SiteSettingController::class, 'faqDestroy'])
+        ->name('site-settings.faqs.destroy');
+
 });

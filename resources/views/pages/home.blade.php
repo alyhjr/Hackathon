@@ -451,32 +451,45 @@ $homeImg3 = !empty($setting->home_image_3)
         </p>
 
         @php
-          $faqs = [
-            [
-              'q' => 'Bagaimana cara mendaftarnya?',
-              'a' => 'Kunjungi Superaplikasi Rumah Pendidikan, kemudian klik banner Hackathon Rumah Pendidikan 2026. Pilih “DAFTAR SEKARANG” dan isi formulir pendaftaran.'
-            ],
-            [
-              'q' => 'Apakah disediakan format khusus untuk proposal?',
-              'a' => 'Format proposal akan diinformasikan dan disediakan oleh panitia saat memasuki masa unggah proposal.'
-            ],
-            [
-              'q' => 'Apakah dalam satu tim wajib terdiri dari tiga orang?',
-              'a' => 'Satu tim terdiri dari 3 guru dan/atau tenaga kependidikan dari sekolah yang sama.'
-            ],
-            [
-              'q' => 'Bagaimana jika peserta tidak memiliki akun belajar.id karena berasal dari madrasah?',
-              'a' => 'Pendaftar dari Madrasah dapat menggunakan akun @madrasah.kemenag.go.id atau akun Gmail.'
-            ],
-            [
-              'q' => 'Apakah guru SLB diperbolehkan mengikuti kegiatan ini?',
-              'a' => 'Diperbolehkan.'
-            ],
-          ];
+          // ambil FAQ dari database (dikirim dari HomeController)
+          $faqItems = $faqs ?? collect();
+
+          // fallback kalau database kosong
+          if ($faqItems->count() === 0) {
+            $faqItems = collect([
+              [
+                'question' => 'Bagaimana cara mendaftarnya?',
+                'answer' => 'Kunjungi Superaplikasi Rumah Pendidikan, kemudian klik banner Hackathon Rumah Pendidikan 2026. Pilih “DAFTAR SEKARANG” dan isi formulir pendaftaran.'
+              ],
+              [
+                'question' => 'Apakah disediakan format khusus untuk proposal?',
+                'answer' => 'Format proposal akan diinformasikan dan disediakan oleh panitia saat memasuki masa unggah proposal.'
+              ],
+              [
+                'question' => 'Apakah dalam satu tim wajib terdiri dari tiga orang?',
+                'answer' => 'Satu tim terdiri dari 3 guru dan/atau tenaga kependidikan dari sekolah yang sama.'
+              ],
+              [
+                'question' => 'Bagaimana jika peserta tidak memiliki akun belajar.id karena berasal dari madrasah?',
+                'answer' => 'Pendaftar dari Madrasah dapat menggunakan akun @madrasah.kemenag.go.id atau akun Gmail.'
+              ],
+              [
+                'question' => 'Apakah guru SLB diperbolehkan mengikuti kegiatan ini?',
+                'answer' => 'Diperbolehkan.'
+              ],
+            ]);
+          }
         @endphp
 
         <div class="mt-6 space-y-3">
-          @foreach ($faqs as $item)
+          @foreach ($faqItems as $item)
+
+            @php
+              // support array fallback & object dari database
+              $question = is_array($item) ? $item['question'] : $item->question;
+              $answer   = is_array($item) ? $item['answer'] : $item->answer;
+            @endphp
+
             <details
               class="group bg-white rounded-xl border border-slate-200
                      shadow-sm transition hover:border-slate-300"
@@ -488,7 +501,7 @@ $homeImg3 = !empty($setting->home_image_3)
                        text-sm md:text-base font-semibold text-slate-900"
               >
                 <span class="leading-snug">
-                  {{ $item['q'] }}
+                  {{ $question }}
                 </span>
 
                 <!-- tombol + / - -->
@@ -498,32 +511,33 @@ $homeImg3 = !empty($setting->home_image_3)
                          border border-slate-200 bg-slate-50
                          transition
                          group-open:border-slate-900"
-                  style="--tw-open-bg: #FFF9BF;"
-                  :class="open ? 'bg-[#FFF9BF]' : ''"
                   aria-hidden="true"
                 >
                   <!-- plus -->
                   <svg class="w-4 h-4 text-slate-900 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M12 5v14M5 12h14" stroke-linecap="round"/>
                   </svg>
+
                   <!-- minus -->
                   <svg class="w-4 h-4 text-slate-900 hidden group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M5 12h14" stroke-linecap="round"/>
                   </svg>
                 </span>
+
               </summary>
 
               <!-- jawaban -->
               <div class="px-4 pb-4 text-sm text-slate-600 leading-relaxed">
                 <div class="pt-2 border-t border-slate-100 animate-[faqDown_200ms_ease-out]">
-                  {{ $item['a'] }}
+                  {{ $answer }}
                 </div>
               </div>
             </details>
+
           @endforeach
 
           <!-- Button Pertanyaan Lainnya -->
-          <a href="#"
+          <a href="/faq"
              class="inline-flex mt-3 items-center justify-center
                     rounded-full
                     px-5 py-2
