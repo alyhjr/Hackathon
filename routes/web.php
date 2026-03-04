@@ -5,17 +5,10 @@ use Illuminate\Support\Facades\Route;
 // BERANDA
 Route::view('/', 'pages.home')->name('home');
 
-// LOMBA
-Route::prefix('lomba')->name('lomba.')->group(function () {
-    Route::view('/panduan', 'pages.lomba.panduan')->name('panduan');
-    Route::view('/tahapan', 'pages.lomba.tahapan')->name('tahapan');
-});
+Route::view('/lomba/panduan', 'pages.lomba_panduan')->name('lomba.panduan');
+Route::view('/lomba/tahapan', 'pages.lomba_tahapan')->name('lomba.tahapan');
 
-// PENGUMUMAN
-Route::prefix('pengumuman')->name('pengumuman.')->group(function () {
-    Route::view('/3besar', 'pages.pengumuman.3besar')->name('3besar');
-    Route::view('/lolos-seleksi-proposal', 'pages.pengumuman.lolos')->name('lolos');
-});
+Route::view('/pengumuman/3besar', 'pages.pengumuman_3besar')->name('pengumuman.3besar');
+Route::view('/pengumuman/lolos', 'pages.pengumuman_lolos')->name('pengumuman.lolos');
 
-// FAQ
 Route::view('/faq', 'pages.faq')->name('faq');
