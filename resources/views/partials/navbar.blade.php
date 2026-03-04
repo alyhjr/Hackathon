@@ -24,7 +24,7 @@
             </a>
           </li>
 
-          {{-- Lomba Dropdown (FIX ANTI ILANG) --}}
+          {{-- Lomba Dropdown --}}
           <li class="relative group">
             <button
               type="button"
@@ -38,7 +38,6 @@
               </svg>
             </button>
 
-            {{-- Dropdown WRAPPER + "bridge" --}}
             <div
               class="absolute left-0 top-full z-50 pt-2
                      opacity-0 invisible translate-y-1
@@ -59,7 +58,7 @@
             </div>
           </li>
 
-          {{-- Pengumuman Dropdown (FIX ANTI ILANG) --}}
+          {{-- Pengumuman Dropdown --}}
           <li class="relative group">
             <button
               type="button"
@@ -106,11 +105,7 @@
       {{-- RIGHT --}}
       <div class="hidden md:flex flex-1 items-center justify-end gap-3 whitespace-nowrap">
 
-        {{-- ───────────────────────────────────────────
-             SEARCH — hanya bagian ini yang diubah
-             Tidak ada route/controller baru.
-             JS mencocokkan keyword lalu redirect langsung.
-        _______________________________________________ --}}
+        {{-- Search --}}
         <form id="navSearchForm" action="#" method="GET" class="relative" autocomplete="off">
           <input
             id="navSearchInput"
@@ -131,6 +126,18 @@
             </svg>
           </button>
         </form>
+
+        {{-- Login / Nama User --}}
+        @guest
+          <a href="{{ route('login') }}"
+             class="shrink-0 px-5 py-2 rounded-full bg-[#FFF9BF] text-slate-800 text-sm font-semibold hover:bg-yellow-300 transition">
+            Login
+          </a>
+        @endguest
+
+        @auth
+          <span class="text-sm font-semibold text-slate-700">{{ Auth::user()->name }}</span>
+        @endauth
 
         {{-- Rumah Pendidikan --}}
         <a href="#" class="shrink-0 flex items-center">
@@ -180,8 +187,17 @@
 
         <a href="{{ route('faq') }}" class="block px-2 py-2 font-semibold text-slate-900">FAQ</a>
 
+        {{-- Login / Nama User (Mobile) --}}
+        @guest
+          <a href="{{ route('login') }}" class="block px-2 py-2 font-semibold text-sky-700">Login</a>
+        @endguest
+
+        @auth
+          <span class="block px-2 py-2 text-sm font-semibold text-slate-700">{{ Auth::user()->name }}</span>
+        @endauth
+
         <div class="px-2 pt-2">
-          {{-- Mobile search — sama, pakai ID berbeda --}}
+          {{-- Mobile search --}}
           <form id="mobileSearchForm" action="#" method="GET" class="relative" autocomplete="off">
             <input
               id="mobileSearchInput"
@@ -213,17 +229,9 @@
   </div>
 </nav>
 
-{{-- ═══════════════════════════════════════════════════════════════
-     SMART SEARCH SCRIPT
-     - Daftar halaman disesuaikan dengan route yang ada di web.php
-     - Keyword dicocokkan ke title + tags (alias kata kunci)
-     - Jika cocok → redirect langsung ke halaman tersebut
-     - Jika tidak cocok → tetap di halaman yang sama (tidak error)
-════════════════════════════════════════════════════════════════ --}}
+{{-- SMART SEARCH SCRIPT --}}
 <script>
 (function () {
-  // ── Daftar halaman beserta kata kunci pencariannya ──────────────
-  // Tambah / ubah sesuai halaman yang ada di web Anda
   var pages = [
     {
       title : 'Beranda',
@@ -258,10 +266,9 @@
     },
   ];
 
-  // ── Fungsi utama: cari & redirect ───────────────────────────────
   function doSearch(query) {
     var q = query.trim().toLowerCase();
-    if (q === '') return;  // kosong, abaikan
+    if (q === '') return;
 
     var matched = null;
     var bestScore = 0;
@@ -270,17 +277,15 @@
       var page = pages[i];
       var score = 0;
 
-      // Cocokkan ke setiap tag
       for (var j = 0; j < page.tags.length; j++) {
         var tag = page.tags[j].toLowerCase();
         if (tag === q) {
-          score += 10;          // exact match → skor tertinggi
+          score += 10;
         } else if (tag.includes(q) || q.includes(tag)) {
-          score += 5;           // partial match
+          score += 5;
         }
       }
 
-      // Cocokkan juga ke title halaman
       if (page.title.toLowerCase().includes(q)) {
         score += 7;
       }
