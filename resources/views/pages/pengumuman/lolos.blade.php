@@ -137,7 +137,7 @@ $jenjang = [
 @endphp
 
 {{-- ============================================================
-     CSS VARIABLES — Edit di sini untuk mengubah tampilan global
+     CSS VARIABLES + RESPONSIVE STYLES
      ============================================================ --}}
 <style>
     :root {
@@ -148,127 +148,415 @@ $jenjang = [
         --color-text-dark:     #1e293b;
         --color-text-title:    #0f172a;
         --color-btn-bg:        #FFF9BF;
-        --color-btn-hover:     #f5c800;
+        --color-btn-hover:     #FFF9BF;
         --color-btn-text:      #1e293b;
 
         /* --- Font family --- */
         --font-primary: 'Plus Jakarta Sans', sans-serif;
         --font-heading:  'Poppins', sans-serif;
 
-        /* --- Font size --- */
-        --fs-page-title:    37px;    /* Judul halaman utama & detail          */
-        --fs-card-header:   13px;    /* "10 TIM PESERTA / LOLOS JENJANG ..." */
-        --fs-team-name:     13px;    /* Nama tim di preview card              */
-        --fs-team-school:   0.66rem; /* Nama sekolah di preview card          */
-        --fs-detail-num:    0.82rem; /* Nomor urut di halaman detail          */
-        --fs-detail-name:   13px;    /* Nama tim di halaman detail            */
-        --fs-detail-school: 0.72rem; /* Nama sekolah di halaman detail        */
-        --fs-btn:           0.72rem; /* Tombol "Tim Lainnya"                  */
-        --fs-btn-back:      0.85rem; /* Tombol "Kembali"                      */
+        /* --- Font size (desktop) --- */
+        --fs-page-title:    37px;
+        --fs-card-header:   13px;
+        --fs-team-name:     13px;
+        --fs-team-school:   0.66rem;
+        --fs-detail-num:    0.82rem;
+        --fs-detail-name:   13px;
+        --fs-detail-school: 0.72rem;
+        --fs-btn:           0.72rem;
+        --fs-btn-back:      0.85rem;
+    }
+
+    /* ── Wrapper utama ── */
+    .rp-wrapper {
+        min-height: 100vh;
+        width: 100%;
+        background: #fff;
+        padding: 80px 48px;
+        font-family: var(--font-primary);
+        box-sizing: border-box;
+    }
+
+    /* ── Judul halaman ── */
+    .rp-page-title {
+        font-family: var(--font-heading);
+        font-size: var(--fs-page-title);
+        font-weight: 900;
+        color: var(--color-text-title);
+        line-height: 1.2;
+        text-align: center;
+        margin-bottom: 64px;
+    }
+
+    /* ── Grid kartu (desktop: 5 kolom) ── */
+    .rp-card-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 16px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* ── Kartu individual ── */
+    .rp-card {
+        background: var(--color-bg-card);
+        border-radius: 12px;
+        border: 1.5px solid var(--color-border-card);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    /* ── Header kartu ── */
+    .rp-card-header {
+        padding: 14px 16px;
+        border-bottom: 1.5px solid var(--color-border-header);
+        text-align: center;
+    }
+
+    .rp-card-header p {
+        font-family: var(--font-heading);
+        font-size: var(--fs-card-header);
+        font-weight: 900;
+        color: var(--color-text-dark);
+        line-height: 1.4;
+        margin: 0;
+    }
+
+    /* ── Isi preview tim ── */
+    .rp-card-body {
+        padding: 16px;
+        flex: 1;
+    }
+
+    .rp-team-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 14px;
+    }
+
+    .rp-team-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .rp-team-num {
+        font-size: var(--fs-team-name);
+        font-weight: 700;
+        color: var(--color-text-dark);
+        flex-shrink: 0;
+    }
+
+    .rp-team-name {
+        font-family: var(--font-heading);
+        font-size: var(--fs-team-name);
+        font-weight: 900;
+        color: var(--color-text-dark);
+        line-height: 1.4;
+        text-transform: uppercase;
+        margin: 0;
+    }
+
+    .rp-team-school {
+        font-size: var(--fs-team-school);
+        font-weight: 700;
+        color: var(--color-text-dark);
+        margin: 2px 0 0;
+        line-height: 1.4;
+    }
+
+    /* ── Tombol ── */
+    .rp-card-footer {
+        padding: 0 16px 20px;
+        text-align: center;
+    }
+
+    .rp-btn {
+        padding: 7px 22px;
+        background: var(--color-btn-bg);
+        color: var(--color-btn-text);
+        border: none;
+        border-radius: 9999px;
+        font-family: var(--font-primary);
+        font-size: var(--fs-btn);
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .rp-btn:hover { background: var(--color-btn-hover); }
+
+    .rp-btn-back {
+        padding: 10px 40px;
+        background: var(--color-btn-bg);
+        color: var(--color-btn-text);
+        border: none;
+        border-radius: 9999px;
+        font-family: var(--font-primary);
+        font-size: var(--fs-btn-back);
+        font-weight: 800;
+        cursor: pointer;
+        transition: background 0.2s;
+        margin-top: 40px;
+    }
+
+    .rp-btn-back:hover { background: var(--color-btn-hover); }
+
+    /* ── Detail: kotak daftar ── */
+    .rp-detail-box {
+        max-width: 900px;
+        margin: 0 auto;
+        background: var(--color-bg-card);
+        border-radius: 20px;
+        border: 1.5px solid var(--color-border-card);
+        padding: 40px 48px;
+    }
+
+    .rp-detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px 56px;
+        align-items: start;
+    }
+
+    .rp-detail-col {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+    }
+
+    .rp-detail-row {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .rp-detail-num {
+        font-size: var(--fs-detail-num);
+        font-weight: 800;
+        color: var(--color-text-dark);
+        flex-shrink: 0;
+        min-width: 24px;
+    }
+
+    .rp-detail-name {
+        font-family: var(--font-heading);
+        font-size: var(--fs-detail-name);
+        font-weight: 900;
+        color: var(--color-text-dark);
+        line-height: 1.4;
+        text-transform: uppercase;
+        margin: 0;
+    }
+
+    .rp-detail-school {
+        font-size: var(--fs-detail-school);
+        font-weight: 700;
+        color: var(--color-text-dark);
+        margin: 3px 0 0;
+        line-height: 1.4;
+    }
+
+    .rp-detail-footer {
+        text-align: center;
+    }
+
+    /* ============================================================
+       RESPONSIVE — Tablet (≤ 900px): flex wrap + centered
+       ============================================================ */
+    @media (max-width: 900px) {
+        .rp-wrapper {
+            padding: 60px 24px;
+        }
+
+        .rp-page-title {
+            font-size: 26px;
+            margin-bottom: 40px;
+        }
+
+        /* Ganti grid → flexbox agar baris terakhir bisa di-center */
+        .rp-card-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+            max-width: 960px;
+        }
+
+        /* Tiap kartu: lebar tetap ~30% sehingga 3 per baris,
+           2 kartu di baris terakhir otomatis center */
+        .rp-card {
+            flex: 0 0 calc(33.333% - 10px);
+            min-width: 180px;
+        }
+
+        .rp-detail-box {
+            padding: 28px 24px;
+        }
+
+        .rp-detail-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 32px;
+        }
+    }
+
+    /* ============================================================
+       RESPONSIVE — Mobile (≤ 600px): 1 kolom (scroll horizontal off)
+       ============================================================ */
+    @media (max-width: 600px) {
+        .rp-wrapper {
+            padding: 40px 16px;
+        }
+
+        .rp-page-title {
+            font-size: 22px;
+            margin-bottom: 28px;
+        }
+
+        /* Kartu tampil 1 kolom, full width */
+        .rp-card-grid {
+            grid-template-columns: 1fr;
+            gap: 12px;
+            max-width: 100%;
+        }
+
+        /* Tiap kartu: isi tampil horizontal (header kiri, list kanan) */
+        .rp-card {
+            flex-direction: column; /* tetap kolom, tapi lebih lebar */
+        }
+
+        .rp-card-header {
+            padding: 12px 16px;
+        }
+
+        .rp-card-header p {
+            font-size: 14px;
+        }
+
+        .rp-card-body {
+            padding: 14px 16px;
+        }
+
+        .rp-team-name {
+            font-size: 13px;
+        }
+
+        .rp-team-school {
+            font-size: 0.72rem;
+        }
+
+        /* Detail: satu kolom di mobile */
+        .rp-detail-box {
+            padding: 20px 16px;
+            border-radius: 12px;
+        }
+
+        .rp-detail-grid {
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .rp-detail-name {
+            font-size: 13px;
+        }
+
+        .rp-detail-school {
+            font-size: 0.72rem;
+        }
+
+        .rp-btn-back {
+            padding: 10px 32px;
+            font-size: 0.82rem;
+        }
     }
 </style>
 
 {{-- ============================================================
      WRAPPER UTAMA
      ============================================================ --}}
-<div class="min-h-screen w-full bg-white py-20 px-12" style="font-family: var(--font-primary);">
-
+<div class="rp-wrapper">
 
     {{-- ==========================================================
-         HALAMAN UTAMA — Grid 5 kartu jenjang
+         HALAMAN UTAMA — Grid kartu jenjang
          ========================================================== --}}
     <div id="page-main">
 
-        {{-- Judul --}}
-        <div class="text-center mb-16">
-            <h1 style="font-family:var(--font-heading);font-size:var(--fs-page-title);font-weight:900;color:var(--color-text-title);line-height:1.2;">
-                Pengumuman Peserta Lolos Seleksi<br>
-                Proposal Hackathon Rumah Pendidikan 2025
-            </h1>
-        </div>
+        <h1 class="rp-page-title">
+            Pengumuman Peserta Lolos Seleksi<br>
+            Proposal Hackathon Rumah Pendidikan 2025
+        </h1>
 
-        {{-- Grid kartu --}}
-        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px;max-width:1200px;margin:0 auto;">
-
+        <div class="rp-card-grid">
             @foreach($jenjang as $col)
-            <div style="background:var(--color-bg-card);border-radius:12px;border:1.5px solid var(--color-border-card);display:flex;flex-direction:column;overflow:hidden;">
+            <div class="rp-card">
 
                 {{-- Header kartu --}}
-                <div style="padding:14px 16px;border-bottom:1.5px solid var(--color-border-header);text-align:center;">
-                    <p style="font-family:var(--font-heading);font-size:var(--fs-card-header);font-weight:900;color:var(--color-text-dark);line-height:1.4;">{{ $col['title'] }}</p>
-                    <p style="font-family:var(--font-heading);font-size:var(--fs-card-header);font-weight:900;color:var(--color-text-dark);line-height:1.4;">{{ $col['sub'] }}</p>
+                <div class="rp-card-header">
+                    <p>{{ $col['title'] }}</p>
+                    <p>{{ $col['sub'] }}</p>
                 </div>
 
                 {{-- Preview 3 tim --}}
-                <div style="padding:16px;flex:1;">
+                <div class="rp-card-body">
                     @foreach($col['preview'] as $rank => $team)
-                    <div style="display:flex;gap:8px;margin-bottom:{{ $loop->last ? '0' : '14px' }};">
-                        <span style="font-size:var(--fs-team-name);font-weight:700;color:var(--color-text-dark);flex-shrink:0;">{{ $rank + 1 }}.</span>
+                    <div class="rp-team-row">
+                        <span class="rp-team-num">{{ $rank + 1 }}.</span>
                         <div>
-                            <p style="font-family:var(--font-heading);font-size:var(--fs-team-name);font-weight:900;color:var(--color-text-dark);line-height:1.4;text-transform:uppercase;">{{ $team['name'] }}</p>
-                            <p style="font-size:var(--fs-team-school);font-weight:700;color:var(--color-text-dark);margin-top:2px;line-height:1.4;">{{ $team['school'] }}</p>
+                            <p class="rp-team-name">{{ $team['name'] }}</p>
+                            <p class="rp-team-school">{{ $team['school'] }}</p>
                         </div>
                     </div>
                     @endforeach
                 </div>
 
                 {{-- Tombol Tim Lainnya --}}
-                <div style="padding:0 16px 20px;text-align:center;">
-                    <button
-                        onclick="showDetail('{{ $col['slug'] }}')"
-                        style="padding:7px 22px;background:var(--color-btn-bg);color:var(--color-btn-text);border:none;border-radius:9999px;font-family:var(--font-primary);font-size:var(--fs-btn);font-weight:800;letter-spacing:0.02em;cursor:pointer;"
-                        onmouseover="this.style.background='#FFF9BF'"
-                        onmouseout="this.style.background='#FFF9BF'"
-                    >
+                <div class="rp-card-footer">
+                    <button class="rp-btn" onclick="showDetail('{{ $col['slug'] }}')">
                         TIM LAINNYA
                     </button>
                 </div>
 
             </div>
             @endforeach
-
         </div>
+
     </div>{{-- /page-main --}}
 
 
     {{-- ==========================================================
-         HALAMAN DETAIL — Satu per jenjang (tersembunyi by default)
+         HALAMAN DETAIL — Per jenjang (tersembunyi by default)
          ========================================================== --}}
     @foreach($jenjang as $col)
     <div id="detail-{{ $col['slug'] }}" style="display:none;">
 
-        {{-- Judul detail --}}
-        <div style="text-align:center;margin-bottom:48px;">
-            <h1 style="font-family:var(--font-heading);font-size:var(--fs-page-title);font-weight:900;color:var(--color-text-title);line-height:1.2;">
-                {{ $col['title'] }} {{ $col['sub'] }}
-            </h1>
-        </div>
+        <h1 class="rp-page-title">
+            {{ $col['title'] }} {{ $col['sub'] }}
+        </h1>
 
-        {{-- Kotak daftar 2 kolom --}}
-        <div style="max-width:900px;margin:0 auto;background:var(--color-bg-card);border-radius:20px;border:1.5px solid var(--color-border-card);padding:40px 48px;">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px 56px;align-items:start;">
+        <div class="rp-detail-box">
+            <div class="rp-detail-grid">
 
                 {{-- Kolom kiri: tim 1–5 --}}
-                <div style="display:flex;flex-direction:column;gap:22px;">
+                <div class="rp-detail-col">
                     @foreach(array_slice($col['all'], 0, 5) as $rank => $team)
-                    <div style="display:flex;gap:12px;align-items:flex-start;">
-                        <span style="font-size:var(--fs-detail-num);font-weight:800;color:var(--color-text-dark);flex-shrink:0;min-width:24px;">{{ $rank + 1 }}.</span>
+                    <div class="rp-detail-row">
+                        <span class="rp-detail-num">{{ $rank + 1 }}.</span>
                         <div>
-                            <p style="font-family:var(--font-heading);font-size:var(--fs-detail-name);font-weight:900;color:var(--color-text-dark);line-height:1.4;text-transform:uppercase;">{{ $team['name'] }}</p>
-                            <p style="font-size:var(--fs-detail-school);font-weight:700;color:var(--color-text-dark);margin-top:3px;line-height:1.4;">{{ $team['school'] }}</p>
+                            <p class="rp-detail-name">{{ $team['name'] }}</p>
+                            <p class="rp-detail-school">{{ $team['school'] }}</p>
                         </div>
                     </div>
                     @endforeach
                 </div>
 
                 {{-- Kolom kanan: tim 6–10 --}}
-                <div style="display:flex;flex-direction:column;gap:22px;">
+                <div class="rp-detail-col">
                     @foreach(array_slice($col['all'], 5, 5) as $rank => $team)
-                    <div style="display:flex;gap:12px;align-items:flex-start;">
-                        <span style="font-size:var(--fs-detail-num);font-weight:800;color:var(--color-text-dark);flex-shrink:0;min-width:24px;">{{ $rank + 6 }}.</span>
+                    <div class="rp-detail-row">
+                        <span class="rp-detail-num">{{ $rank + 6 }}.</span>
                         <div>
-                            <p style="font-family:var(--font-heading);font-size:var(--fs-detail-name);font-weight:900;color:var(--color-text-dark);line-height:1.4;text-transform:uppercase;">{{ $team['name'] }}</p>
-                            <p style="font-size:var(--fs-detail-school);font-weight:700;color:var(--color-text-dark);margin-top:3px;line-height:1.4;">{{ $team['school'] }}</p>
+                            <p class="rp-detail-name">{{ $team['name'] }}</p>
+                            <p class="rp-detail-school">{{ $team['school'] }}</p>
                         </div>
                     </div>
                     @endforeach
@@ -278,22 +566,14 @@ $jenjang = [
         </div>
 
         {{-- Tombol Kembali --}}
-        <div style="text-align:center;margin-top:40px;">
-            <button
-                onclick="showMain()"
-                style="padding:10px 40px;background:var(--color-btn-bg);color:var(--color-btn-text);border:none;border-radius:9999px;font-family:var(--font-primary);font-size:var(--fs-btn-back);font-weight:800;cursor:pointer;transition:background 0.2s;"
-                onmouseover="this.style.background='#FFF9BF'"
-                onmouseout="this.style.background='#FFF9BF'"
-            >
-                Kembali
-            </button>
+        <div class="rp-detail-footer">
+            <button class="rp-btn-back" onclick="showMain()">Kembali</button>
         </div>
 
     </div>{{-- /detail-{{ $col['slug'] }} --}}
     @endforeach
 
-
-</div>{{-- /wrapper --}}
+</div>{{-- /rp-wrapper --}}
 
 {{-- ============================================================
      JAVASCRIPT — Navigasi antar halaman
