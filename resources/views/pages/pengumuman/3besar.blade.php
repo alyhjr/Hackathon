@@ -79,8 +79,27 @@
     gap: 18px;
     align-items: start;
 }
-@media (max-width:1024px) { .pg-grid { grid-template-columns: repeat(3,1fr); } }
-@media (max-width:640px)  { .pg-grid { grid-template-columns: repeat(1,1fr); } }
+@media (max-width:1024px) {
+    .pg-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .pg-card {
+        flex: 0 0 calc(33.333% - 14px);
+        min-width: 160px;
+    }
+}
+@media (max-width:640px) {
+    .pg-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .pg-card {
+        flex: 0 0 100%;
+    }
+}
 
 /* Card */
 .pg-card {
