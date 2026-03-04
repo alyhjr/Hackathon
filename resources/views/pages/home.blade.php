@@ -26,20 +26,19 @@
   <div class="relative min-h-[520px] md:min-h-[580px] lg:min-h-[640px]">
   <div class="absolute left-10 md:left-16 lg:left-24 top-[45%] -translate-y-1/2 text-white max-w-2xl">
 
-    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight drop-shadow">
-      HACKATHON RUMAH<br>
-      PENDIDIKAN 2026
-    </h1>
+    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.15] tracking-wide drop-shadow">
+  {!! nl2br(e($setting->hero_title ?? "HACKATHON RUMAH\nPENDIDIKAN 2026")) !!}
+</h1>
 
-    <p class="mt-1 text-lg md:text-xl lg:text-2xl font-extrabold leading-tight drop-shadow">
-  Wujudkan Indonesia Cerdas
+<p class="mt-1 text-lg md:text-xl lg:text-2xl font-extrabold leading-snug drop-shadow">
+  {{ $setting->hero_subtitle ?? 'Wujudkan Indonesia Cerdas' }}
 </p>
 
-    <p class="mt-2 text-sm md:text-base lg:text-lg font-semibold leading-snug opacity-90 drop-shadow">
-      "<span class="font-extrabold">Gim Edukasi untuk Pembelajaran Seru</span>"
-    </p>
+<p class="mt-2 text-sm md:text-base lg:text-lg font-semibold leading-snug opacity-90 drop-shadow">
+  "<span class="font-extrabold">{{ $setting->hero_tagline ?? 'Gim Edukasi untuk Pembelajaran Seru' }}</span>"
+</p>
 
-    <a href="{{ route('registrasi') }}"
+<a href="{{ $setting->primary_button_url ?? route('registrasi') }}"
    class="inline-flex items-center justify-center mt-6 px-5 py-2
           text-white text-sm font-bold
           rounded-full shadow-sm hover:shadow-md
@@ -47,7 +46,9 @@
    style="background-color:#0072BC;"
    onmouseover="this.style.backgroundColor='#005fa3'"
    onmouseout="this.style.backgroundColor='#0072BC'">
-  Registrasi
+
+   {{ $setting->primary_button_text ?? 'Registrasi' }}
+
 </a>
 
 
@@ -98,38 +99,55 @@
 
     </div>
 
-    <!-- IMAGES -->
-    <div class="grid grid-cols-2 gap-5">
+    @php
+$homeImg1 = !empty($setting->home_image_1)
+    ? asset('storage/'.$setting->home_image_1)
+    : asset('image/header/gambar 1.png');
 
-      <!-- Gambar 1 -->
-      <div class="overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
-        <img
-          src="{{ asset('image/header/gambar 1.png') }}"
-          alt="Kegiatan 1"
-          class="w-full h-full object-cover aspect-[4/3] hover:scale-[1.03] transition duration-300"
-          loading="lazy"
-        />
-      </div>
+$homeImg2 = !empty($setting->home_image_2)
+    ? asset('storage/'.$setting->home_image_2)
+    : asset('image/header/gambar 2.jpg');
 
-      <!-- Gambar 2 -->
-      <div class="overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
-        <img
-          src="{{ asset('image/header/gambar 2.jpg') }}"
-          alt="Kegiatan 2"
-          class="w-full h-full object-cover aspect-[4/3] hover:scale-[1.03] transition duration-300"
-          loading="lazy"
-        />
-      </div>
+$homeImg3 = !empty($setting->home_image_3)
+    ? asset('storage/'.$setting->home_image_3)
+    : asset('image/header/gambar 3.png');
+@endphp
 
-      <!-- Gambar 3 (Full Width) -->
-      <div class="col-span-2 overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
-        <img
-          src="{{ asset('image/header/gambar 3.png') }}"
-          alt="Kegiatan 3"
-          class="w-full h-full object-cover aspect-[16/7] hover:scale-[1.03] transition duration-300"
-          loading="lazy"
-        />
-      </div>
+<!-- IMAGES -->
+<div class="grid grid-cols-2 gap-5">
+
+  <!-- Gambar 1 -->
+  <div class="overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
+    <img
+      src="{{ $homeImg1 }}"
+      alt="Kegiatan 1"
+      class="w-full h-full object-cover aspect-[4/3] hover:scale-[1.03] transition duration-300"
+      loading="lazy"
+    />
+  </div>
+
+  <!-- Gambar 2 -->
+  <div class="overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
+    <img
+      src="{{ $homeImg2 }}"
+      alt="Kegiatan 2"
+      class="w-full h-full object-cover aspect-[4/3] hover:scale-[1.03] transition duration-300"
+      loading="lazy"
+    />
+  </div>
+
+  <!-- Gambar 3 (Full Width) -->
+  <div class="col-span-2 overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
+    <img
+      src="{{ $homeImg3 }}"
+      alt="Kegiatan 3"
+      class="w-full h-full object-cover aspect-[16/7] hover:scale-[1.03] transition duration-300"
+      loading="lazy"
+    />
+  </div>
+
+</div>
+      
     </div>
   </div>
 </section>
