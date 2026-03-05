@@ -7,13 +7,13 @@
 
     {{-- Title --}}
     <div class="text-center mb-16">
-        <h1 style="font-family:'Poppins',sans-serif;font-size:37px;font-weight:900;color:#000000;margin-bottom:1rem;">
+       <h1 style="font-family:'Poppins',sans-serif;font-size:37px;font-weight:900;color:#000000;margin-bottom:0.4rem;">
             PENGUMUMAN 3 BESAR
         </h1>
-        <h2 style="font-family:'Poppins',sans-serif;font-size:22px;font-weight:600;color:#1e293b;margin-bottom:0.5rem;">
+        <h2 style="font-family:'Poppins',sans-serif;font-size:24px;font-weight:900;color:#000000;margin-top:0.6rem;margin-bottom:0.1rem;">
             Hackathon Rumah Pendidikan 2026
         </h2>
-        <p style="font-family:'Poppins',sans-serif;font-size:16px;font-weight:500;color:#475569;">
+      <p style="font-family:'Poppins',sans-serif;font-size:18px;font-weight:900;color:#000000;margin-top:0;">
             Wujudkan Indonesia Cerdas
         </p>
     </div>
