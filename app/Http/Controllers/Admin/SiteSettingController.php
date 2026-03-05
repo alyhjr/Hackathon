@@ -5,11 +5,16 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
 use App\Models\Faq;
+use App\Models\LombaKetentuanItem;
+use App\Models\LombaTahapanStep;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class SiteSettingController extends Controller
 {
+    // =========================================
+    // CMS MAIN PAGE
+    // =========================================
     public function edit(Request $request)
     {
         $setting = SiteSetting::firstOrCreate(['id' => 1]);
@@ -30,12 +35,37 @@ class SiteSettingController extends Controller
             ->pluck('category')
             ->toArray();
 
-        // tab agar tetap kebuka (kalau kamu masih pake query tab)
+        // LOMBA - ketentuan grouped per tab
+        $lombaKetentuan = LombaKetentuanItem::query()
+            ->orderBy('tab')
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get()
+            ->groupBy('tab');
+
+        // LOMBA - tahapan list
+        $lombaTahapan = LombaTahapanStep::query()
+            ->orderBy('step_number')
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
+
+        // tab agar tetap kebuka
         $tab = $request->query('tab', 'hero');
 
-        return view('admin.site-settings', compact('setting', 'faqs', 'faqCategories', 'tab'));
+        return view('admin.site-settings', compact(
+            'setting',
+            'faqs',
+            'faqCategories',
+            'tab',
+            'lombaKetentuan',
+            'lombaTahapan'
+        ));
     }
 
+    // =========================================
+    // SITE SETTINGS UPDATE (Hero/Home)
+    // =========================================
     public function update(Request $request)
     {
         $setting = SiteSetting::firstOrCreate(['id' => 1]);
@@ -81,11 +111,10 @@ class SiteSettingController extends Controller
             ->with('success', 'Berhasil update Site Settings!');
     }
 
-    // =========================
-    // FAQ CRUD
-    // =========================
-
-    public function storeFaq(Request $request)
+    // =========================================
+    // FAQ CRUD (sesuai route kamu)
+    // =========================================
+    public function faqStore(Request $request)
     {
         $data = $request->validate([
             'category' => 'required|string|max:100',
@@ -104,7 +133,7 @@ class SiteSettingController extends Controller
             ->with('success', 'FAQ berhasil ditambahkan!');
     }
 
-    public function updateFaq(Request $request, Faq $faq)
+    public function faqUpdate(Request $request, Faq $faq)
     {
         $data = $request->validate([
             'category' => 'required|string|max:100',
@@ -123,11 +152,159 @@ class SiteSettingController extends Controller
             ->with('success', 'FAQ berhasil diupdate!');
     }
 
-    public function destroyFaq(Faq $faq)
+    public function faqDestroy(Faq $faq)
     {
         $faq->delete();
 
         return redirect()->route('admin.site-settings.edit', ['tab' => 'faq'])
             ->with('success', 'FAQ berhasil dihapus!');
+    }
+
+    // =========================================
+    // LOMBA - KETENTUAN CRUD (sesuai route kamu)
+    // tab: kategori | persyaratan | pendaftaran
+    // =========================================
+    public function lombaKetentuanStore(Request $request)
+    {
+        $data = $request->validate([
+            'tab' => 'required|in:kategori,persyaratan,pendaftaran',
+            'title' => 'nullable|string|max:120',
+            'content' => 'nullable|string',
+            'sort_order' => 'nullable|integer|min:0',
+            'is_active' => 'nullable|boolean',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        $item = new LombaKetentuanItem();
+        $item->tab = $data['tab'];
+        $item->title = $data['title'] ?? null;
+        $item->content = $data['content'] ?? null;
+        $item->sort_order = $data['sort_order'] ?? 0;
+        $item->is_active = $request->has('is_active') ? 1 : 0;
+
+        // sesuai migration: kolomnya "image"
+        if ($request->hasFile('image')) {
+            $item->image = $request->file('image')->store('lomba/kategori', 'public');
+        }
+
+        $item->save();
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'lomba'])
+            ->with('success', 'Ketentuan lomba berhasil ditambahkan!');
+    }
+
+    public function lombaKetentuanUpdate(Request $request, LombaKetentuanItem $item)
+    {
+        $data = $request->validate([
+            'tab' => 'required|in:kategori,persyaratan,pendaftaran',
+            'title' => 'nullable|string|max:120',
+            'content' => 'nullable|string',
+            'sort_order' => 'nullable|integer|min:0',
+            'is_active' => 'nullable|boolean',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        $item->tab = $data['tab'];
+        $item->title = $data['title'] ?? null;
+        $item->content = $data['content'] ?? null;
+        $item->sort_order = $data['sort_order'] ?? 0;
+        $item->is_active = $request->has('is_active') ? 1 : 0;
+
+        if ($request->hasFile('image')) {
+            if (!empty($item->image) && Storage::disk('public')->exists($item->image)) {
+                Storage::disk('public')->delete($item->image);
+            }
+            $item->image = $request->file('image')->store('lomba/kategori', 'public');
+        }
+
+        $item->save();
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'lomba'])
+            ->with('success', 'Ketentuan lomba berhasil diupdate!');
+    }
+
+    public function lombaKetentuanDestroy(LombaKetentuanItem $item)
+    {
+        if (!empty($item->image) && Storage::disk('public')->exists($item->image)) {
+            Storage::disk('public')->delete($item->image);
+        }
+
+        $item->delete();
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'lomba'])
+            ->with('success', 'Ketentuan lomba berhasil dihapus!');
+    }
+
+    // =========================================
+    // LOMBA - TAHAPAN CRUD (sesuai migration: bullets JSON)
+    // Form CMS boleh kirim "description" textarea:
+    // - 1 baris = 1 bullet
+    // - akan disimpan ke kolom "bullets" (json)
+    // =========================================
+    public function lombaTahapanStore(Request $request)
+    {
+        $data = $request->validate([
+            'step_number' => 'required|integer|min:1|max:99',
+            'title' => 'required|string|max:120',
+            'description' => 'nullable|string', // textarea input
+            'sort_order' => 'nullable|integer|min:0',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $step = new LombaTahapanStep();
+        $step->step_number = (int) $data['step_number'];
+        $step->title = $data['title'];
+        $step->bullets = $this->parseBullets($data['description'] ?? null); // IMPORTANT
+        $step->sort_order = $data['sort_order'] ?? 0;
+        $step->is_active = $request->has('is_active') ? 1 : 0;
+
+        $step->save();
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'lomba'])
+            ->with('success', 'Tahapan berhasil ditambahkan!');
+    }
+
+    public function lombaTahapanUpdate(Request $request, LombaTahapanStep $step)
+    {
+        $data = $request->validate([
+            'step_number' => 'required|integer|min:1|max:99',
+            'title' => 'required|string|max:120',
+            'description' => 'nullable|string', // textarea input
+            'sort_order' => 'nullable|integer|min:0',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $step->step_number = (int) $data['step_number'];
+        $step->title = $data['title'];
+        $step->bullets = $this->parseBullets($data['description'] ?? null); // IMPORTANT
+        $step->sort_order = $data['sort_order'] ?? 0;
+        $step->is_active = $request->has('is_active') ? 1 : 0;
+
+        $step->save();
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'lomba'])
+            ->with('success', 'Tahapan berhasil diupdate!');
+    }
+
+    public function lombaTahapanDestroy(LombaTahapanStep $step)
+    {
+        $step->delete();
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'lomba'])
+            ->with('success', 'Tahapan berhasil dihapus!');
+    }
+
+    // =========================================
+    // HELPER: Parse textarea -> bullets array
+    // "1 baris = 1 bullet"
+    // =========================================
+    private function parseBullets(?string $text): ?array
+    {
+        $text = $text ?? '';
+        $text = str_replace(["\r\n", "\r"], "\n", $text);
+        $lines = array_map('trim', explode("\n", $text));
+        $lines = array_values(array_filter($lines, fn ($v) => $v !== ''));
+
+        return count($lines) ? $lines : null;
     }
 }

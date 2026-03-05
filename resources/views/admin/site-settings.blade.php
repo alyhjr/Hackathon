@@ -190,11 +190,11 @@
             $tabs = [
               ['key'=>'hero',        'label'=>'Beranda – Hero',    'desc'=>'Judul, subtitle, tombol, gambar'],
               ['key'=>'homeimg',     'label'=>'Beranda – Gambar',  'desc'=>'3 gambar konten beranda'],
-              ['key'=>'youtube',     'label'=>'Beranda – YouTube', 'desc'=>'2 link video embed'],
-              ['key'=>'timeline',    'label'=>'Timeline',          'desc'=>'Tahapan timeline beranda'],
-              ['key'=>'faq',         'label'=>'FAQ',               'desc'=>'Pertanyaan & jawaban'],
               ['key'=>'lomba',       'label'=>'Lomba',             'desc'=>'Ketentuan & tahapan'],
               ['key'=>'pengumuman',  'label'=>'Pengumuman',        'desc'=>'3 Besar & Lolos Proposal'],
+              ['key'=>'timeline',    'label'=>'Timeline',          'desc'=>'Tahapan timeline beranda'],
+              ['key'=>'faq',         'label'=>'FAQ',               'desc'=>'Pertanyaan & jawaban'],
+              ['key'=>'youtube',     'label'=>'Beranda – YouTube', 'desc'=>'2 link video embed'],
             ];
           @endphp
 
@@ -603,19 +603,710 @@
         </div>{{-- end card --}}
       </div>
 
-      {{-- ===========================
-          TAB: LOMBA
-      ============================ --}}
-      <div x-show="tab==='lomba'" x-cloak class="tab-content">
-        <div class="card">
-          <div class="card-title">Lomba</div>
-          <div class="card-sub">Konten ketentuan & tahapan lomba.</div>
-          <hr class="section-divider">
-          <div class="rounded-xl bg-slate-50 border border-slate-200 p-4 text-sm text-slate-600">
-            Nanti bisa dibuat CMS per halaman: ketentuan & tahapan (atau satu tabel).
-          </div>
+    {{-- ===========================
+    TAB: LOMBA — Full Alpine, no page reload
+============================ --}}
+
+<style>
+  .lomba-fade {
+    animation: lombaFadeIn 0.2s ease both;
+  }
+  @keyframes lombaFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Sub-tab pill */
+  .sub-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 1rem;
+    border-radius: 99px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1.5px solid transparent;
+  }
+  .sub-pill-active {
+    background: #0072BC;
+    color: #fff;
+    border-color: #0072BC;
+    box-shadow: 0 2px 8px rgba(0,114,188,0.25);
+  }
+  .sub-pill-inactive {
+    background: #f8fafc;
+    color: #64748b;
+    border-color: #e2e8f0;
+  }
+  .sub-pill-inactive:hover {
+    border-color: #0072BC;
+    color: #0072BC;
+    background: #eff8ff;
+  }
+
+  /* Section card */
+  .lomba-nav-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-radius: 1rem;
+    border: 1.5px solid #e2e8f0;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: left;
+    width: 100%;
+  }
+  .lomba-nav-card:hover {
+    border-color: #0072BC;
+    background: #f0f8ff;
+    box-shadow: 0 4px 16px rgba(0,114,188,0.1);
+    transform: translateY(-1px);
+  }
+  .lomba-nav-card:hover .lnc-icon {
+    background: #0072BC;
+    color: #fff;
+  }
+  .lomba-nav-card:hover .lnc-arrow {
+    color: #0072BC;
+    transform: translateX(3px);
+  }
+  .lnc-icon {
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.75rem;
+    background: #f1f5f9;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.18s;
+  }
+  .lnc-arrow {
+    margin-left: auto;
+    color: #cbd5e1;
+    transition: all 0.18s;
+    flex-shrink: 0;
+  }
+
+  /* Breadcrumb back button */
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 0.4rem 0.75rem;
+    border-radius: 0.5rem;
+    border: 1.5px solid #e2e8f0;
+    background: #f8fafc;
+    transition: all 0.15s;
+  }
+  .back-btn:hover {
+    color: #0072BC;
+    border-color: #0072BC;
+    background: #eff8ff;
+  }
+
+  /* Section header strip */
+  .section-header-strip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1.5px solid #f1f5f9;
+    flex-wrap: wrap;
+  }
+
+  /* Add form box */
+  .add-form-box {
+    background: linear-gradient(135deg, #f8fafc 0%, #f0f7ff 100%);
+    border: 1.5px solid #e2e8f0;
+    border-radius: 1rem;
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  /* Item row */
+  .item-row {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 0.875rem;
+    background: #fff;
+    overflow: hidden;
+    transition: box-shadow 0.15s;
+  }
+  .item-row:hover {
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .item-row-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 1rem;
+    background: #f8fafc;
+    border-bottom: 1.5px solid #f1f5f9;
+  }
+  .item-row-body {
+    padding: 1rem;
+  }
+
+  /* Step bubble */
+  .step-bubble {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background: #0072BC;
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 900;
+    flex-shrink: 0;
+  }
+
+  /* Empty state */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    text-align: center;
+    border: 1.5px dashed #e2e8f0;
+    border-radius: 1rem;
+    background: #fafbfc;
+  }
+</style>
+
+@php
+  $kt       = $lombaKetentuan ?? collect();
+  $selected = request('lomba_tab', 'kategori');
+  if (!in_array($selected, ['kategori','persyaratan','pendaftaran'])) $selected = 'kategori';
+  $items    = $kt[$selected] ?? collect();
+@endphp
+
+<div x-show="tab==='lomba'" x-cloak class="tab-content"
+     x-data="{
+       lombaSection: '{{ request()->has('lomba_tab') ? 'ketentuan' : '' }}',
+       kTab: '{{ $selected }}'
+     }">
+  <div class="card">
+
+    {{-- ===== CARD HEADER ===== --}}
+    <div class="flex items-center gap-3 mb-1">
+      {{-- Back button (shown inside section) --}}
+      <button type="button"
+        x-show="lombaSection !== ''"
+        x-cloak
+        class="back-btn"
+        @click="lombaSection = ''">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Kembali
+      </button>
+
+      <div>
+        <div class="card-title" x-text="lombaSection === '' ? 'Lomba' : (lombaSection === 'ketentuan' ? 'Ketentuan Lomba' : 'Tahapan Lomba')"></div>
+        <div class="card-sub" x-text="lombaSection === '' ? 'Pilih bagian yang ingin dikelola.' : (lombaSection === 'ketentuan' ? 'Kelola kategori, persyaratan, & pendaftaran.' : 'Kelola langkah-langkah kegiatan lomba.')"></div>
+      </div>
+    </div>
+
+    <hr class="section-divider">
+
+    {{-- ===== LANDING: 2 PILIHAN ===== --}}
+    <div x-show="lombaSection === ''" class="lomba-fade grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+      <button type="button" class="lomba-nav-card" @click="lombaSection = 'ketentuan'">
+        <div class="lnc-icon">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="font-bold text-[0.9rem] text-slate-900">Ketentuan</div>
+          <div class="text-xs text-slate-400 mt-0.5">Kategori · Persyaratan · Pendaftaran</div>
+        </div>
+        <svg class="lnc-arrow w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
+
+      <button type="button" class="lomba-nav-card" @click="lombaSection = 'tahapan'">
+        <div class="lnc-icon">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+          </svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="font-bold text-[0.9rem] text-slate-900">Tahapan</div>
+          <div class="text-xs text-slate-400 mt-0.5">Langkah-langkah kegiatan lomba</div>
+        </div>
+        <svg class="lnc-arrow w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
+
+    </div>
+
+    {{-- =========================
+        SECTION: KETENTUAN
+    ========================= --}}
+    <div x-show="lombaSection === 'ketentuan'" x-cloak class="lomba-fade">
+
+      {{-- Sub-tab pills (pure Alpine, no page reload) --}}
+      <div class="section-header-strip">
+        <div class="flex gap-1.5 flex-wrap">
+          <button type="button"
+            class="sub-pill"
+            :class="kTab === 'kategori' ? 'sub-pill-active' : 'sub-pill-inactive'"
+            @click="kTab = 'kategori'">
+            Kategori
+          </button>
+          <button type="button"
+            class="sub-pill"
+            :class="kTab === 'persyaratan' ? 'sub-pill-active' : 'sub-pill-inactive'"
+            @click="kTab = 'persyaratan'">
+            Persyaratan
+          </button>
+          <button type="button"
+            class="sub-pill"
+            :class="kTab === 'pendaftaran' ? 'sub-pill-active' : 'sub-pill-inactive'"
+            @click="kTab = 'pendaftaran'">
+            Pendaftaran
+          </button>
+        </div>
+
+        <div class="text-xs text-slate-400">
+          Pilih bagian lalu isi form di bawah
         </div>
       </div>
+
+      {{-- ---- KATEGORI ---- --}}
+      <div x-show="kTab === 'kategori'" x-cloak class="lomba-fade space-y-4">
+        <div class="add-form-box">
+          <div class="font-bold text-sm text-slate-900 mb-3">+ Tambah Kategori</div>
+          <form action="{{ route('admin.site-settings.lomba.ketentuan.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+            @csrf
+            <input type="hidden" name="tab" value="kategori">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="field-label">Title</label>
+                <input name="title" class="field-input" placeholder="Contoh: PAUD / Sederajat">
+              </div>
+              <div>
+                <label class="field-label">Gambar (opsional)</label>
+                <label class="flex items-center gap-2 w-full border border-dashed border-slate-200 rounded-lg px-3 py-2.5 cursor-pointer hover:border-[#0072BC] hover:bg-blue-50/20 transition-colors text-sm text-slate-500 bg-white">
+                  <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+                  Pilih gambar
+                  <input type="file" name="image" class="hidden" accept="image/*">
+                </label>
+              </div>
+            </div>
+            <div>
+              <label class="field-label">Deskripsi / Konten</label>
+              <textarea name="content" required class="field-input min-h-[80px]" placeholder="Deskripsi singkat kategori..."></textarea>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="w-24">
+                <label class="field-label">Urutan</label>
+                <input type="number" name="sort_order" value="1" min="1" class="field-input">
+              </div>
+              <label class="inline-flex items-center gap-2 mt-5 cursor-pointer">
+                <input type="checkbox" name="is_active" value="1" checked class="w-4 h-4 accent-[#0072BC]">
+                <span class="text-sm font-medium text-slate-700">Aktif</span>
+              </label>
+              <div class="mt-5 ml-auto">
+                <button type="submit" class="btn-primary">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                  Tambah
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        {{-- List Kategori --}}
+        @php $kItems = $kt['kategori'] ?? collect(); @endphp
+        <div class="text-xs text-slate-400 mb-2"><span class="font-bold text-slate-700">{{ $kItems->count() }}</span> item</div>
+        <div class="space-y-2.5">
+          @forelse($kItems as $item)
+            <div class="item-row">
+              <div class="item-row-head">
+                <span class="text-xs font-black text-slate-400">#{{ $item->id }}</span>
+                @if($item->title)<span class="text-sm font-semibold text-slate-700">{{ $item->title }}</span>@endif
+                <span class="badge ml-auto {{ $item->is_active ? 'badge-active' : 'badge-inactive' }}">{{ $item->is_active ? 'Aktif' : 'Nonaktif' }}</span>
+                <span class="text-xs text-slate-400">Urut: {{ $item->sort_order }}</span>
+              </div>
+              <div class="item-row-body">
+                <form action="{{ route('admin.site-settings.lomba.ketentuan.update', $item->id) }}" method="POST" enctype="multipart/form-data" class="space-y-3">
+                  @csrf @method('PUT')
+                  <input type="hidden" name="tab" value="kategori">
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="md:col-span-2">
+                      <label class="field-label">Title</label>
+                      <input name="title" value="{{ $item->title }}" class="field-input">
+                    </div>
+                    <div>
+                      <label class="field-label">Urutan</label>
+                      <input type="number" name="sort_order" value="{{ $item->sort_order }}" min="1" class="field-input">
+                    </div>
+                  </div>
+                  <div>
+                    <label class="field-label">Konten</label>
+                    <textarea name="content" required class="field-input min-h-[60px]">{{ $item->content }}</textarea>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <label class="inline-flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="is_active" value="1" {{ $item->is_active ? 'checked' : '' }} class="w-4 h-4 accent-[#0072BC]">
+                      <span class="text-sm font-medium text-slate-700">Aktif</span>
+                    </label>
+                    <button type="submit" class="btn-primary ml-auto" style="padding:0.4rem 1rem;font-size:0.78rem;">Simpan</button>
+                  </div>
+                </form>
+                <form action="{{ route('admin.site-settings.lomba.ketentuan.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus?')" class="mt-2.5">
+                  @csrf @method('DELETE')
+                  <button type="submit" class="btn-danger">Hapus</button>
+                </form>
+              </div>
+            </div>
+          @empty
+            <div class="empty-state">
+              <svg class="w-9 h-9 text-slate-200 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              <div class="text-sm font-medium text-slate-500">Belum ada kategori</div>
+            </div>
+          @endforelse
+        </div>
+      </div>
+
+      {{-- ---- PERSYARATAN ---- --}}
+      <div x-show="kTab === 'persyaratan'" x-cloak class="lomba-fade space-y-4">
+        <div class="add-form-box">
+          <div class="font-bold text-sm text-slate-900 mb-3">+ Tambah Persyaratan</div>
+          <form action="{{ route('admin.site-settings.lomba.ketentuan.store') }}" method="POST" class="space-y-4">
+            @csrf
+            <input type="hidden" name="tab" value="persyaratan">
+            <div>
+              <label class="field-label">Title (opsional)</label>
+              <input name="title" class="field-input" placeholder="Opsional">
+            </div>
+            <div>
+              <label class="field-label">Konten</label>
+              <textarea name="content" required class="field-input min-h-[80px]" placeholder="Contoh: Peserta merupakan siswa aktif..."></textarea>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="w-24">
+                <label class="field-label">Urutan</label>
+                <input type="number" name="sort_order" value="1" min="1" class="field-input">
+              </div>
+              <label class="inline-flex items-center gap-2 mt-5 cursor-pointer">
+                <input type="checkbox" name="is_active" value="1" checked class="w-4 h-4 accent-[#0072BC]">
+                <span class="text-sm font-medium text-slate-700">Aktif</span>
+              </label>
+              <div class="mt-5 ml-auto">
+                <button type="submit" class="btn-primary">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                  Tambah
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        @php $pItems = $kt['persyaratan'] ?? collect(); @endphp
+        <div class="text-xs text-slate-400 mb-2"><span class="font-bold text-slate-700">{{ $pItems->count() }}</span> item</div>
+        <div class="space-y-2.5">
+          @forelse($pItems as $item)
+            <div class="item-row">
+              <div class="item-row-head">
+                <span class="text-xs font-black text-slate-400">#{{ $item->id }}</span>
+                @if($item->title)<span class="text-sm font-semibold text-slate-700">{{ $item->title }}</span>@endif
+                <span class="badge ml-auto {{ $item->is_active ? 'badge-active' : 'badge-inactive' }}">{{ $item->is_active ? 'Aktif' : 'Nonaktif' }}</span>
+                <span class="text-xs text-slate-400">Urut: {{ $item->sort_order }}</span>
+              </div>
+              <div class="item-row-body">
+                <form action="{{ route('admin.site-settings.lomba.ketentuan.update', $item->id) }}" method="POST" class="space-y-3">
+                  @csrf @method('PUT')
+                  <input type="hidden" name="tab" value="persyaratan">
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="md:col-span-2">
+                      <label class="field-label">Title</label>
+                      <input name="title" value="{{ $item->title }}" class="field-input">
+                    </div>
+                    <div>
+                      <label class="field-label">Urutan</label>
+                      <input type="number" name="sort_order" value="{{ $item->sort_order }}" min="1" class="field-input">
+                    </div>
+                  </div>
+                  <div>
+                    <label class="field-label">Konten</label>
+                    <textarea name="content" required class="field-input min-h-[60px]">{{ $item->content }}</textarea>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <label class="inline-flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="is_active" value="1" {{ $item->is_active ? 'checked' : '' }} class="w-4 h-4 accent-[#0072BC]">
+                      <span class="text-sm font-medium text-slate-700">Aktif</span>
+                    </label>
+                    <button type="submit" class="btn-primary ml-auto" style="padding:0.4rem 1rem;font-size:0.78rem;">Simpan</button>
+                  </div>
+                </form>
+                <form action="{{ route('admin.site-settings.lomba.ketentuan.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus?')" class="mt-2.5">
+                  @csrf @method('DELETE')
+                  <button type="submit" class="btn-danger">Hapus</button>
+                </form>
+              </div>
+            </div>
+          @empty
+            <div class="empty-state">
+              <svg class="w-9 h-9 text-slate-200 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              <div class="text-sm font-medium text-slate-500">Belum ada persyaratan</div>
+            </div>
+          @endforelse
+        </div>
+      </div>
+
+      {{-- ---- PENDAFTARAN ---- --}}
+      <div x-show="kTab === 'pendaftaran'" x-cloak class="lomba-fade space-y-4">
+        <div class="add-form-box">
+          <div class="font-bold text-sm text-slate-900 mb-3">+ Tambah Pendaftaran</div>
+          <form action="{{ route('admin.site-settings.lomba.ketentuan.store') }}" method="POST" class="space-y-4">
+            @csrf
+            <input type="hidden" name="tab" value="pendaftaran">
+            <div>
+              <label class="field-label">Title (opsional)</label>
+              <input name="title" class="field-input" placeholder="Opsional">
+            </div>
+            <div>
+              <label class="field-label">Konten</label>
+              <textarea name="content" required class="field-input min-h-[80px]" placeholder="Contoh: Pendaftaran dibuka mulai..."></textarea>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="w-24">
+                <label class="field-label">Urutan</label>
+                <input type="number" name="sort_order" value="1" min="1" class="field-input">
+              </div>
+              <label class="inline-flex items-center gap-2 mt-5 cursor-pointer">
+                <input type="checkbox" name="is_active" value="1" checked class="w-4 h-4 accent-[#0072BC]">
+                <span class="text-sm font-medium text-slate-700">Aktif</span>
+              </label>
+              <div class="mt-5 ml-auto">
+                <button type="submit" class="btn-primary">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                  Tambah
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        @php $dItems = $kt['pendaftaran'] ?? collect(); @endphp
+        <div class="text-xs text-slate-400 mb-2"><span class="font-bold text-slate-700">{{ $dItems->count() }}</span> item</div>
+        <div class="space-y-2.5">
+          @forelse($dItems as $item)
+            <div class="item-row">
+              <div class="item-row-head">
+                <span class="text-xs font-black text-slate-400">#{{ $item->id }}</span>
+                @if($item->title)<span class="text-sm font-semibold text-slate-700">{{ $item->title }}</span>@endif
+                <span class="badge ml-auto {{ $item->is_active ? 'badge-active' : 'badge-inactive' }}">{{ $item->is_active ? 'Aktif' : 'Nonaktif' }}</span>
+                <span class="text-xs text-slate-400">Urut: {{ $item->sort_order }}</span>
+              </div>
+              <div class="item-row-body">
+                <form action="{{ route('admin.site-settings.lomba.ketentuan.update', $item->id) }}" method="POST" class="space-y-3">
+                  @csrf @method('PUT')
+                  <input type="hidden" name="tab" value="pendaftaran">
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="md:col-span-2">
+                      <label class="field-label">Title</label>
+                      <input name="title" value="{{ $item->title }}" class="field-input">
+                    </div>
+                    <div>
+                      <label class="field-label">Urutan</label>
+                      <input type="number" name="sort_order" value="{{ $item->sort_order }}" min="1" class="field-input">
+                    </div>
+                  </div>
+                  <div>
+                    <label class="field-label">Konten</label>
+                    <textarea name="content" required class="field-input min-h-[60px]">{{ $item->content }}</textarea>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <label class="inline-flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="is_active" value="1" {{ $item->is_active ? 'checked' : '' }} class="w-4 h-4 accent-[#0072BC]">
+                      <span class="text-sm font-medium text-slate-700">Aktif</span>
+                    </label>
+                    <button type="submit" class="btn-primary ml-auto" style="padding:0.4rem 1rem;font-size:0.78rem;">Simpan</button>
+                  </div>
+                </form>
+                <form action="{{ route('admin.site-settings.lomba.ketentuan.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus?')" class="mt-2.5">
+                  @csrf @method('DELETE')
+                  <button type="submit" class="btn-danger">Hapus</button>
+                </form>
+              </div>
+            </div>
+          @empty
+            <div class="empty-state">
+              <svg class="w-9 h-9 text-slate-200 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              <div class="text-sm font-medium text-slate-500">Belum ada item pendaftaran</div>
+            </div>
+          @endforelse
+        </div>
+      </div>
+
+    </div>{{-- end ketentuan --}}
+
+    {{-- =========================
+        SECTION: TAHAPAN
+    ========================= --}}
+    <div x-show="lombaSection === 'tahapan'" x-cloak class="lomba-fade">
+
+      {{-- Form tambah tahapan --}}
+      <div class="add-form-box">
+        <div class="font-bold text-sm text-slate-900 mb-3">+ Tambah Tahapan</div>
+        <form action="{{ route('admin.site-settings.lomba.tahapan.store') }}" method="POST" class="space-y-4">
+          @csrf
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <div>
+              <label class="field-label">Step</label>
+              <input type="number" name="step_number" value="1" min="1" class="field-input" required>
+            </div>
+            <div class="md:col-span-2">
+              <label class="field-label">Judul</label>
+              <input name="title" class="field-input" placeholder="Contoh: Pendaftaran" required>
+            </div>
+            <div>
+              <label class="field-label">Urutan</label>
+              <input type="number" name="sort_order" value="1" min="1" class="field-input">
+            </div>
+          </div>
+        <div>
+  <label class="field-label">Deskripsi (opsional)</label>
+  <textarea
+    name="bullets_text"
+    class="w-full border rounded-xl px-3 py-2 min-h-[70px]"
+    placeholder="1 baris = 1 bullet"
+  >{{ old('bullets_text', '') }}</textarea>
+</div>
+
+<div class="flex items-center gap-4">
+  <label class="inline-flex items-center gap-2 cursor-pointer">
+    <input
+      type="checkbox"
+      name="is_active"
+      value="1"
+      {{ old('is_active', 1) ? 'checked' : '' }}
+      class="w-4 h-4 accent-[#0072BC]"
+    >
+    <span class="text-sm font-medium text-slate-700">Aktif</span>
+  </label>
+
+  <div class="ml-auto">
+    <button type="submit" class="btn-primary">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+      </svg>
+      Tambah Tahapan
+    </button>
+  </div>
+</div>
+        </form>
+      </div>
+
+      {{-- LIST TAHAPAN --}}
+<div class="space-y-4 mt-6">
+
+@foreach($lombaTahapan as $step)
+
+<div class="rounded-xl border p-4 bg-white">
+
+<form method="POST" action="{{ route('admin.site-settings.lomba.tahapan.update', $step->id) }}">
+@csrf
+@method('PUT')
+
+<div class="grid grid-cols-3 gap-3">
+
+<div>
+<label class="field-label">Step</label>
+<input type="number"
+name="step_number"
+value="{{ $step->step_number }}"
+class="w-full border rounded-xl px-3 py-2">
+</div>
+
+<div class="col-span-2">
+<label class="field-label">Judul</label>
+<input
+name="title"
+value="{{ $step->title }}"
+class="w-full border rounded-xl px-3 py-2">
+</div>
+
+</div>
+
+
+<div class="mt-3">
+
+<label class="field-label">Deskripsi (opsional)</label>
+
+<textarea
+  name="description"
+  class="w-full border rounded-xl px-3 py-2 min-h-[70px]"
+  placeholder="1 baris = 1 bullet">{{ old('description') }}</textarea>
+
+</div>
+
+
+<div class="flex items-center gap-3 mt-3">
+
+<label class="flex items-center gap-2">
+<input type="checkbox"
+name="is_active"
+value="1"
+{{ $step->is_active ? 'checked' : '' }}>
+<span>Aktif</span>
+</label>
+
+<button
+type="submit"
+class="px-4 py-2 bg-blue-600 text-white rounded-xl">
+Simpan
+</button>
+
+</form>
+
+
+<form method="POST"
+action="{{ route('admin.site-settings.lomba.tahapan.destroy',$step->id) }}">
+@csrf
+@method('DELETE')
+
+<button
+class="px-4 py-2 bg-red-600 text-white rounded-xl">
+Hapus
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+@endforeach
+
+</div>
+
+    </div>{{-- end tahapan --}}
+
+  </div>
+</div>
 
       {{-- ===========================
           TAB: PENGUMUMAN

@@ -10,7 +10,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             SiteSettingSeeder::class,
-            FaqSeeder::class, // tambah ini
+            FaqSeeder::class,
+            LombaSeeder::class,
         ]);
     }
 }

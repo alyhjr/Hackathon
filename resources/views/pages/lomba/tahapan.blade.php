@@ -110,6 +110,18 @@
   }
 </style>
 
+@php
+  // posisi grid biar tetap sama kayak hardcode kamu:
+  $posClass = [
+    1 => 'top-1',
+    2 => 'top-2',
+    3 => 'top-3',
+    4 => 'bot-4',
+    5 => 'bot-5',
+    6 => 'bot-6',
+  ];
+@endphp
+
 <div class="t-wrap">
   <div class="t-shell">
     <h2 class="t-title">Tahapan Kegiatan</h2>
@@ -117,35 +129,30 @@
 
     <div class="t-grid" id="tgrid">
 
-      <div class="t-step top-1">
-        <div class="t-box"><span class="t-num">1.</span><span class="t-label">Pendaftaran</span></div>
-        <div class="t-desc"><ul><li>Pendaftaran melampirkan Surat Keterangan dari Kepala Sekolah</li></ul></div>
-      </div>
+      @foreach(($steps ?? collect()) as $s)
+        @php
+          $cls = $posClass[$s->step_number] ?? '';
+          $boxId = $s->step_number == 3 ? 'box3' : ($s->step_number == 4 ? 'box4' : null);
+          $bullets = is_array($s->bullets) ? $s->bullets : [];
+        @endphp
 
-      <div class="t-step top-2">
-        <div class="t-box"><span class="t-num">2.</span><span class="t-label">Pelatihan</span></div>
-        <div class="t-desc"><ul><li>Pelatihan secara daring</li><li>Difasilitasi Google for Education dan Canva</li></ul></div>
-      </div>
+        <div class="t-step {{ $cls }}">
+          <div class="t-box" @if($boxId) id="{{ $boxId }}" @endif>
+            <span class="t-num">{{ $s->step_number }}.</span>
+            <span class="t-label">{{ $s->title }}</span>
+          </div>
 
-      <div class="t-step top-3">
-        <div class="t-box" id="box3"><span class="t-num">3.</span><span class="t-label">Proposal Ide Karya</span></div>
-        <div class="t-desc"><ul><li>Unggah Proposal Ide Karya untuk 2 Gim Edukasi</li><li>Penilaian Proposal Ide Karya</li><li>Pengumuman 10 proposal terbaik tiap kategori</li></ul></div>
-      </div>
-
-      <div class="t-step bot-6">
-        <div class="t-box"><span class="t-num">6.</span><span class="t-label">Pemberian Hadiah</span></div>
-        <div class="t-desc"><ul><li>Pengumuman 3 pemenang tiap kategori</li><li>Pemberian hadiah</li></ul></div>
-      </div>
-
-      <div class="t-step bot-5">
-        <div class="t-box"><span class="t-num">5.</span><span class="t-label">Penjurian</span></div>
-        <div class="t-desc"><ul><li>Penilaian karya peserta</li><li>Presentasi karya 2 Gim Edukasi</li></ul></div>
-      </div>
-
-      <div class="t-step bot-4">
-        <div class="t-box" id="box4"><span class="t-num">4.</span><span class="t-label">Inkubasi Peserta</span></div>
-        <div class="t-desc"><ul><li>Inkubasi daring 10 peserta lolos tahap proposal tiap kategori</li><li>Unggah karya 2 Gim Edukasi</li></ul></div>
-      </div>
+          @if(count($bullets))
+            <div class="t-desc">
+              <ul>
+                @foreach($bullets as $b)
+                  <li>{{ $b }}</li>
+                @endforeach
+              </ul>
+            </div>
+          @endif
+        </div>
+      @endforeach
 
     </div>
   </div>
@@ -160,6 +167,7 @@ function drawConnector3to4() {
   var old = document.getElementById('svg-connector');
   if (old) old.remove();
 
+  if (!box3 || !box4) return;
   if (window.innerWidth <= 900) return;
 
   var gridRect = grid.getBoundingClientRect();

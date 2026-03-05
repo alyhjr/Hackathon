@@ -183,12 +183,28 @@
     grid-column: 2 / 3;
   }
 
+  .kb-empty{
+    font-size: 13px;
+    color: #64748b;
+    background: #fff;
+    border: 1.5px dashed #cbd5e1;
+    border-radius: 14px;
+    padding: 14px;
+    text-align: center;
+  }
+
   @media(max-width:600px){
     .kb-card{ padding: 24px 20px; }
     .kb-cat-grid{ grid-template-columns: repeat(2, 1fr); }
     .kb-cat-item.full{ grid-column: 1 / -1; }
   }
 </style>
+
+@php
+  $kategori = $kategori ?? collect();
+  $persyaratan = $persyaratan ?? collect();
+  $pendaftaran = $pendaftaran ?? collect();
+@endphp
 
 <div class="kb-wrap">
   <div class="kb-shell">
@@ -207,28 +223,36 @@
     <div class="kb-panel active" id="panel-0">
       <div class="kb-card">
         <div class="kb-card-title">Kategori Lomba</div>
-        <div class="kb-cat-grid">
-          <div class="kb-cat-item">
-            <div class="kb-cat-img"><img src="/image/kategori/paud.png" alt="PAUD"></div>
-            <div class="kb-cat-label">PAUD / Sederajat</div>
+
+        @if($kategori->count())
+          <div class="kb-cat-grid">
+            @foreach($kategori as $item)
+              <div class="kb-cat-item">
+                <div class="kb-cat-img">
+                  @if(!empty($item->image))
+                    <img src="{{ asset('storage/'.$item->image) }}" alt="{{ $item->title ?? 'Kategori' }}">
+                  @else
+                    {{-- kalau ga ada gambar, biarin kosong tapi layout aman --}}
+                    <span style="font-size:12px;color:#94a3b8;">(tanpa gambar)</span>
+                  @endif
+                </div>
+
+                <div class="kb-cat-label">
+                  {{ $item->title ?? '-' }}
+                </div>
+
+                {{-- content kategori opsional (kalau kamu isi) --}}
+                @if(!empty($item->content))
+                  <div style="font-size:12px;color:#64748b;text-align:center;line-height:1.4;">
+                    {{ $item->content }}
+                  </div>
+                @endif
+              </div>
+            @endforeach
           </div>
-          <div class="kb-cat-item">
-            <div class="kb-cat-img"><img src="/image/kategori/sd.png" alt="SD"></div>
-            <div class="kb-cat-label">SD / Sederajat</div>
-          </div>
-          <div class="kb-cat-item">
-            <div class="kb-cat-img"><img src="/image/kategori/smp.png" alt="SMP"></div>
-            <div class="kb-cat-label">SMP / Sederajat</div>
-          </div>
-          <div class="kb-cat-item">
-            <div class="kb-cat-img"><img src="/image/kategori/sma.png" alt="SMA"></div>
-            <div class="kb-cat-label">SMA / Sederajat</div>
-          </div>
-          <div class="kb-cat-item full">
-            <div class="kb-cat-img"><img src="/image/kategori/smk.png" alt="SMK"></div>
-            <div class="kb-cat-label">SMK / Sederajat</div>
-          </div>
-        </div>
+        @else
+          <div class="kb-empty">Belum ada data kategori. Tambahkan dari CMS (menu Lomba &gt; Ketentuan).</div>
+        @endif
       </div>
     </div>
 
@@ -236,14 +260,16 @@
     <div class="kb-panel" id="panel-1">
       <div class="kb-card">
         <div class="kb-card-title">Persyaratan Peserta</div>
-        <ul class="kb-list">
-          <li>Warga Negara Indonesia</li>
-          <li>Peserta bersifat tim: 1 (satu) tim terdiri dari 3 (tiga) orang (guru dan/atau tenaga kependidikan) dari satu sekolah yang sama.</li>
-          <li>Setiap orang peserta hanya dapat terdaftar pada 1 (satu) tim.</li>
-          <li>Peserta (tim) merupakan pendidik dan atau tenaga kependidikan aktif dibuktikan dengan surat keterangan dari Kepala Sekolah.</li>
-          <li>Seluruh anggota tim diutamakan memiliki akun belajar.id</li>
-          <li>Satu sekolah dapat mengirim lebih dari satu tim.</li>
-        </ul>
+
+        @if($persyaratan->count())
+          <ul class="kb-list">
+            @foreach($persyaratan as $item)
+              <li>{{ $item->content }}</li>
+            @endforeach
+          </ul>
+        @else
+          <div class="kb-empty">Belum ada data persyaratan. Tambahkan dari CMS (menu Lomba &gt; Ketentuan).</div>
+        @endif
       </div>
     </div>
 
@@ -251,10 +277,16 @@
     <div class="kb-panel" id="panel-2">
       <div class="kb-card">
         <div class="kb-card-title">Cara Pendaftaran</div>
-        <ul class="kb-list">
-          <li>Tim (perwakilan) melakukan pendaftaran melalui superaplikasi Rumah Pendidikan dan mengunggah surat keterangan dari Kepala Sekolah.</li>
-          <li>Tim yang telah mendaftar berhak untuk mengikuti pelatihan yang diselenggarakan oleh Pusdatin.</li>
-        </ul>
+
+        @if($pendaftaran->count())
+          <ul class="kb-list">
+            @foreach($pendaftaran as $item)
+              <li>{{ $item->content }}</li>
+            @endforeach
+          </ul>
+        @else
+          <div class="kb-empty">Belum ada data pendaftaran. Tambahkan dari CMS (menu Lomba &gt; Ketentuan).</div>
+        @endif
       </div>
     </div>
 
