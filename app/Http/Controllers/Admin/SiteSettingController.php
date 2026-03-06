@@ -7,8 +7,12 @@ use App\Models\SiteSetting;
 use App\Models\Faq;
 use App\Models\LombaKetentuanItem;
 use App\Models\LombaTahapanStep;
+use App\Models\Pengumuman;
+use App\Models\PengumumanGroup;
+use App\Models\PengumumanEntry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Timeline;
 
 class SiteSettingController extends Controller
 {
@@ -25,7 +29,7 @@ class SiteSettingController extends Controller
             ->orderBy('id')
             ->get();
 
-        // list kategori untuk dropdown
+        // list kategori FAQ untuk dropdown
         $faqCategories = Faq::query()
             ->select('category')
             ->whereNotNull('category')
@@ -50,6 +54,34 @@ class SiteSettingController extends Controller
             ->orderBy('id')
             ->get();
 
+        // PENGUMUMAN
+        $pengumuman = Pengumuman::query()
+            ->orderBy('type')
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
+
+        $pengumumanGroups = PengumumanGroup::query()
+            ->with('pengumuman')
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
+
+        $pengumumanEntries = PengumumanEntry::query()
+            ->with('group')
+            ->orderBy('rank_order')
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
+
+
+        // Timeline
+        $timelineItems = Timeline::query()
+    ->orderBy('sort_order')
+    ->orderBy('id')
+    ->get();
+
+
         // tab agar tetap kebuka
         $tab = $request->query('tab', 'hero');
 
@@ -59,7 +91,11 @@ class SiteSettingController extends Controller
             'faqCategories',
             'tab',
             'lombaKetentuan',
-            'lombaTahapan'
+            'lombaTahapan',
+            'pengumuman',
+            'pengumumanGroups',
+            'pengumumanEntries',
+            'timelineItems',
         ));
     }
 
@@ -79,6 +115,8 @@ class SiteSettingController extends Controller
             'secondary_button_text' => 'nullable|string',
             'secondary_button_url' => 'nullable|string',
             'youtube_url' => 'nullable|string',
+            'youtube_url_1' => 'nullable|string',
+            'youtube_url_2' => 'nullable|string',
             'home_description' => 'nullable|string',
 
             'hero_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
@@ -90,7 +128,9 @@ class SiteSettingController extends Controller
         $setting->fill($validated);
 
         $upload = function ($field, $folder) use ($request, $setting) {
-            if (!$request->hasFile($field)) return;
+            if (!$request->hasFile($field)) {
+                return;
+            }
 
             if (!empty($setting->$field) && Storage::disk('public')->exists($setting->$field)) {
                 Storage::disk('public')->delete($setting->$field);
@@ -112,7 +152,7 @@ class SiteSettingController extends Controller
     }
 
     // =========================================
-    // FAQ CRUD (sesuai route kamu)
+    // FAQ CRUD
     // =========================================
     public function faqStore(Request $request)
     {
@@ -161,8 +201,7 @@ class SiteSettingController extends Controller
     }
 
     // =========================================
-    // LOMBA - KETENTUAN CRUD (sesuai route kamu)
-    // tab: kategori | persyaratan | pendaftaran
+    // LOMBA - KETENTUAN CRUD
     // =========================================
     public function lombaKetentuanStore(Request $request)
     {
@@ -182,7 +221,6 @@ class SiteSettingController extends Controller
         $item->sort_order = $data['sort_order'] ?? 0;
         $item->is_active = $request->has('is_active') ? 1 : 0;
 
-        // sesuai migration: kolomnya "image"
         if ($request->hasFile('image')) {
             $item->image = $request->file('image')->store('lomba/kategori', 'public');
         }
@@ -214,6 +252,7 @@ class SiteSettingController extends Controller
             if (!empty($item->image) && Storage::disk('public')->exists($item->image)) {
                 Storage::disk('public')->delete($item->image);
             }
+
             $item->image = $request->file('image')->store('lomba/kategori', 'public');
         }
 
@@ -236,17 +275,14 @@ class SiteSettingController extends Controller
     }
 
     // =========================================
-    // LOMBA - TAHAPAN CRUD (sesuai migration: bullets JSON)
-    // Form CMS boleh kirim "description" textarea:
-    // - 1 baris = 1 bullet
-    // - akan disimpan ke kolom "bullets" (json)
+    // LOMBA - TAHAPAN CRUD
     // =========================================
     public function lombaTahapanStore(Request $request)
     {
         $data = $request->validate([
             'step_number' => 'required|integer|min:1|max:99',
             'title' => 'required|string|max:120',
-            'description' => 'nullable|string', // textarea input
+            'description' => 'nullable|string',
             'sort_order' => 'nullable|integer|min:0',
             'is_active' => 'nullable|boolean',
         ]);
@@ -254,7 +290,7 @@ class SiteSettingController extends Controller
         $step = new LombaTahapanStep();
         $step->step_number = (int) $data['step_number'];
         $step->title = $data['title'];
-        $step->bullets = $this->parseBullets($data['description'] ?? null); // IMPORTANT
+        $step->bullets = $this->parseBullets($data['description'] ?? null);
         $step->sort_order = $data['sort_order'] ?? 0;
         $step->is_active = $request->has('is_active') ? 1 : 0;
 
@@ -269,14 +305,14 @@ class SiteSettingController extends Controller
         $data = $request->validate([
             'step_number' => 'required|integer|min:1|max:99',
             'title' => 'required|string|max:120',
-            'description' => 'nullable|string', // textarea input
+            'description' => 'nullable|string',
             'sort_order' => 'nullable|integer|min:0',
             'is_active' => 'nullable|boolean',
         ]);
 
         $step->step_number = (int) $data['step_number'];
         $step->title = $data['title'];
-        $step->bullets = $this->parseBullets($data['description'] ?? null); // IMPORTANT
+        $step->bullets = $this->parseBullets($data['description'] ?? null);
         $step->sort_order = $data['sort_order'] ?? 0;
         $step->is_active = $request->has('is_active') ? 1 : 0;
 
@@ -293,6 +329,239 @@ class SiteSettingController extends Controller
         return redirect()->route('admin.site-settings.edit', ['tab' => 'lomba'])
             ->with('success', 'Tahapan berhasil dihapus!');
     }
+
+    // =========================
+    // PENGUMUMAN UTAMA CRUD
+    // =========================
+    public function storePengumuman(Request $request)
+    {
+        $request->validate([
+            'type' => 'required|in:umum,lolos,tiga_besar',
+            'title' => 'required|string|max:255',
+            'content' => 'nullable|string',
+            'sort_order' => 'nullable|integer|min:0',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        Pengumuman::create([
+            'type' => $request->type,
+            'title' => $request->title,
+            'content' => $request->content,
+            'sort_order' => $request->sort_order ?? 0,
+            'is_active' => $request->has('is_active') ? 1 : 0,
+        ]);
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'pengumuman'])
+            ->with('success', 'Pengumuman berhasil ditambahkan.');
+    }
+
+    public function updatePengumuman(Request $request, Pengumuman $pengumuman)
+    {
+        $request->validate([
+            'type' => 'required|in:umum,lolos,tiga_besar',
+            'title' => 'required|string|max:255',
+            'content' => 'nullable|string',
+            'sort_order' => 'nullable|integer|min:0',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $pengumuman->update([
+            'type' => $request->type,
+            'title' => $request->title,
+            'content' => $request->content,
+            'sort_order' => $request->sort_order ?? 0,
+            'is_active' => $request->has('is_active') ? 1 : 0,
+        ]);
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'pengumuman'])
+            ->with('success', 'Pengumuman berhasil diupdate.');
+    }
+
+    public function destroyPengumuman(Pengumuman $pengumuman)
+    {
+        $pengumuman->delete();
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'pengumuman'])
+            ->with('success', 'Pengumuman berhasil dihapus.');
+    }
+
+    // =========================
+    // PENGUMUMAN GROUP CRUD
+    // =========================
+    public function storePengumumanGroup(Request $request)
+    {
+        $request->validate([
+            'pengumuman_id' => 'required|exists:pengumumen,id',
+            'title' => 'required|string|max:255',
+            'subtitle' => 'required|string|max:255',
+            'slug' => 'required|string|max:100',
+            'sort_order' => 'nullable|integer|min:0',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        PengumumanGroup::create([
+            'pengumuman_id' => $request->pengumuman_id,
+            'title' => $request->title,
+            'subtitle' => $request->subtitle,
+            'slug' => $request->slug,
+            'sort_order' => $request->sort_order ?? 0,
+            'is_active' => $request->has('is_active') ? 1 : 0,
+        ]);
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'pengumuman'])
+            ->with('success', 'Group pengumuman berhasil ditambahkan.');
+    }
+
+    public function updatePengumumanGroup(Request $request, PengumumanGroup $group)
+    {
+        $request->validate([
+            'pengumuman_id' => 'required|exists:pengumumen,id',
+            'title' => 'required|string|max:255',
+            'subtitle' => 'required|string|max:255',
+            'slug' => 'required|string|max:100',
+            'sort_order' => 'nullable|integer|min:0',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $group->update([
+            'pengumuman_id' => $request->pengumuman_id,
+            'title' => $request->title,
+            'subtitle' => $request->subtitle,
+            'slug' => $request->slug,
+            'sort_order' => $request->sort_order ?? 0,
+            'is_active' => $request->has('is_active') ? 1 : 0,
+        ]);
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'pengumuman'])
+            ->with('success', 'Group pengumuman berhasil diupdate.');
+    }
+
+    public function destroyPengumumanGroup(PengumumanGroup $group)
+    {
+        $group->delete();
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'pengumuman'])
+            ->with('success', 'Group pengumuman berhasil dihapus.');
+    }
+
+    // =========================
+    // PENGUMUMAN ENTRY CRUD
+    // =========================
+    public function storePengumumanEntry(Request $request)
+    {
+        $request->validate([
+            'pengumuman_group_id' => 'required|exists:pengumuman_groups,id',
+            'team_name' => 'required|string|max:255',
+            'school_name' => 'required|string|max:255',
+            'rank_order' => 'nullable|integer|min:0',
+            'sort_order' => 'nullable|integer|min:0',
+            'is_preview' => 'nullable|boolean',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        PengumumanEntry::create([
+            'pengumuman_group_id' => $request->pengumuman_group_id,
+            'team_name' => $request->team_name,
+            'school_name' => $request->school_name,
+            'rank_order' => $request->rank_order ?? 0,
+            'sort_order' => $request->sort_order ?? 0,
+            'is_preview' => $request->has('is_preview') ? 1 : 0,
+            'is_active' => $request->has('is_active') ? 1 : 0,
+        ]);
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'pengumuman'])
+            ->with('success', 'Entry pengumuman berhasil ditambahkan.');
+    }
+
+    public function updatePengumumanEntry(Request $request, PengumumanEntry $entry)
+    {
+        $request->validate([
+            'pengumuman_group_id' => 'required|exists:pengumuman_groups,id',
+            'team_name' => 'required|string|max:255',
+            'school_name' => 'required|string|max:255',
+            'rank_order' => 'nullable|integer|min:0',
+            'sort_order' => 'nullable|integer|min:0',
+            'is_preview' => 'nullable|boolean',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $entry->update([
+            'pengumuman_group_id' => $request->pengumuman_group_id,
+            'team_name' => $request->team_name,
+            'school_name' => $request->school_name,
+            'rank_order' => $request->rank_order ?? 0,
+            'sort_order' => $request->sort_order ?? 0,
+            'is_preview' => $request->has('is_preview') ? 1 : 0,
+            'is_active' => $request->has('is_active') ? 1 : 0,
+        ]);
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'pengumuman'])
+            ->with('success', 'Entry pengumuman berhasil diupdate.');
+    }
+
+    public function destroyPengumumanEntry(PengumumanEntry $entry)
+    {
+        $entry->delete();
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'pengumuman'])
+            ->with('success', 'Entry pengumuman berhasil dihapus.');
+    }
+
+    // =========================
+    // TIMELINE CRUD
+    // =========================
+    public function timelineStore(Request $request)
+    {
+        $data = $request->validate([
+            'date_label' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'sort_order' => 'nullable|integer|min:0',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        Timeline::create([
+            'date_label' => $data['date_label'],
+            'title' => $data['title'],
+            'description' => $data['description'] ?? null,
+            'sort_order' => $data['sort_order'] ?? 0,
+            'is_active' => $request->has('is_active') ? 1 : 0,
+        ]);
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'timeline'])
+            ->with('success', 'Timeline berhasil ditambahkan.');
+    }
+
+    public function timelineUpdate(Request $request, Timeline $timeline)
+    {
+        $data = $request->validate([
+            'date_label' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'sort_order' => 'nullable|integer|min:0',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $timeline->update([
+            'date_label' => $data['date_label'],
+            'title' => $data['title'],
+            'description' => $data['description'] ?? null,
+            'sort_order' => $data['sort_order'] ?? 0,
+            'is_active' => $request->has('is_active') ? 1 : 0,
+        ]);
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'timeline'])
+            ->with('success', 'Timeline berhasil diupdate.');
+    }
+
+    public function timelineDestroy(Timeline $timeline)
+    {
+        $timeline->delete();
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'timeline'])
+            ->with('success', 'Timeline berhasil dihapus.');
+    }
+
 
     // =========================================
     // HELPER: Parse textarea -> bullets array

@@ -4,77 +4,19 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-
-
 @php
-$faq = [
-    ['category'=>'Pendaftaran','items'=>[
-        ['q'=>'Bagaimana cara mendaftarnya?','a'=>'Kunjungi Superaplikasi Rumah Pendidikan, kemudian klik banner Hackathon Rumah Pendidikan 2025. Pilih "DAFTAR SEKARANG" dan isi formulir pendaftaran.'],
-        ['q'=>'Apakah prosedur pendaftarannya dapat dibagikan ke grup komunitas?','a'=>'Diperbolehkan.'],
-        ['q'=>'Apakah terdapat dokumen resmi terkait Hackathon yang dapat dipelajari, termasuk ketentuan format game?','a'=>'Dokumen resmi akan disediakan pada laman Hackathon Rumah Pendidikan 2025 di s.id/hackathon-rumdik.'],
-    ]],
-    ['category'=>'Proposal','items'=>[
-        ['q'=>'Apakah disediakan format khusus untuk proposal?','a'=>'Format proposal akan diinformasikan dan disediakan oleh panitia saat memasuki masa unggah proposal.'],
-        ['q'=>'Berapa jumlah tim yang akan lolos pada tahap proposal ide?','a'=>'Sebanyak 10 tim dari tiap kategori.'],
-        ['q'=>'Apakah dalam pengajuan proposal diperbolehkan mencantumkan lebih dari dua game?','a'=>'Setiap tim wajib membuat 2 karya: 1 karya menggunakan tools Google for Education dan 1 karya menggunakan Canva.'],
-    ]],
-    ['category'=>'Tim & Kualifikasi','items'=>[
-        ['q'=>'Apakah dalam satu tim wajib terdiri dari tiga orang?','a'=>'Satu tim terdiri dari 3 guru dan/atau tenaga kependidikan dari sekolah yang sama.'],
-        ['q'=>'Apakah anggota tim boleh berasal dari lintas mata pelajaran?','a'=>'Diperbolehkan.'],
-        ['q'=>'Apakah anggota tim harus dari sekolah yang sama atau boleh dari sekolah yang berbeda?','a'=>'Anggota tim wajib berasal dari sekolah yang sama.'],
-        ['q'=>'Apakah anggota tim boleh berasal dari kepala sekolah?','a'=>'Diperbolehkan.'],
-        ['q'=>'Jika dalam satu tim terdapat guru yang bukan WNI, apakah diperbolehkan?','a'=>'Seluruh anggota tim wajib berstatus Warga Negara Indonesia.'],
-    ]],
-    ['category'=>'Akun belajar.id','items'=>[
-        ['q'=>'Bagaimana jika peserta tidak memiliki akun belajar.id karena berasal dari madrasah?','a'=>'Pendaftar dari Madrasah dapat menggunakan akun @madrasah.kemenag.go.id atau akun Gmail.'],
-        ['q'=>'Apakah guru yang belum memiliki akun belajar.id boleh ikut dengan meminjam akun belajar.id guru lain?','a'=>'Disarankan menggunakan akun belajar.id milik sendiri.'],
-        ['q'=>'Apakah guru madrasah diperbolehkan mengikuti kegiatan ini?','a'=>'Diperbolehkan.'],
-        ['q'=>'Jika guru Kemenag memiliki akun kemenag.go.id, apakah mereka boleh berpartisipasi?','a'=>'Diperbolehkan.'],
-        ['q'=>'Bagaimana solusi bagi guru atau tenaga kependidikan yang tidak memiliki akun belajar.id?','a'=>'Calon peserta sangat disarankan mengaktifkan akun belajar.id-nya terlebih dahulu.'],
-        ['q'=>'Saya belum memiliki akun belajar.id karena masih dalam proses masuk ke Dapodik. Apakah saya boleh menggunakan akun program.belajar.id yang saya miliki saat PPG Prajabatan?','a'=>'Boleh menggunakan akun program.belajar.id selama seluruh anggota tim terdata sebagai guru aktif pada Dapodik sekolah masing-masing.'],
-    ]],
-    ['category'=>'Kategori & Jenjang','items'=>[
-        ['q'=>'Apakah guru SLB diperbolehkan mengikuti kegiatan ini?','a'=>'Diperbolehkan.'],
-        ['q'=>'Jika guru SLB boleh ikut, apakah materi harus disesuaikan dengan jenjang SLB atau mengikuti jenjang umum?','a'=>'Materi dapat disesuaikan dengan jenjang di SLB-nya.'],
-        ['q'=>'Apakah guru SMA boleh membuat game untuk kategori PAUD?','a'=>'Diwajibkan membuat game yang sesuai dengan jenjang yang diampu.'],
-        ['q'=>'Saya guru Matematika di SMK. Apakah saya masuk kategori SMK atau SMA?','a'=>'Masuk kategori SMK.'],
-        ['q'=>'Apakah terdapat pemilihan terbaik tingkat provinsi atau langsung tingkat nasional?','a'=>'Pemilihan proposal/karya terbaik dilakukan berdasarkan jenjang. Tidak ada pemilihan tingkat provinsi.'],
-        ['q'=>'Apakah 10 kelompok terbaik dipilih per jenjang atau gabungan semua jenjang?','a'=>'10 kelompok terbaik ditetapkan per jenjang.'],
-    ]],
-    ['category'=>'Game / Media','items'=>[
-        ['q'=>'Apakah game edukasi wajib mendukung proses pembelajaran murid?','a'=>'Dianjurkan untuk mendukung pembelajaran dan relevan dengan kebutuhan peserta didik.'],
-        ['q'=>'Apakah game edukasi termasuk media pembelajaran, dan apakah wajib menyertakan TP, ATP, dan evaluasi?','a'=>'Dianjurkan untuk menyertakan TP, ATP, dan evaluasi guna memperkuat kelayakan pembelajaran.'],
-        ['q'=>'Apakah game yang dibuat harus dapat diakses oleh semua orang atau cukup melalui tautan tertentu?','a'=>'Karya yang dibuat harus dapat diakses menggunakan browser tanpa menggunakan tools tambahan tertentu.'],
-        ['q'=>'Apakah game yang tidak menjadi juara akan dipublikasikan di website?','a'=>'Karya yang dipublikasikan merupakan 3 karya terbaik dari masing-masing kategori.'],
-        ['q'=>'Apakah game harus berbasis HTML?','a'=>'Ya, game harus berbasis HTML.'],
-        ['q'=>'Apakah akan diajarkan cara membuat game yang dapat diakses secara offline?','a'=>'Peserta wajib mengikuti pelatihan pada tanggal 27 - 28 November 2025.'],
-        ['q'=>'Apakah game dapat berasal dari mata pelajaran apa pun, termasuk Agama, PJOK, atau Bahasa Daerah?','a'=>'Ya, diperbolehkan.'],
-        ['q'=>'Apakah terdapat tema tertentu atau tema bebas?','a'=>'Tidak ada tema khusus; peserta dapat memilih tema secara bebas dan mendukung pembelajaran serta relevan dengan kebutuhan peserta didik.'],
-    ]],
-    ['category'=>'Platform','items'=>[
-        ['q'=>'Apakah kolaborasi antara Gemini AI, Canva, dan H5P Lumi diperbolehkan?','a'=>'Diperbolehkan, sepanjang karya yang dihasilkan nantinya dapat dimainkan via browser tanpa menggunakan tools khusus.'],
-        ['q'=>'Apakah karya harus berformat PDF atau HTML?','a'=>'Karya berupa game edukasi interaktif berbasis web (HTML).'],
-        ['q'=>'Apakah wajib menggabungkan Canva dan Google, atau boleh memilih salah satu?','a'=>'Setiap tim wajib membuat 2 karya: 1 menggunakan tools dasar Google for Education dan 1 menggunakan tools dasar Canva.'],
-        ['q'=>'Apakah aplikasi Google dan Canva harus digunakan secara bersamaan atau cukup salah satu?','a'=>'Setiap tim wajib membuat 2 karya: 1 menggunakan tools dasar Google for Education dan 1 menggunakan tools dasar Canva.'],
-        ['q'=>'Bagaimana cara membuat game melalui Canva AI?','a'=>'Peserta wajib mengikuti pelatihan pada tanggal 27 November 2025.'],
-    ]],
-    ['category'=>'Status Peserta','items'=>[
-        ['q'=>'Apakah guru yang sedang tugas belajar diperbolehkan ikut?','a'=>'Guru yang sedang tugas belajar diperbolehkan ikut selama status di Dapodik merupakan guru aktif.'],
-        ['q'=>'Apakah kegiatan ini khusus untuk guru dan tendik yang terdaftar di Dapodik?','a'=>'Ya.'],
-        ['q'=>'Apakah peserta lomba Game Edukasi wajib memiliki NUPTK?','a'=>'Persyaratan peserta Hackathon Rumah Pendidikan 2025 adalah guru aktif yang terdata di Dapodik. Kepemilikan NUPTK tidak menjadi syarat utama.'],
-    ]],
-    ['category'=>'Pelatihan & Kickoff','items'=>[
-        ['q'=>'Apakah pelatihan dapat dilakukan secara luring per kecamatan?','a'=>'Pelatihan diselenggarakan secara daring oleh panitia pada tanggal 27 November 2025.'],
-        ['q'=>'Jika tidak dapat mengikuti Kick Off karena Zoom penuh, apa langkah selanjutnya?','a'=>'Rekaman Kick Off dapat disaksikan melalui Channel YouTube Rumah Pendidikan Kemendikdasmen atau Pusdatin Kemendikdasmen.'],
-    ]],
-    ['category'=>'Dukungan Kementerian','items'=>[
-        ['q'=>'Apakah kementerian dapat menyediakan template atau game edukasi yang siap pakai?','a'=>'Untuk pelaksanaan Hackathon Rumah Pendidikan 2025 ini, Kementerian belum menyediakan template atau game edukasi yang siap pakai.'],
-    ]],
-];
+    $groupedFaq = collect($faqs ?? [])
+        ->where('is_active', 1)
+        ->sortBy([
+            ['category', 'asc'],
+            ['sort_order', 'asc'],
+            ['id', 'asc'],
+        ])
+        ->groupBy('category');
 @endphp
 
 <style>
-/* ✅ PERBAIKAN: Scoped ke .faq-page saja agar tidak merusak navbar & footer */
+/* Scoped ke .faq-page saja agar tidak merusak navbar & footer */
 .faq-page *, .faq-page *::before, .faq-page *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 .faq-page {
@@ -247,6 +189,15 @@ $faq = [
     border-top: 1px solid #f1f5f9;
 }
 
+.fempty {
+    border: 1px dashed #cbd5e1;
+    background: #f8fafc;
+    color: #64748b;
+    border-radius: 12px;
+    padding: 20px;
+    font-size: 13px;
+}
+
 @media (max-width: 680px) {
     .fwrap { grid-template-columns: 1fr; padding: 16px 14px 48px; gap: 16px; }
     .fside { position: static; }
@@ -277,67 +228,79 @@ $faq = [
     <aside class="fside">
         <p class="fside-label">Kategori</p>
         <nav class="fside-nav">
-            @foreach($faq as $i => $cat)
-            <a class="fside-link {{ $i === 0 ? 'active' : '' }}"
-               href="#cat-{{ $i }}" data-cat="{{ $i }}">
-                {{ $cat['category'] }}
-                <span class="fside-count">{{ count($cat['items']) }}</span>
-            </a>
-            @endforeach
+            @forelse($groupedFaq as $category => $items)
+                <a class="fside-link {{ $loop->first ? 'active' : '' }}"
+                   href="#cat-{{ $loop->index }}" data-cat="{{ $loop->index }}">
+                    {{ $category }}
+                    <span class="fside-count">{{ $items->count() }}</span>
+                </a>
+            @empty
+                <span class="fside-link">Belum ada kategori</span>
+            @endforelse
         </nav>
     </aside>
 
     <main class="fmain">
-        @foreach($faq as $ci => $cat)
-        <div class="fcat" id="cat-{{ $ci }}">
-            <div class="fcat-head">
-                <span class="fcat-name">{{ $cat['category'] }}</span>
-                <span class="fcat-num">{{ count($cat['items']) }} pertanyaan</span>
-            </div>
-            @foreach($cat['items'] as $ii => $item)
-            <div class="facc" id="item-{{ $ci }}-{{ $ii }}">
-                <button class="facc-btn" onclick="toggleFaq('item-{{ $ci }}-{{ $ii }}')">
-                    <span class="facc-num">{{ $ii + 1 }}</span>
-                    <span class="facc-q">{{ $item['q'] }}</span>
-                    <span class="facc-chevron">
-                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"
-                             stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="6 9 12 15 18 9"/>
-                        </svg>
-                    </span>
-                </button>
-                <div class="facc-body">
-                    <div class="facc-inner">
-                        <div class="facc-ans">{{ $item['a'] }}</div>
-                    </div>
+        @forelse($groupedFaq as $category => $items)
+            <div class="fcat" id="cat-{{ $loop->index }}">
+                <div class="fcat-head">
+                    <span class="fcat-name">{{ $category }}</span>
+                    <span class="fcat-num">{{ $items->count() }} pertanyaan</span>
                 </div>
+
+                @foreach($items as $item)
+                    <div class="facc" id="item-{{ $loop->parent->index }}-{{ $loop->index }}">
+                        <button class="facc-btn" onclick="toggleFaq('item-{{ $loop->parent->index }}-{{ $loop->index }}')">
+                            <span class="facc-num">{{ $loop->iteration }}</span>
+                            <span class="facc-q">{{ $item->question }}</span>
+                            <span class="facc-chevron">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"
+                                     stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="6 9 12 15 18 9"/>
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="facc-body">
+                            <div class="facc-inner">
+                                <div class="facc-ans">{{ $item->answer }}</div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
-            @endforeach
-        </div>
-        @endforeach
+        @empty
+            <div class="fempty">Belum ada FAQ di database.</div>
+        @endforelse
     </main>
 </div>
 
-</div>{{-- .faq-page --}}
+</div>
 
 <script>
 function toggleFaq(id) {
     const el = document.getElementById(id);
+    if (!el) return;
+
     const isOpen = el.classList.contains('open');
     document.querySelectorAll('.facc.open').forEach(e => e.classList.remove('open'));
     if (!isOpen) el.classList.add('open');
 }
-const links = document.querySelectorAll('.fside-link');
+
+const links = document.querySelectorAll('.fside-link[data-cat]');
 const cats  = document.querySelectorAll('.fcat');
-const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-        if (e.isIntersecting) {
-            const id = e.target.id.replace('cat-', '');
-            links.forEach(l => l.classList.toggle('active', l.dataset.cat === id));
-        }
-    });
-}, { rootMargin: '-15% 0px -70% 0px' });
-cats.forEach(c => obs.observe(c));
+
+if (links.length && cats.length) {
+    const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                const id = e.target.id.replace('cat-', '');
+                links.forEach(l => l.classList.toggle('active', l.dataset.cat === id));
+            }
+        });
+    }, { rootMargin: '-15% 0px -70% 0px' });
+
+    cats.forEach(c => obs.observe(c));
+}
 </script>
 
 @endsection

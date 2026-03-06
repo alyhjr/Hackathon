@@ -8,67 +8,53 @@
     {{-- Title --}}
     <div class="text-center mb-16">
         <h1 class="text-5xl font-extrabold text-black-900 mb-4">
-            PENGUMUMAN 3 BESAR
+            {{ $pengumuman->title ?? 'PENGUMUMAN 3 BESAR' }}
         </h1>
+
         <h2 class="text-2xl font-semibold text-black-800">
             Hackathon Rumah Pendidikan 2026
         </h2>
-        <p class="text-lg font-medium text-black-700 mt-2">
-            Wujudkan Indonesia Cerdas
-        </p>
+
+        @if(!empty($pengumuman?->content))
+            <p class="text-lg font-medium text-black-700 mt-2 whitespace-pre-line">
+                {{ $pengumuman->content }}
+            </p>
+        @else
+            <p class="text-lg font-medium text-black-700 mt-2">
+                Wujudkan Indonesia Cerdas
+            </p>
+        @endif
     </div>
 
     {{-- Cards --}}
     <div class="pg-grid max-w-7xl mx-auto px-4" id="pgGrid">
 
-        @php
-        $categories = [
-            ['label' => 'Paud / Sederajat', 'teams' => [
-                ['name' => 'THE S.E.A PROJECT', 'school' => 'TK Surya Buana, Kota Malang, Jawa Timur'],
-                ['name' => 'Tim Bu Guru Ceria',  'school' => 'TAUD SaQu Al Umm Barabai, Hulu Sungai Tengah, Kalimantan Selatan'],
-                ['name' => 'Tim GPG',            'school' => 'TK IT Al-Busyra Hasyimiyah, Lombok Tengah, Nusa Tenggara Barat'],
-            ]],
-            ['label' => 'SD / Sederajat', 'teams' => [
-                ['name' => 'THE S.E.A PROJECT', 'school' => 'SDN Sokaraja Kidul, Banyumas, Jawa Tengah'],
-                ['name' => 'Tim Bu Guru Ceria',  'school' => 'SD Negeri Kradenan 01, Kabupaten Semarang, Jawa Tengah'],
-                ['name' => 'Tim GPG',            'school' => 'SDN 3 Sukahurip, Ciamis'],
-            ]],
-            ['label' => 'SMP / Sederajat', 'teams' => [
-                ['name' => 'THE S.E.A PROJECT', 'school' => 'SMP Islam As-Shofa, Pekanbaru, Riau'],
-                ['name' => 'Tim Bu Guru Ceria',  'school' => 'SMP Negeri 4 Satu Atap Kragan, Rembang, Jawa Tengah'],
-                ['name' => 'Tim GPG',            'school' => 'SMP Negeri 1 Nglipar, Gunungkidul, DI Yogyakarta'],
-            ]],
-            ['label' => 'SMA / Sederajat', 'teams' => [
-                ['name' => 'THE S.E.A PROJECT', 'school' => 'SMA Negeri 75 Jakarta, Jakarta Utara, DKI Jakarta'],
-                ['name' => 'Tim Bu Guru Ceria',  'school' => 'SMAN 1 Bintan Pesisir, Bintan, Kepulauan Riau'],
-                ['name' => 'Tim GPG',            'school' => 'SMA Negeri 6 Bandung, Kota Bandung, Jawa Barat'],
-            ]],
-            ['label' => 'SMK / Sederajat', 'teams' => [
-                ['name' => 'THE S.E.A PROJECT', 'school' => 'SMK-IT As-Syifa Boarding School, Subang, Jawa Barat'],
-                ['name' => 'Tim Bu Guru Ceria',  'school' => 'SMK Negeri 2 Bangkalan, Bangkalan, Jawa Timur'],
-                ['name' => 'Tim GPG',            'school' => 'SMK Telkom Banjarbaru, Banjarbaru, Kalimantan Selatan'],
-            ]],
-        ];
-        @endphp
+        @forelse($groups as $group)
+            <div class="pg-card">
+                <div class="pg-label-wrap">
+                    <h3>{{ $group->subtitle }}</h3>
+                </div>
 
-        @foreach($categories as $cat)
-        <div class="pg-card">
-            <div class="pg-label-wrap">
-                <h3>{{ $cat['label'] }}</h3>
-            </div>
-            <div class="pg-body">
-                <div class="pg-body-inner">
-                    @foreach($cat['teams'] as $rank => $team)
-                    <div class="pg-team {{ $loop->last ? '' : 'pg-team-mb' }}">
-                        <p class="pg-tname">{{ $rank + 1 }}. {{ $team['name'] }}</p>
-                        <p class="pg-tschool">{{ $team['school'] }}</p>
+                <div class="pg-body">
+                    <div class="pg-body-inner">
+                        @forelse($group->entries as $entry)
+                            <div class="pg-team {{ $loop->last ? '' : 'pg-team-mb' }}">
+                                <p class="pg-tname">{{ $entry->rank_order }}. {{ $entry->team_name }}</p>
+                                <p class="pg-tschool">{{ $entry->school_name }}</p>
+                            </div>
+                        @empty
+                            <div class="pg-team">
+                                <p class="pg-tname">Belum ada data tim</p>
+                            </div>
+                        @endforelse
                     </div>
-                    @endforeach
-
                 </div>
             </div>
-        </div>
-        @endforeach
+        @empty
+            <div class="col-span-full text-center text-slate-500 text-lg">
+                Belum ada data pengumuman 3 besar.
+            </div>
+        @endforelse
 
     </div>
 </div>
@@ -83,7 +69,6 @@
 @media (max-width:1024px) { .pg-grid { grid-template-columns: repeat(3,1fr); } }
 @media (max-width:640px)  { .pg-grid { grid-template-columns: repeat(1,1fr); } }
 
-/* Card */
 .pg-card {
     background: #dce8ee;
     border-radius: 20px;
@@ -97,7 +82,6 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
 }
 
-/* Aktif: maju ke depan */
 .pg-grid.has-active .pg-card.active {
     transform: scale(1.08);
     box-shadow: 0 18px 40px rgba(0,0,0,0.16);
@@ -106,14 +90,12 @@
     opacity: 1;
 }
 
-/* Tidak aktif: mundur ke belakang */
 .pg-grid.has-active .pg-card:not(.active) {
     transform: scale(0.91);
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     opacity: 0.85;
 }
 
-/* Label: default di tengah */
 .pg-label-wrap {
     flex: 1;
     display: flex;
@@ -122,6 +104,7 @@
     padding: 20px;
     min-height: 180px;
 }
+
 .pg-label-wrap h3 {
     font-size: 1rem;
     font-weight: 800;
@@ -130,7 +113,6 @@
     font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-/* Aktif: label naik ke atas */
 .pg-card.active .pg-label-wrap {
     flex: 0;
     min-height: 0;
@@ -138,13 +120,11 @@
     align-items: flex-start;
 }
 
-/* Konten: tersembunyi */
 .pg-body {
     display: none;
     padding: 0 20px;
 }
 
-/* Aktif: konten muncul */
 .pg-card.active .pg-body {
     max-height: 400px;
     opacity: 1;
@@ -154,31 +134,27 @@
 .pg-body-inner { padding: 10px 0 20px; }
 
 .pg-team-mb { margin-bottom: 14px; }
-.pg-tname   { font-weight:700; font-size:0.78rem; color:#1e293b; line-height:1.4; font-family:'Plus Jakarta Sans',sans-serif; }
-.pg-tschool { font-size:0.69rem; color:#475569; margin-top:2px; line-height:1.4; font-family:'Plus Jakarta Sans',sans-serif; }
-
-.pg-btn {
-    display: block;
-    width: 100%;
-    margin-top: 18px;
-    padding: 10px 0;
-    background: #2563eb;
-    color: #fff;
-    border: none;
-    border-radius: 9999px;
-    font-size: 0.8rem;
+.pg-tname   {
     font-weight: 700;
-    cursor: pointer;
+    font-size: 0.78rem;
+    color: #1e293b;
+    line-height: 1.4;
     font-family: 'Plus Jakarta Sans', sans-serif;
-    box-shadow: 0 2px 8px rgba(37,99,235,0.25);
-    transition: background 0.2s;
 }
-.pg-btn:hover { background: #1d4ed8; }
+.pg-tschool {
+    font-size: 0.69rem;
+    color: #475569;
+    margin-top: 2px;
+    line-height: 1.4;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
 </style>
 
 <script>
 (function() {
-    const grid  = document.getElementById('pgGrid');
+    const grid = document.getElementById('pgGrid');
+    if (!grid) return;
+
     const cards = Array.from(grid.querySelectorAll('.pg-card'));
 
     cards.forEach(card => {
@@ -187,6 +163,7 @@
             cards.forEach(c => c.classList.remove('active'));
             card.classList.add('active');
         });
+
         card.addEventListener('mouseleave', () => {
             card.classList.remove('active');
             grid.classList.remove('has-active');

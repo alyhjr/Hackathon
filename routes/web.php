@@ -3,23 +3,28 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\SiteSettingController;
-
-// ✅ Tambahan untuk tarik data DB Lomba (ketentuan & tahapan)
+use App\Models\Faq;
 use App\Models\LombaKetentuanItem;
 use App\Models\LombaTahapanStep;
+use App\Models\Pengumuman;
+use App\Models\PengumumanGroup;
 
 /*
-BERANDA
+|--------------------------------------------------------------------------
+| BERANDA
+|--------------------------------------------------------------------------
 */
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-/* LOMBA (Dropdown Menu) */
+/*
+|--------------------------------------------------------------------------
+| LOMBA (Dropdown Menu)
+|--------------------------------------------------------------------------
+*/
 Route::prefix('lomba')->name('lomba.')->group(function () {
 
-    // tetap view (statis)
     Route::view('/panduan', 'pages.lomba.panduan')->name('panduan');
 
-    // ✅ Tahapan: pakai Route::get supaya bisa compact('steps')
     Route::get('/tahapan', function () {
         $steps = LombaTahapanStep::where('is_active', 1)
             ->orderBy('step_number')
@@ -29,7 +34,6 @@ Route::prefix('lomba')->name('lomba.')->group(function () {
         return view('pages.lomba.tahapan', compact('steps'));
     })->name('tahapan');
 
-    // ✅ Ketentuan: pakai Route::get supaya bisa compact kategori/persyaratan/pendaftaran
     Route::get('/ketentuan', function () {
         $kategori = LombaKetentuanItem::where('tab', 'kategori')
             ->where('is_active', 1)
@@ -53,22 +57,86 @@ Route::prefix('lomba')->name('lomba.')->group(function () {
     })->name('ketentuan');
 });
 
-/* PENGUMUMAN (Dropdown Menu) */
+/*
+|--------------------------------------------------------------------------
+| PENGUMUMAN (Dropdown Menu)
+|--------------------------------------------------------------------------
+*/
 Route::prefix('pengumuman')->name('pengumuman.')->group(function () {
-    Route::view('/3besar', 'pages.pengumuman.3besar')->name('3besar');
-    Route::view('/lolos-seleksi-proposal', 'pages.pengumuman.lolos')->name('lolos');
+
+    Route::get('/3besar', function () {
+        $pengumuman = Pengumuman::where('type', 'tiga_besar')
+            ->where('is_active', 1)
+            ->orderBy('sort_order')
+            ->first();
+
+        $groups = collect();
+
+        if ($pengumuman) {
+            $groups = PengumumanGroup::with(['entries' => function ($q) {
+                    $q->where('is_active', 1)
+                        ->orderBy('rank_order')
+                        ->orderBy('sort_order')
+                        ->orderBy('id');
+                }])
+                ->where('pengumuman_id', $pengumuman->id)
+                ->where('is_active', 1)
+                ->orderBy('sort_order')
+                ->orderBy('id')
+                ->get();
+        }
+
+        return view('pages.pengumuman.3besar', compact('pengumuman', 'groups'));
+    })->name('3besar');
+
+    Route::get('/lolos-seleksi-proposal', function () {
+        $pengumuman = Pengumuman::where('type', 'lolos')
+            ->where('is_active', 1)
+            ->orderBy('sort_order')
+            ->first();
+
+        $groups = collect();
+
+        if ($pengumuman) {
+            $groups = PengumumanGroup::with(['entries' => function ($q) {
+                    $q->where('is_active', 1)
+                        ->orderBy('rank_order')
+                        ->orderBy('sort_order')
+                        ->orderBy('id');
+                }])
+                ->where('pengumuman_id', $pengumuman->id)
+                ->where('is_active', 1)
+                ->orderBy('sort_order')
+                ->orderBy('id')
+                ->get();
+        }
+
+        return view('pages.pengumuman.lolos', compact('pengumuman', 'groups'));
+    })->name('lolos');
 });
 
 /*
-FAQ
+|--------------------------------------------------------------------------
+| FAQ
+|--------------------------------------------------------------------------
 */
-Route::view('/faq', 'pages.faq')->name('faq');
+Route::get('/faq', function () {
+    $faqs = Faq::query()
+        ->where('is_active', 1)
+        ->orderBy('category')
+        ->orderBy('sort_order')
+        ->orderBy('id')
+        ->get();
+
+    return view('pages.faq', compact('faqs'));
+})->name('faq');
 
 /*
-REGISTRASI
+|--------------------------------------------------------------------------
+| REGISTRASI
+|--------------------------------------------------------------------------
 */
 Route::view('/registrasi', 'pages.registrasi')->name('registrasi');
-
 
 /*
 |--------------------------------------------------------------------------
@@ -84,9 +152,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('/site-settings', [SiteSettingController::class, 'update'])
         ->name('site-settings.update');
 
-    // =====================
-    // FAQ CRUD
-    // =====================
+    /*
+    |--------------------------------------------------------------------------
+    | FAQ CRUD
+    |--------------------------------------------------------------------------
+    */
     Route::post('/site-settings/faqs', [SiteSettingController::class, 'faqStore'])
         ->name('site-settings.faqs.store');
 
@@ -96,9 +166,59 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('/site-settings/faqs/{faq}', [SiteSettingController::class, 'faqDestroy'])
         ->name('site-settings.faqs.destroy');
 
-    // =====================
-    // LOMBA CRUD
-    // =====================
+
+
+    // Timeline
+    Route::post('/site-settings/timeline', [SiteSettingController::class, 'timelineStore'])
+        ->name('site-settings.timeline.store');
+
+    Route::put('/site-settings/timeline/{timeline}', [SiteSettingController::class, 'timelineUpdate'])
+        ->name('site-settings.timeline.update');
+
+    Route::delete('/site-settings/timeline/{timeline}', [SiteSettingController::class, 'timelineDestroy'])
+        ->name('site-settings.timeline.destroy');
+
+    /*
+    |--------------------------------------------------------------------------
+    | PENGUMUMAN CRUD
+    |--------------------------------------------------------------------------
+    */
+
+    // Pengumuman utama
+    Route::post('/site-settings/pengumuman', [SiteSettingController::class, 'storePengumuman'])
+        ->name('site-settings.pengumuman.store');
+
+    Route::put('/site-settings/pengumuman/{pengumuman}', [SiteSettingController::class, 'updatePengumuman'])
+        ->name('site-settings.pengumuman.update');
+
+    Route::delete('/site-settings/pengumuman/{pengumuman}', [SiteSettingController::class, 'destroyPengumuman'])
+        ->name('site-settings.pengumuman.destroy');
+
+    // Group / jenjang
+    Route::post('/site-settings/pengumuman-groups', [SiteSettingController::class, 'storePengumumanGroup'])
+        ->name('site-settings.pengumuman-groups.store');
+
+    Route::put('/site-settings/pengumuman-groups/{group}', [SiteSettingController::class, 'updatePengumumanGroup'])
+        ->name('site-settings.pengumuman-groups.update');
+
+    Route::delete('/site-settings/pengumuman-groups/{group}', [SiteSettingController::class, 'destroyPengumumanGroup'])
+        ->name('site-settings.pengumuman-groups.destroy');
+
+    // Entry / tim
+    Route::post('/site-settings/pengumuman-entries', [SiteSettingController::class, 'storePengumumanEntry'])
+        ->name('site-settings.pengumuman-entries.store');
+
+    Route::put('/site-settings/pengumuman-entries/{entry}', [SiteSettingController::class, 'updatePengumumanEntry'])
+        ->name('site-settings.pengumuman-entries.update');
+
+    Route::delete('/site-settings/pengumuman-entries/{entry}', [SiteSettingController::class, 'destroyPengumumanEntry'])
+        ->name('site-settings.pengumuman-entries.destroy');
+
+    /*
+    |--------------------------------------------------------------------------
+    | LOMBA CRUD
+    |--------------------------------------------------------------------------
+    */
 
     // Ketentuan
     Route::post('/site-settings/lomba/ketentuan', [SiteSettingController::class, 'lombaKetentuanStore'])

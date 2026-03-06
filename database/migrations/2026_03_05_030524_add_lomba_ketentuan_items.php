@@ -1,13 +1,22 @@
-public function up(): void
-{
-    Schema::table('lomba_ketentuan_items', function (Blueprint $table) {
-        $table->string('image_path')->nullable()->after('content');
-    });
-}
+<?php
 
-public function down(): void
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
 {
-    Schema::table('lomba_ketentuan_items', function (Blueprint $table) {
-        $table->dropColumn('image_path');
-    });
-}
+    public function up(): void
+    {
+        Schema::table('lomba_ketentuan_items', function (Blueprint $table) {
+            $table->string('image_path')->nullable()->after('content');
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('lomba_ketentuan_items', function (Blueprint $table) {
+            $table->dropColumn('image_path');
+        });
+    }
+};

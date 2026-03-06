@@ -12,6 +12,8 @@ class DatabaseSeeder extends Seeder
             SiteSettingSeeder::class,
             FaqSeeder::class,
             LombaSeeder::class,
+            PengumumanSeeder::class,
+            TimelineSeeder::class,
         ]);
     }
 }

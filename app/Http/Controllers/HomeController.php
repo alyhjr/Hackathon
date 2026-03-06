@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\SiteSetting;
 use App\Models\Faq;
+use App\Models\Timeline;
 
 class HomeController extends Controller
 {
@@ -11,12 +13,17 @@ class HomeController extends Controller
     {
         $setting = SiteSetting::first();
 
-        // ambil hanya 6 FAQ untuk homepage
         $faqs = Faq::where('is_active', 1)
             ->orderBy('sort_order')
-            ->limit(6)
+            ->orderBy('id')
+            ->get()
+            ->take(6);
+
+        $timeline = Timeline::where('is_active', 1)
+            ->orderBy('sort_order')
+            ->orderBy('id')
             ->get();
 
-        return view('pages.home', compact('setting', 'faqs'));
+        return view('pages.home', compact('setting', 'faqs', 'timeline'));
     }
 }

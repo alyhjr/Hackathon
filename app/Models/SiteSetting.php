@@ -20,5 +20,8 @@ class SiteSetting extends Model
         'hero_image-1',
         'hero_image-2',
         'hero_image-3',
+        'youtube_url',
+        'youtube_url_1',
+        'youtube_url_2',
     ];
 }

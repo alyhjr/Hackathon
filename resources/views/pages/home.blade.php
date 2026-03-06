@@ -23,133 +23,107 @@
 >
   <div class="absolute inset-0 bg-black/55"></div>
 
-  <div class="relative min-h-[520px] md:min-h-[580px] lg:min-h-[640px]">
-  <div class="absolute left-10 md:left-16 lg:left-24 top-[45%] -translate-y-1/2 text-white max-w-2xl">
+  <div class="relative min-h-[480px] md:min-h-[540px] lg:min-h-[580px]">
+    <div class="absolute left-10 md:left-16 lg:left-24 top-1/2 -translate-y-1/2 text-white max-w-2xl">
 
-    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.15] tracking-wide drop-shadow">
-  {!! nl2br(e($setting->hero_title ?? "HACKATHON RUMAH\nPENDIDIKAN 2026")) !!}
-</h1>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-wide drop-shadow">
+        <span class="block leading-tight">{!! e($setting->hero_title ? explode("\n", $setting->hero_title)[0] : "HACKATHON RUMAH") !!}</span>
+        <span class="block leading-tight mt-4">{!! e($setting->hero_title ? (explode("\n", $setting->hero_title)[1] ?? '') : "PENDIDIKAN 2026") !!}</span>
+      </h1>
 
-<p class="mt-1 text-lg md:text-xl lg:text-2xl font-extrabold leading-snug drop-shadow">
-  {{ $setting->hero_subtitle ?? 'Wujudkan Indonesia Cerdas' }}
-</p>
+      <div class="mt-5">
+        <p class="text-lg md:text-xl lg:text-2xl font-extrabold leading-snug drop-shadow">
+          {{ $setting->hero_subtitle ?? 'Wujudkan Indonesia Cerdas' }}
+        </p>
+        <p class="mt-1 text-sm md:text-base lg:text-lg font-semibold leading-snug opacity-90 drop-shadow">
+          "{{ $setting->hero_tagline ?? 'Gim Edukasi untuk Pembelajaran Seru' }}"
+        </p>
+      </div>
 
-<p class="mt-2 text-sm md:text-base lg:text-lg font-semibold leading-snug opacity-90 drop-shadow">
-  "<span class="font-extrabold">{{ $setting->hero_tagline ?? 'Gim Edukasi untuk Pembelajaran Seru' }}</span>"
-</p>
+      <a href="{{ $setting->primary_button_url ?? route('registrasi') }}"
+         class="inline-flex items-center justify-center mt-5 px-5 py-2
+                text-white text-sm font-bold
+                rounded-full shadow-sm hover:shadow-md
+                transition-all duration-200"
+         style="background-color:#0072BC;"
+         onmouseover="this.style.backgroundColor='#005fa3'"
+         onmouseout="this.style.backgroundColor='#0072BC'">
+        {{ $setting->primary_button_text ?? 'Registrasi' }}
+      </a>
 
-<a href="{{ $setting->primary_button_url ?? route('registrasi') }}"
-   class="inline-flex items-center justify-center mt-6 px-5 py-2
-          text-white text-sm font-bold
-          rounded-full shadow-sm hover:shadow-md
-          transition-all duration-200"
-   style="background-color:#0072BC;"
-   onmouseover="this.style.backgroundColor='#005fa3'"
-   onmouseout="this.style.backgroundColor='#0072BC'">
-
-   {{ $setting->primary_button_text ?? 'Registrasi' }}
-
-</a>
-
-
+    </div>
   </div>
-</div>
 </section>
 
 
 <!-- DESKRIPSI -->
-<section class="py-20 md:py-24">
-  <div class="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
+<section class="{{ $bleed ?? '' }} py-12 md:py-16">
+  <div class="{{ $inner ?? '' }}">
+    <div class="grid md:grid-cols-[1fr_0.75fr] gap-10 lg:gap-16 items-center">
 
     <!-- TEXT -->
     <div>
 
-      <h2 class="text-2xl md:text-2xl font-extrabold tracking-tight text-slate-900">
+      <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 leading-tight">
         HACKATHON RUMAH PENDIDIKAN 2026
       </h2>
-
-      <h3 class="mt-2 text-xl md:text-2xl font-bold text-slate-900">
-         Wujudkan Indonesia Cerdas
+      <h3 class="mt-1 text-xl md:text-2xl font-bold text-[#0072BC] leading-tight">
+        Wujudkan Indonesia Cerdas
       </h3>
 
-      <p class="mt-6 text-lg font-bold text-slate-900">
-  “Gim Edukasi untuk Pembelajaran Seru”
-</p>
-
-      <p class="mt-3 text-slate-900 leading-relaxed">
-        Hackathon Rumah Pendidikan 2025 ini menjadi wadah bagi berbagai kalangan
-        untuk menciptakan ide, solusi, dan prototipe teknologi pendidikan yang
-        berdampak nyata terhadap pengembangan Rumah Pendidikan.
+      <p class="mt-5 text-sm font-semibold text-slate-900">
+        "Gim Edukasi untuk Pembelajaran Seru"
       </p>
 
-      <p class="mt-3 text-slate-900 leading-relaxed">
-        Hackathon Rumah Pendidikan 2025 tidak sekadar ajang kompetisi teknologi,
-        tetapi juga ruang pembelajaran kolaboratif yang mendorong peserta untuk
-        merancang, mengembangkan, dan mendemonstrasikan solusi pembelajaran berbasis teknologi.
+      <p class="mt-5 mb-2 text-sm text-slate-600 leading-relaxed text-justify">
+        Hackathon Rumah Pendidikan 2026 menjadi wadah bagi berbagai kalangan untuk
+        menciptakan ide, solusi, dan prototipe teknologi pendidikan yang berdampak nyata
+        terhadap pengembangan Rumah Pendidikan. Bukan sekadar ajang kompetisi teknologi,
+        tetapi juga ruang pembelajaran kolaboratif yang mendorong peserta untuk merancang,
+        mengembangkan, dan mendemonstrasikan solusi pembelajaran berbasis teknologi.
       </p>
 
-      <p class="mt-3 text-lg font-bold text-slate-900 leading-relaxed">
-  Bapak Ibu Guru, saatnya berkreasi !
-</p>
-
-      <p class="mt-3 text-slate-900 leading-relaxed">
-        Wujudkan ide pembelajaran interaktif lewat game buatan sendiri, seru,
+      <p class="mt-4 mb-2 text-sm text-slate-600 leading-relaxed text-justify">
+        Wujudkan ide pembelajaran interaktif lewat game buatan sendiri — seru,
         menyenangkan, dan bisa dipakai di kelas seluruh Indonesia.
+      </p>
+
+      <p class="mt-6 text-base font-extrabold text-slate-900">
+        Bapak Ibu Guru, saatnya berkreasi!
       </p>
 
     </div>
 
     @php
-$homeImg1 = !empty($setting->home_image_1)
-    ? asset('storage/'.$setting->home_image_1)
-    : asset('image/header/gambar 1.png');
+      $homeImg1 = !empty($setting->home_image_1)
+          ? asset('storage/'.$setting->home_image_1)
+          : asset('image/header/gambar 1.png');
+      $homeImg2 = !empty($setting->home_image_2)
+          ? asset('storage/'.$setting->home_image_2)
+          : asset('image/header/gambar 2.jpg');
+      $homeImg3 = !empty($setting->home_image_3)
+          ? asset('storage/'.$setting->home_image_3)
+          : asset('image/header/gambar 3.png');
+    @endphp
 
-$homeImg2 = !empty($setting->home_image_2)
-    ? asset('storage/'.$setting->home_image_2)
-    : asset('image/header/gambar 2.jpg');
-
-$homeImg3 = !empty($setting->home_image_3)
-    ? asset('storage/'.$setting->home_image_3)
-    : asset('image/header/gambar 3.png');
-@endphp
-
-<!-- IMAGES -->
-<div class="grid grid-cols-2 gap-5">
-
-  <!-- Gambar 1 -->
-  <div class="overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
-    <img
-      src="{{ $homeImg1 }}"
-      alt="Kegiatan 1"
-      class="w-full h-full object-cover aspect-[4/3] hover:scale-[1.03] transition duration-300"
-      loading="lazy"
-    />
-  </div>
-
-  <!-- Gambar 2 -->
-  <div class="overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
-    <img
-      src="{{ $homeImg2 }}"
-      alt="Kegiatan 2"
-      class="w-full h-full object-cover aspect-[4/3] hover:scale-[1.03] transition duration-300"
-      loading="lazy"
-    />
-  </div>
-
-  <!-- Gambar 3 (Full Width) -->
-  <div class="col-span-2 overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
-    <img
-      src="{{ $homeImg3 }}"
-      alt="Kegiatan 3"
-      class="w-full h-full object-cover aspect-[16/7] hover:scale-[1.03] transition duration-300"
-      loading="lazy"
-    />
-  </div>
-
-</div>
-      
+    <!-- IMAGES -->
+    <div class="grid grid-cols-2 gap-2 max-w-sm mx-auto md:max-w-none">
+      <div class="overflow-hidden rounded-xl shadow-sm">
+        <img src="{{ $homeImg1 }}" alt="Kegiatan 1"
+          class="w-full object-cover aspect-[4/3] hover:scale-[1.03] transition duration-300" loading="lazy"/>
+      </div>
+      <div class="overflow-hidden rounded-xl shadow-sm">
+        <img src="{{ $homeImg2 }}" alt="Kegiatan 2"
+          class="w-full object-cover aspect-[4/3] hover:scale-[1.03] transition duration-300" loading="lazy"/>
+      </div>
+      <div class="col-span-2 overflow-hidden rounded-xl shadow-sm">
+        <img src="{{ $homeImg3 }}" alt="Kegiatan 3"
+          class="w-full object-cover aspect-[16/6] hover:scale-[1.03] transition duration-300" loading="lazy"/>
+      </div>
     </div>
-  </div>
+
+    </div>{{-- end grid --}}
+  </div>{{-- end inner --}}
 </section>
 
 <!-- INFORMASI PENTING -->
@@ -240,10 +214,7 @@ $homeImg3 = !empty($setting->home_image_3)
       </div>
     </div>
 
-    <!-- Footer text -->
-    <p class="mt-10 text-center text-lg md:text-xl font-extrabold text-slate-900 tracking-tight">
-      Selamat kepada seluruh tim terpilih dan tetap semangat untuk tahapan selanjutnya!
-    </p>
+  
 
   </div>
 </section>
@@ -291,7 +262,6 @@ $homeImg3 = !empty($setting->home_image_3)
   }
 </style>
 
-  <!-- Heading -->
   <div class="text-center mb-14">
     <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
       Timeline Kegiatan
@@ -301,58 +271,44 @@ $homeImg3 = !empty($setting->home_image_3)
     </p>
   </div>
 
-  @php
-    $timeline = [
-      ['date' => "18\nNov, 2025",         'title' => 'Kickoff Meeting'],
-      ['date' => "18 – 25\nNov, 2025",    'title' => 'Pendaftaran Peserta'],
-      ['date' => "27 – 28\nNov, 2025",    'title' => 'Pelatihan Peserta dengan Tools (daring)', 'desc' => 'Cek email (yang terdaftar) untuk mendapatkan tautan zoom'],
-      ['date' => "28 Nov –\n3 Des, 2025", 'title' => 'Unggah Proposal Ide Karya'],
-      ['date' => "5 – 6\nDes, 2025",      'title' => 'Penilaian Proposal Ide Karya'],
-      ['date' => "7\nDes, 2025",          'title' => 'Pengumuman Peserta Lolos Seleksi Proposal'],
-      ['date' => "9\nDes, 2025",          'title' => 'Inkubasi Peserta (daring)'],
-      ['date' => "10\nDes, 2025",         'title' => 'Unggah Karya Peserta'],
-      ['date' => "12 – 13\nDes, 2025",    'title' => 'Presentasi Karya', 'desc' => 'Penilaian dan Penentuan Pemenang'],
-    ];
-  @endphp
-
   <div class="max-w-3xl mx-auto">
-    @foreach ($timeline as $i => $item)
+    @forelse(($timeline ?? collect()) as $i => $item)
       <div class="tl-group tl-item flex gap-6 items-stretch"
            style="animation-delay: {{ $i * 0.06 }}s">
 
-        <!-- DATE -->
         <div class="w-28 flex-shrink-0 flex items-center justify-end py-3">
-         <span class="text-right text-sm font-extrabold leading-snug whitespace-pre-line"
-      style="color:#1c1917;">{{ $item['date'] }}</span>
+          <span class="text-right text-sm font-extrabold leading-snug whitespace-pre-line" style="color:#1c1917;">
+            {{ $item->date_label }}
+          </span>
         </div>
 
-        <!-- LINE + DOT -->
         <div class="relative flex flex-col items-center flex-shrink-0" style="width:28px;">
           <div class="tl-line flex-1"></div>
           <div class="tl-dot flex-shrink-0 my-1 z-10"></div>
           <div class="tl-line flex-1"></div>
         </div>
 
-        <!-- CARD -->
         <div class="flex-1 py-2">
           <div class="tl-card">
             <div class="text-base font-bold text-slate-900 leading-snug">
-              {{ $item['title'] }}
+              {{ $item->title }}
             </div>
-            @if(!empty($item['desc']))
+            @if(!empty($item->description))
               <div class="mt-1 text-sm font-medium leading-relaxed text-slate-700">
-                {{ $item['desc'] }}
+                {{ $item->description }}
               </div>
             @endif
           </div>
         </div>
 
       </div>
-    @endforeach
+    @empty
+      <div class="text-center text-slate-500">
+        Belum ada data timeline.
+      </div>
+    @endforelse
   </div>
-
 </section>
-
 
 <!-- TOOLS (BALANCED LOGO SIZE) -->
 <section class="{{ $bleed }} py-20 md:py-24 bg-white-100">
@@ -608,48 +564,88 @@ $homeImg3 = !empty($setting->home_image_3)
 </section>
 
 
-
-      <!-- YOUTUBE -->
+<!-- YOUTUBE -->
 <section class="{{ $bleed }} py-24 md:py-32 bg-white">
   <div class="{{ $inner }}">
 
     <div class="mb-8">
-      <p class="text-xs font-semibold tracking-widest uppercase text-slate-400 mb-2">Dokumentasi Kegiatan</p>
+      <p class="text-xs font-semibold tracking-widest uppercase text-slate-400 mb-2">
+        Dokumentasi Kegiatan
+      </p>
       <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 leading-snug">
-        Simak Kick-off Hackathon Rumah Pendidikan 2025</span><br>
+        Simak Kick-off Hackathon Rumah Pendidikan 2025<br>
         Wujudkan Indonesia Cerdas.
       </h2>
     </div>
 
-    <div class="grid md:grid-cols-2 gap-6 items-start">
+    @php
+      if (!function_exists('extractYoutubeIdSimple')) {
+          function extractYoutubeIdSimple($url) {
+              if (!$url) return null;
 
-      <!-- Video 1 -->
-      <div class="aspect-video rounded-2xl overflow-hidden shadow-lg ring-1 ring-slate-200">
-        <iframe
-          class="w-full h-full"
-          src="https://www.youtube.com/embed/L02cYTuljK0"
-          title="Kick-off Hackathon Rumah Pendidikan - Video 1"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen>
-        </iframe>
+              if (preg_match('/youtu\.be\/([^\?&]+)/', $url, $match)) {
+                  return $match[1];
+              }
+
+              if (preg_match('/watch\?v=([^\?&]+)/', $url, $match)) {
+                  return $match[1];
+              }
+
+              if (preg_match('/live\/([^\?&]+)/', $url, $match)) {
+                  return $match[1];
+              }
+
+              if (preg_match('/embed\/([^\?&]+)/', $url, $match)) {
+                  return $match[1];
+              }
+
+              return null;
+          }
+      }
+
+      $video1 = extractYoutubeIdSimple($setting->youtube_url_1 ?? null);
+      $video2 = extractYoutubeIdSimple($setting->youtube_url_2 ?? null);
+    @endphp
+
+    @if($video1 || $video2)
+      <div class="grid md:grid-cols-2 gap-6 items-start">
+
+        @if($video1)
+          <div class="aspect-video rounded-2xl overflow-hidden shadow-lg ring-1 ring-slate-200">
+            <iframe
+              class="w-full h-full"
+              src="https://www.youtube.com/embed/{{ $video1 }}"
+              title="Kick-off Hackathon Rumah Pendidikan - Video 1"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
+        @endif
+
+        @if($video2)
+          <div class="aspect-video rounded-2xl overflow-hidden shadow-lg ring-1 ring-slate-200">
+            <iframe
+              class="w-full h-full"
+              src="https://www.youtube.com/embed/{{ $video2 }}"
+              title="Kick-off Hackathon Rumah Pendidikan - Video 2"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
+        @endif
+
       </div>
-
-      <!-- Video 2 -->
-      <div class="aspect-video rounded-2xl overflow-hidden shadow-lg ring-1 ring-slate-200 ">
-        <iframe
-          class="w-full h-full"
-          src="https://www.youtube.com/embed/hYhSnf3t4u4"
-          title="Kick-off Hackathon Rumah Pendidikan - Video 2"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen>
-        </iframe>
+    @else
+      <div class="max-w-4xl mx-auto rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 py-12 text-center">
+        <p class="text-slate-500 font-medium">
+          Video YouTube belum diatur di CMS.
+        </p>
       </div>
-
-    </div>
+    @endif
 
   </div>
 </section>
-
+      
 @endsection
