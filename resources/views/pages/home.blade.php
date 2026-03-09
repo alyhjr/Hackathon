@@ -26,129 +26,196 @@
   <div class="relative min-h-[480px] md:min-h-[540px] lg:min-h-[580px]">
     <div class="absolute left-10 md:left-16 lg:left-24 top-1/2 -translate-y-1/2 text-white max-w-2xl">
 
-      <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-wide drop-shadow">
-        <span class="block leading-tight">{!! e($setting->hero_title ? explode("\n", $setting->hero_title)[0] : "HACKATHON RUMAH") !!}</span>
-        <span class="block leading-tight mt-4">{!! e($setting->hero_title ? (explode("\n", $setting->hero_title)[1] ?? '') : "PENDIDIKAN 2026") !!}</span>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-wide drop-shadow mt-6">
+        <span class="block leading-tight hero-anim" style="animation-delay:0ms">
+          {!! e($setting->hero_title ? explode("\n", $setting->hero_title)[0] : "HACKATHON RUMAH") !!}
+        </span>
+        <span class="block leading-tight mt-1 hero-anim" style="animation-delay:120ms">
+          {!! e($setting->hero_title ? (explode("\n", $setting->hero_title)[1] ?? '') : "PENDIDIKAN 2026") !!}
+        </span>
       </h1>
 
-      <div class="mt-5">
-        <p class="text-lg md:text-xl lg:text-2xl font-extrabold leading-snug drop-shadow">
+      <div class="mt-4">
+        <p class="text-lg md:text-xl lg:text-2xl font-extrabold leading-snug drop-shadow hero-anim" style="animation-delay:260ms">
           {{ $setting->hero_subtitle ?? 'Wujudkan Indonesia Cerdas' }}
         </p>
-        <p class="mt-1 text-sm md:text-base lg:text-lg font-semibold leading-snug opacity-90 drop-shadow">
+        <p class="mt-1 text-sm md:text-base lg:text-lg font-semibold leading-snug opacity-90 drop-shadow hero-anim" style="animation-delay:360ms">
           "{{ $setting->hero_tagline ?? 'Gim Edukasi untuk Pembelajaran Seru' }}"
         </p>
       </div>
 
-      <a href="{{ $setting->primary_button_url ?? route('registrasi') }}"
-         class="inline-flex items-center justify-center mt-5 px-5 py-2
-                text-white text-sm font-bold
-                rounded-full shadow-sm hover:shadow-md
-                transition-all duration-200"
-         style="background-color:#0072BC;"
-         onmouseover="this.style.backgroundColor='#005fa3'"
-         onmouseout="this.style.backgroundColor='#0072BC'">
-        {{ $setting->primary_button_text ?? 'Registrasi' }}
-      </a>
+      <div class="hero-anim" style="animation-delay:480ms">
+        <a href="{{ $setting->primary_button_url ?? route('registrasi') }}"
+           class="inline-flex items-center justify-center mt-5 px-5 py-2
+                  text-white text-sm font-bold
+                  rounded-full shadow-sm hover:shadow-md
+                  transition-all duration-200 hero-btn"
+           style="background-color:#0072BC;"
+           onmouseover="this.style.backgroundColor='#005fa3'"
+           onmouseout="this.style.backgroundColor='#0072BC'">
+          {{ $setting->primary_button_text ?? 'Registrasi' }}
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <style>
+    @keyframes heroFadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes heroPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0,114,188,0.5); }
+      50%       { box-shadow: 0 0 0 8px rgba(0,114,188,0); }
+    }
+    .hero-anim {
+      opacity: 0;
+      animation: heroFadeUp 0.65s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+    .hero-btn {
+      animation: heroPulse 2.4s ease-in-out 1.2s infinite;
+    }
+  </style>
+</section>
+
+<!-- DESKRIPSI -->
+<section class="{{ $bleed ?? '' }} pt-16 pb-12 md:pt-20 md:pb-16">
+  <div class="{{ $inner ?? '' }}">
+    <div class="grid md:grid-cols-[1fr_0.75fr] gap-10 lg:gap-16 items-start">
+
+      <!-- TEXT -->
+      <div class="pt-5">
+        <h2 class="desc-up text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 leading-tight" style="--i:0">
+          HACKATHON RUMAH PENDIDIKAN
+        </h2>
+        <h3 class="desc-up mt-1 text-xl md:text-2xl font-bold text-[#0072BC] leading-tight" style="--i:1">
+          Wujudkan Indonesia Cerdas
+        </h3>
+
+        <p class="desc-up mt-5 text-sm font-extrabold text-slate-900" style="--i:2">
+          "Gim Edukasi untuk Pembelajaran Seru"
+        </p>
+
+        <p class="desc-up mt-4 text-sm text-slate-800 leading-relaxed text-justify" style="--i:3">
+          Hackathon Rumah Pendidikan 2026 ini menjadi wadah bagi berbagai
+          kalangan untuk menciptakan ide, solusi, dan prototipe teknologi
+          pendidikan yang berdampak nyata terhadap pengembangan Rumah
+          Pendidikan.
+        </p>
+
+        <p class="desc-up mt-3 text-sm text-slate-800 leading-relaxed text-justify" style="--i:4">
+          Hackathon Rumah Pendidikan 2026 tidak sekadar ajang kompetisi
+          teknologi, tetapi juga ruang pembelajaran kolaboratif yang mendorong
+          peserta untuk merancang, mengembangkan, dan mendemonstrasikan
+          solusi pembelajaran berbasis teknologi.
+        </p>
+
+        <p class="desc-up mt-6 text-base font-extrabold text-slate-900" style="--i:5">
+          Bapak Ibu Guru, saatnya berkreasi !
+        </p>
+
+        <p class="desc-up mt-2 text-sm text-slate-800 leading-relaxed" style="--i:6">
+          Wujudkan ide pembelajaran interaktif lewat game buatan sendiri, seru,
+          menyenangkan, dan bisa dipakai di kelas seluruh Indonesia.
+        </p>
+      </div>
+
+      @php
+        $homeImg1 = !empty($setting->home_image_1)
+            ? asset('storage/'.$setting->home_image_1)
+            : asset('image/header/gambar 1.png');
+        $homeImg2 = !empty($setting->home_image_2)
+            ? asset('storage/'.$setting->home_image_2)
+            : asset('image/header/gambar 2.jpg');
+        $homeImg3 = !empty($setting->home_image_3)
+            ? asset('storage/'.$setting->home_image_3)
+            : asset('image/header/gambar 3.png');
+      @endphp
+
+      <!-- IMAGES -->
+      <div class="flex flex-col gap-2">
+        <div class="grid grid-cols-2 gap-2">
+          <div class="desc-up overflow-hidden rounded-xl shadow-sm" style="--i:2">
+            <img src="{{ $homeImg1 }}" alt="Kegiatan 1"
+              class="w-full object-cover aspect-square hover:scale-[1.05] transition duration-500 ease-out" loading="lazy"/>
+          </div>
+          <div class="desc-up overflow-hidden rounded-xl shadow-sm" style="--i:3">
+            <img src="{{ $homeImg2 }}" alt="Kegiatan 2"
+              class="w-full object-cover aspect-square hover:scale-[1.05] transition duration-500 ease-out" loading="lazy"/>
+          </div>
+        </div>
+        <div class="desc-up overflow-hidden rounded-xl shadow-sm" style="--i:4">
+          <img src="{{ $homeImg3 }}" alt="Kegiatan 3"
+            class="w-full object-cover aspect-[16/7] hover:scale-[1.05] transition duration-500 ease-out" loading="lazy"/>
+        </div>
+      </div>
 
     </div>
   </div>
 </section>
 
+<style>
+  .desc-up {
+    opacity: 0;
+    transform: translateY(32px);
+    transition:
+      opacity  0.7s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i, 0) * 90ms),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i, 0) * 90ms);
+  }
+  .desc-up.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
 
-<!-- DESKRIPSI -->
-<section class="{{ $bleed ?? '' }} py-12 md:py-16">
-  <div class="{{ $inner ?? '' }}">
-    <div class="grid md:grid-cols-[1fr_0.75fr] gap-10 lg:gap-16 items-center">
+<script>
+  (function () {
+    const targets = document.querySelectorAll('.desc-up');
+    if (!targets.length) return;
 
-    <!-- TEXT -->
-    <div>
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.08,
+        rootMargin: '0px 0px -60px 0px'
+      }
+    );
 
-      <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 leading-tight">
-        HACKATHON RUMAH PENDIDIKAN 2026
-      </h2>
-      <h3 class="mt-1 text-xl md:text-2xl font-bold text-[#0072BC] leading-tight">
-        Wujudkan Indonesia Cerdas
-      </h3>
-
-      <p class="mt-5 text-sm font-semibold text-slate-900">
-        "Gim Edukasi untuk Pembelajaran Seru"
-      </p>
-
-      <p class="mt-5 mb-2 text-sm text-slate-600 leading-relaxed text-justify">
-        Hackathon Rumah Pendidikan 2026 menjadi wadah bagi berbagai kalangan untuk
-        menciptakan ide, solusi, dan prototipe teknologi pendidikan yang berdampak nyata
-        terhadap pengembangan Rumah Pendidikan. Bukan sekadar ajang kompetisi teknologi,
-        tetapi juga ruang pembelajaran kolaboratif yang mendorong peserta untuk merancang,
-        mengembangkan, dan mendemonstrasikan solusi pembelajaran berbasis teknologi.
-      </p>
-
-      <p class="mt-4 mb-2 text-sm text-slate-600 leading-relaxed text-justify">
-        Wujudkan ide pembelajaran interaktif lewat game buatan sendiri — seru,
-        menyenangkan, dan bisa dipakai di kelas seluruh Indonesia.
-      </p>
-
-      <p class="mt-6 text-base font-extrabold text-slate-900">
-        Bapak Ibu Guru, saatnya berkreasi!
-      </p>
-
-    </div>
-
-    @php
-      $homeImg1 = !empty($setting->home_image_1)
-          ? asset('storage/'.$setting->home_image_1)
-          : asset('image/header/gambar 1.png');
-      $homeImg2 = !empty($setting->home_image_2)
-          ? asset('storage/'.$setting->home_image_2)
-          : asset('image/header/gambar 2.jpg');
-      $homeImg3 = !empty($setting->home_image_3)
-          ? asset('storage/'.$setting->home_image_3)
-          : asset('image/header/gambar 3.png');
-    @endphp
-
-    <!-- IMAGES -->
-    <div class="grid grid-cols-2 gap-2 max-w-sm mx-auto md:max-w-none">
-      <div class="overflow-hidden rounded-xl shadow-sm">
-        <img src="{{ $homeImg1 }}" alt="Kegiatan 1"
-          class="w-full object-cover aspect-[4/3] hover:scale-[1.03] transition duration-300" loading="lazy"/>
-      </div>
-      <div class="overflow-hidden rounded-xl shadow-sm">
-        <img src="{{ $homeImg2 }}" alt="Kegiatan 2"
-          class="w-full object-cover aspect-[4/3] hover:scale-[1.03] transition duration-300" loading="lazy"/>
-      </div>
-      <div class="col-span-2 overflow-hidden rounded-xl shadow-sm">
-        <img src="{{ $homeImg3 }}" alt="Kegiatan 3"
-          class="w-full object-cover aspect-[16/6] hover:scale-[1.03] transition duration-300" loading="lazy"/>
-      </div>
-    </div>
-
-    </div>{{-- end grid --}}
-  </div>{{-- end inner --}}
-</section>
+    targets.forEach((el) => observer.observe(el));
+  })();
+</script>
 
 <!-- INFORMASI PENTING -->
 <section class="{{ $bleed }} py-24 bg-gradient-to-b from-sky-50 to-sky-100/40">
   <div class="{{ $inner }}">
 
     <!-- Heading -->
-    <div class="text-center">
+    <div class="text-center info-up" style="--i:0">
       <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 inline-flex items-center justify-center gap-3">
         Informasi Penting
         <img
-  src="{{ asset('image/header/perintah.png') }}"
-  alt="Perintah"
-  class="w-10 md:w-12 h-10 md:h-12 object-contain mt-1"
-  loading="lazy"
-/>
+          src="{{ asset('image/header/perintah.png') }}"
+          alt="Perintah"
+          class="w-10 md:w-12 h-10 md:h-12 object-contain mt-1"
+          loading="lazy"
+        />
       </h2>
     </div>
 
-    <!-- Content (dibatasi biar center & nggak ketarik ke kanan) -->
+    <!-- Content -->
     <div class="mt-16 max-w-6xl mx-auto">
       <div class="grid md:grid-cols-2 gap-14 items-start">
 
         <!-- Ilustrasi kiri -->
-        <div class="flex justify-center md:justify-center">
+        <div class="info-up flex justify-center md:justify-center" style="--i:1">
           <img
             src="{{ asset('image/header/pengumuman.png') }}"
             alt="Ilustrasi Informasi Penting"
@@ -160,7 +227,7 @@
         </div>
 
         <!-- Card Informasi -->
-        <div class="flex justify-center">
+        <div class="info-up flex justify-center" style="--i:2">
           <div class="w-full max-w-xl bg-white rounded-3xl p-10 border border-slate-200
                       shadow-[0_10px_30px_rgba(0,0,0,0.06)]
                       transition duration-300
@@ -169,17 +236,15 @@
             <div class="space-y-10">
 
               <!-- Item 1 -->
-              <div class="flex gap-5">
+              <div class="info-up flex gap-5" style="--i:3">
                 <div class="shrink-0">
                   <div class="w-14 h-14 rounded-2xl bg-sky-50 flex items-center justify-center border border-sky-100">
-                    <!-- Email tertutup -->
                     <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M4 6h16v12H4z"/>
                       <path d="M4 8l8 5 8-5"/>
                     </svg>
                   </div>
                 </div>
-
                 <p class="text-slate-900 leading-relaxed font-medium">
                   Informasi lanjutan terkait pelatihan dan tahapan berikutnya telah dikirimkan melalui email kepada
                   masing-masing Ketua Tim yang lolos.
@@ -189,10 +254,9 @@
               <div class="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
 
               <!-- Item 2 -->
-              <div class="flex gap-5">
+              <div class="info-up flex gap-5" style="--i:4">
                 <div class="shrink-0">
                   <div class="w-14 h-14 rounded-2xl bg-sky-50 flex items-center justify-center border border-sky-100">
-                    <!-- Email terbuka -->
                     <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M3 10l9 5 9-5"/>
                       <path d="M21 10v10H3V10"/>
@@ -200,7 +264,6 @@
                     </svg>
                   </div>
                 </div>
-
                 <p class="text-slate-900 leading-relaxed font-medium">
                   Mohon segera melakukan pengecekan email (termasuk folder spam/promosi)
                   agar tidak ada informasi terlewat.
@@ -214,87 +277,140 @@
       </div>
     </div>
 
-  
-
   </div>
 </section>
 
-
-<!-- TIMELINE -->
-<section class="py-20 md:py-24 px-4">
 <style>
-  .tl-line {
-    background: linear-gradient(to bottom, transparent, #c8c27e 8%, #c8c27e 92%, transparent);
-    width: 2px;
+  .info-up {
+    opacity: 0;
+    transform: translateY(32px);
+    transition:
+      opacity  0.7s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i, 0) * 90ms),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i, 0) * 90ms);
   }
-  .tl-dot {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background-color: #FFF9BF;
-    border: 2px solid #c8c27e;
-    box-shadow: 0 0 0 4px rgba(255, 249, 191, 0.4);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-  }
-  .tl-group:hover .tl-dot {
-    box-shadow: 0 0 0 6px rgba(255, 249, 191, 0.6);
-    transform: scale(1.2);
-  }
-  .tl-card {
-    background-color: #FFF9BF;
-    border: 1.5px solid #ddd880;
-    border-radius: 14px;
-    padding: 16px 24px;
-    box-shadow: 2px 3px 12px rgba(180, 174, 60, 0.15);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-    isolation: isolate;
-  }
-  .tl-group:hover .tl-card {
-    transform: translateY(-3px);
-    box-shadow: 2px 8px 24px rgba(180, 174, 60, 0.22);
-  }
-  @keyframes tl-fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .tl-item {
-    animation: tl-fadeUp 0.5s ease both;
+  .info-up.in-view {
+    opacity: 1;
+    transform: translateY(0);
   }
 </style>
 
-  <div class="text-center mb-14">
+<script>
+  (function () {
+    const targets = document.querySelectorAll('.info-up');
+    if (!targets.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.08,
+        rootMargin: '0px 0px -60px 0px'
+      }
+    );
+
+    targets.forEach((el) => observer.observe(el));
+  })();
+</script>
+
+
+<!-- TIMELINE -->
+<section class="{{ $bleed ?? '' }} py-12 md:py-16 px-4">
+<style>
+  .tl-line {
+    background: linear-gradient(to bottom, transparent, #ddd880 15%, #ddd880 85%, transparent);
+    width: 1.5px;
+  }
+  .tl-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 2px solid #ddd880;
+    transition: transform 0.25s ease, background-color 0.25s ease;
+    flex-shrink: 0;
+  }
+  .tl-group:hover .tl-dot {
+    transform: scale(1.3);
+    background-color: #FEFCE8;
+  }
+  .tl-card {
+    background-color: #FEFBD0;
+    border: 1px solid #e8e27a;
+    border-radius: 10px;
+    padding: 10px 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .tl-group:hover .tl-card {
+    transform: translateX(3px);
+    box-shadow: 0 4px 16px rgba(200, 195, 80, 0.15);
+  }
+
+  /* Scroll animation */
+  .tl-heading {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1),
+                transform 0.7s cubic-bezier(0.16,1,0.3,1);
+  }
+  .tl-heading.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .tl-item {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1) var(--tl-delay, 0ms),
+                transform 0.6s cubic-bezier(0.16,1,0.3,1) var(--tl-delay, 0ms);
+  }
+  .tl-item.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+
+  <div class="tl-heading text-center mb-10">
     <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
       Timeline Kegiatan
     </h2>
-    <p class="mt-2 text-sm text-slate-500">
+    <p class="mt-3 text-xs text-slate-900 font-semibold">
       Jadwal dapat berubah sesuai ketentuan panitia.
     </p>
   </div>
 
-  <div class="max-w-3xl mx-auto">
+  <div class="max-w-2xl mx-auto">
     @forelse(($timeline ?? collect()) as $i => $item)
-      <div class="tl-group tl-item flex gap-6 items-stretch"
-           style="animation-delay: {{ $i * 0.06 }}s">
+      <div class="tl-group tl-item flex gap-4 items-stretch"
+           style="--tl-delay: {{ $i * 80 }}ms">
 
-        <div class="w-28 flex-shrink-0 flex items-center justify-end py-3">
-          <span class="text-right text-sm font-extrabold leading-snug whitespace-pre-line" style="color:#1c1917;">
+        {{-- DATE --}}
+        <div class="w-24 flex-shrink-0 flex items-center justify-end py-2">
+          <span class="text-right text-xs font-bold leading-snug text-slate-900 whitespace-pre-line">
             {{ $item->date_label }}
           </span>
         </div>
 
-        <div class="relative flex flex-col items-center flex-shrink-0" style="width:28px;">
+        {{-- CONNECTOR --}}
+        <div class="relative flex flex-col items-center flex-shrink-0" style="width: 20px;">
           <div class="tl-line flex-1"></div>
-          <div class="tl-dot flex-shrink-0 my-1 z-10"></div>
+          <div class="tl-dot z-10"></div>
           <div class="tl-line flex-1"></div>
         </div>
 
-        <div class="flex-1 py-2">
+        {{-- CARD --}}
+        <div class="flex-1 py-1.5">
           <div class="tl-card">
-            <div class="text-base font-bold text-slate-900 leading-snug">
+            <div class="text-sm font-semibold text-slate-800 leading-snug">
               {{ $item->title }}
             </div>
             @if(!empty($item->description))
-              <div class="mt-1 text-sm font-medium leading-relaxed text-slate-700">
+              <div class="mt-0.5 text-xs text-slate-500 leading-relaxed">
                 {{ $item->description }}
               </div>
             @endif
@@ -303,21 +419,49 @@
 
       </div>
     @empty
-      <div class="text-center text-slate-500">
+      <div class="text-center text-sm text-slate-400 py-8">
         Belum ada data timeline.
       </div>
     @endforelse
   </div>
+
 </section>
+
+<script>
+  (function () {
+    // Heading
+    const heading = document.querySelector('.tl-heading');
+    // Items
+    const items = document.querySelectorAll('.tl-item');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.08,
+        rootMargin: '0px 0px -50px 0px'
+      }
+    );
+
+    if (heading) observer.observe(heading);
+    items.forEach((el) => observer.observe(el));
+  })();
+</script>
 
 <!-- TOOLS (BALANCED LOGO SIZE) -->
 <section class="{{ $bleed }} py-20 md:py-24 bg-white-100">
   <div class="{{ $inner }} text-center">
 
-    <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900">
+    <h2 class="tools-up text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900" style="--i:0">
       Setiap Tim akan membuat 2 Gim Edukasi
     </h2>
-    <p class="mt-3 text-slate-00">
+    <p class="tools-up mt-3 text-slate-900 font-semibold" style="--i:1">
       Tools yang wajib digunakan:
     </p>
 
@@ -328,7 +472,8 @@
         href="https://edu.google.com/"
         target="_blank"
         rel="noopener noreferrer"
-        class="group flex flex-col items-center"
+        class="tools-card group flex flex-col items-center"
+        style="--i:2"
       >
         <div
           class="w-40 h-40 md:w-48 md:h-48
@@ -336,23 +481,19 @@
                  rounded-full
                  shadow-sm flex items-center justify-center
                  transition duration-300
-                 group-hover:-translate-y-1
-                 group-hover:shadow-md"
+                 group-hover:-translate-y-2
+                 group-hover:shadow-xl
+                 tools-circle"
         >
           <img
             src="{{ asset('image/header/google edu.png') }}"
             alt="Google for Education"
-            class="w-32 md:w-36 object-contain"
+            class="w-32 md:w-36 object-contain transition duration-300 group-hover:scale-110"
             loading="lazy"
           />
         </div>
-
-        <p class="mt-5 font-semibold text-slate-900">
-          Google for Education
-        </p>
-        <p class="mt-1 text-sm text-slate-500 group-hover:text-slate-700 transition">
-          Kunjungi halaman
-        </p>
+        <p class="mt-5 font-semibold text-slate-900">Google for Education</p>
+        <p class="mt-1 text-sm text-slate-800 group-hover:text-slate-500 transition">Kunjungi halaman</p>
       </a>
 
       <!-- Canva -->
@@ -360,7 +501,8 @@
         href="https://www.canva.com/"
         target="_blank"
         rel="noopener noreferrer"
-        class="group flex flex-col items-center"
+        class="tools-card group flex flex-col items-center"
+        style="--i:3"
       >
         <div
           class="w-40 h-40 md:w-48 md:h-48
@@ -368,184 +510,185 @@
                  rounded-full
                  shadow-sm flex items-center justify-center
                  transition duration-300
-                 group-hover:-translate-y-1
-                 group-hover:shadow-md"
+                 group-hover:-translate-y-2
+                 group-hover:shadow-xl
+                 tools-circle"
         >
           <img
             src="{{ asset('image/header/canva.png') }}"
             alt="Canva"
-            class="w-28 md:w-32 object-contain"
+            class="w-28 md:w-32 object-contain transition duration-300 group-hover:scale-110"
             loading="lazy"
           />
         </div>
-
-        <p class="mt-5 font-semibold text-slate-900">
-          Canva
-        </p>
-        <p class="mt-1 text-sm text-slate-500 group-hover:text-slate-700 transition">
-          Kunjungi halaman
-        </p>
+        <p class="mt-5 font-semibold text-slate-900">Canva</p>
+        <p class="mt-1 text-sm text-slate-800 group-hover:text-slate-500 transition">Kunjungi halaman</p>
       </a>
 
     </div>
   </div>
 </section>
 
+<style>
+  /* Fade + slide up for text */
+  .tools-up {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity  0.7s cubic-bezier(0.16,1,0.3,1) calc(var(--i,0) * 100ms),
+      transform 0.7s cubic-bezier(0.16,1,0.3,1) calc(var(--i,0) * 100ms);
+  }
+  .tools-up.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-<!-- FAQ + PANDUAN (FULL BLEED BG) -->
-<section class="{{ $bleed }} py-14 md:py-16 bg-sky-50">
+  /* Scale + fade for cards */
+  .tools-card {
+    opacity: 0;
+    transform: translateY(40px) scale(0.92);
+    transition:
+      opacity  0.75s cubic-bezier(0.16,1,0.3,1) calc(var(--i,0) * 120ms),
+      transform 0.75s cubic-bezier(0.16,1,0.3,1) calc(var(--i,0) * 120ms);
+  }
+  .tools-card.in-view {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Subtle orbit pulse on circle when in view */
+  @keyframes tools-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(56,189,248,0.15); }
+    50%       { box-shadow: 0 0 0 12px rgba(56,189,248,0); }
+  }
+  .tools-card.in-view .tools-circle {
+    animation: tools-glow 3s ease-in-out infinite;
+    animation-delay: calc(var(--i,0) * 200ms);
+  }
+</style>
+
+<script>
+  (function () {
+    const els = document.querySelectorAll('.tools-up, .tools-card');
+    if (!els.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
+    );
+
+    els.forEach((el) => observer.observe(el));
+  })();
+</script>
+
+
+
+
+ <!-- FAQ + PANDUAN (FULL BLEED BG) -->
+<section class="{{ $bleed }} pt-16 pb-12 md:pt-20 md:pb-14 bg-sky-50">
   <div class="{{ $inner }}">
-    <div class="grid md:grid-cols-2 gap-10 items-start">
+    <div class="grid md:grid-cols-2 gap-8 items-start">
 
       <!-- LEFT: FAQ -->
       <div>
-        <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900">
+        <h2 class="faq-up text-3xl font-black tracking-tight text-slate-900 leading-tight max-w-sm" style="--i:0">
           Pertanyaan yang Sering Diajukan (FAQ).
         </h2>
-        <p class="mt-2 text-slate-600 text-sm md:text-base">
+        <p class="faq-up mt-3 text-slate-500 text-sm leading-relaxed" style="--i:1">
           Beberapa pertanyaan yang paling sering ditanyakan peserta.
         </p>
 
         @php
-          // ambil FAQ dari database (dikirim dari HomeController)
           $faqItems = $faqs ?? collect();
-
-          // fallback kalau database kosong
           if ($faqItems->count() === 0) {
             $faqItems = collect([
-              [
-                'question' => 'Bagaimana cara mendaftarnya?',
-                'answer' => 'Kunjungi Superaplikasi Rumah Pendidikan, kemudian klik banner Hackathon Rumah Pendidikan 2026. Pilih “DAFTAR SEKARANG” dan isi formulir pendaftaran.'
-              ],
-              [
-                'question' => 'Apakah disediakan format khusus untuk proposal?',
-                'answer' => 'Format proposal akan diinformasikan dan disediakan oleh panitia saat memasuki masa unggah proposal.'
-              ],
-              [
-                'question' => 'Apakah dalam satu tim wajib terdiri dari tiga orang?',
-                'answer' => 'Satu tim terdiri dari 3 guru dan/atau tenaga kependidikan dari sekolah yang sama.'
-              ],
-              [
-                'question' => 'Bagaimana jika peserta tidak memiliki akun belajar.id karena berasal dari madrasah?',
-                'answer' => 'Pendaftar dari Madrasah dapat menggunakan akun @madrasah.kemenag.go.id atau akun Gmail.'
-              ],
-              [
-                'question' => 'Apakah guru SLB diperbolehkan mengikuti kegiatan ini?',
-                'answer' => 'Diperbolehkan.'
-              ],
+              ['question' => 'Bagaimana cara mendaftarnya?', 'answer' => 'Kunjungi Superaplikasi Rumah Pendidikan, kemudian klik banner Hackathon Rumah Pendidikan 2026. Pilih "DAFTAR SEKARANG" dan isi formulir pendaftaran.'],
+              ['question' => 'Apakah disediakan format khusus untuk proposal?', 'answer' => 'Format proposal akan diinformasikan dan disediakan oleh panitia saat memasuki masa unggah proposal.'],
+              ['question' => 'Apakah dalam satu tim wajib terdiri dari tiga orang?', 'answer' => 'Satu tim terdiri dari 3 guru dan/atau tenaga kependidikan dari sekolah yang sama.'],
+              ['question' => 'Bagaimana jika peserta tidak memiliki akun belajar.id karena berasal dari madrasah?', 'answer' => 'Pendaftar dari Madrasah dapat menggunakan akun @madrasah.kemenag.go.id atau akun Gmail.'],
+              ['question' => 'Apakah guru SLB diperbolehkan mengikuti kegiatan ini?', 'answer' => 'Diperbolehkan.'],
             ]);
           }
         @endphp
 
-        <div class="mt-6 space-y-3">
+        <div class="mt-5 space-y-2.5">
           @foreach ($faqItems as $item)
-
             @php
-              // support array fallback & object dari database
               $question = is_array($item) ? $item['question'] : $item->question;
-              $answer   = is_array($item) ? $item['answer'] : $item->answer;
+              $answer   = is_array($item) ? $item['answer']   : $item->answer;
+              $fi = $loop->index + 2;
             @endphp
 
-            <details
-              class="group bg-white rounded-xl border border-slate-200
-                     shadow-sm transition hover:border-slate-300"
-            >
-              <summary
-                class="list-none cursor-pointer select-none
-                       flex items-center justify-between gap-4
-                       px-4 py-3
-                       text-sm md:text-base font-semibold text-slate-900"
-              >
-                <span class="leading-snug">
-                  {{ $question }}
-                </span>
-
-                <!-- tombol + / - -->
-                <span
-                  class="shrink-0 grid place-items-center
-                         w-7 h-7 rounded-lg
-                         border border-slate-200 bg-slate-50
-                         transition
-                         group-open:border-slate-900"
-                  aria-hidden="true"
-                >
-                  <!-- plus -->
-                  <svg class="w-4 h-4 text-slate-900 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 5v14M5 12h14" stroke-linecap="round"/>
-                  </svg>
-
-                  <!-- minus -->
-                  <svg class="w-4 h-4 text-slate-900 hidden group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M5 12h14" stroke-linecap="round"/>
-                  </svg>
-                </span>
-
-              </summary>
-
-              <!-- jawaban -->
-              <div class="px-4 pb-4 text-sm text-slate-600 leading-relaxed">
-                <div class="pt-2 border-t border-slate-100 animate-[faqDown_200ms_ease-out]">
-                  {{ $answer }}
+            <div class="faq-up" style="--i:{{ $fi }}">
+              <details class="group bg-white rounded-lg border border-slate-200 transition hover:border-slate-300">
+                <summary class="list-none cursor-pointer select-none flex items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-slate-900">
+                  <span class="leading-snug">{{ $question }}</span>
+                  <span class="shrink-0 grid place-items-center w-6 h-6 rounded-md border border-slate-200 bg-slate-50 transition group-open:bg-[#FEFBD0] group-open:border-[#ddd880]" aria-hidden="true">
+                    <svg class="w-3 h-3 text-slate-700 group-open:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+                    <svg class="w-3 h-3 text-slate-700 hidden group-open:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14" stroke-linecap="round"/></svg>
+                  </span>
+                </summary>
+                <div class="px-4 pb-4 text-sm font-medium text-slate-800 leading-7 tracking-wide">
+                  <div class="pt-3 border-t border-slate-100 animate-[faqDown_200ms_ease-out]">
+                    {{ $answer }}
+                  </div>
                 </div>
-              </div>
-            </details>
-
+              </details>
+            </div>
           @endforeach
 
-          <!-- Button Pertanyaan Lainnya -->
-          <a href="/faq"
-             class="inline-flex mt-3 items-center justify-center
-                    rounded-full
-                    px-5 py-2
-                    text-sm font-extrabold text-slate-900
-                    transition"
-             style="background-color:#FFF9BF;"
-             onmouseover="this.style.backgroundColor='#f5ef9a'"
-             onmouseout="this.style.backgroundColor='#FFF9BF'">
-            Pertanyaan lainnya
-          </a>
+          <div class="faq-up" style="--i:{{ ($faqItems instanceof \Illuminate\Support\Collection ? $faqItems->count() : count($faqItems)) + 2 }}">
+            <a href="/faq"
+               class="inline-flex mt-3 items-center justify-center rounded-full px-5 py-2 text-sm font-extrabold text-slate-900 transition"
+               style="background-color:#FFF9BF;"
+               onmouseover="this.style.backgroundColor='#FEFBD0'"
+               onmouseout="this.style.backgroundColor='#FFF9BF'">
+              Pertanyaan lainnya
+            </a>
+          </div>
         </div>
       </div>
 
       <!-- RIGHT: PANDUAN + KONTAK -->
-      <div class="space-y-5 md:pl-6 md:mt-32">
+      <div class="space-y-3 md:pl-4" style="padding-top: 8rem">
 
-        <!-- Butuh Panduan -->
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-7">
-          <h3 class="text-lg md:text-xl font-extrabold text-slate-900">
-            Butuh Pedoman?
-          </h3>
-          <p class="mt-2 text-sm md:text-base text-slate-700 leading-relaxed">
-            Akses pedoman resmi dan informasi penting lainnya di sini.
-          </p>
-
-          <a href="https://drive.google.com/file/d/1LuQ8j2MEuPMePAEccTWSw-7OQaS5GAyS/view"
-   target="_blank"
-   rel="noopener noreferrer"
-   class="inline-flex mt-4 items-center justify-center
-          rounded-full
-          px-5 py-2
-          text-sm font-extrabold text-slate-900
-          transition"
-   style="background-color:#FFF9BF;"
-   onmouseover="this.style.backgroundColor='#f5ef9a'"
-   onmouseout="this.style.backgroundColor='#FFF9BF'">
-  Lihat Pedoman
-</a>
+        <div class="faq-right" style="--j:0">
+          <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-7">
+            <h3 class="text-base md:text-lg font-extrabold text-slate-900">Butuh Pedoman?</h3>
+            <p class="mt-2 text-sm text-slate-700 leading-relaxed">
+              Berbagi informasi dan pedoman resmi untuk mendukung partisipasi Anda.
+            </p>
+            <p class="mt-2 text-sm font-bold text-slate-900 leading-relaxed">
+              Akses pedoman resmi dan informasi penting lainnya di sini, ya!
+            </p>
+            <a href="https://drive.google.com/file/d/1LuQ8j2MEuPMePAEccTWSw-7OQaS5GAyS/view"
+               target="_blank" rel="noopener noreferrer"
+               class="inline-flex mt-4 items-center justify-center rounded-full px-5 py-2 text-sm font-extrabold text-slate-900 transition"
+               style="background-color:#FFF9BF;"
+               onmouseover="this.style.backgroundColor='#FEFBD0'"
+               onmouseout="this.style.backgroundColor='#FFF9BF'">
+              Lihat Pedoman
+            </a>
+          </div>
         </div>
 
-        <!-- Kontak Kami -->
-        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-7">
-          <h3 class="text-base md:text-lg font-extrabold text-slate-900">
-            Kontak Kami
-          </h3>
-          <p class="mt-2 text-sm text-slate-600">
-            Surel :<br>
-            <span class="font-semibold text-slate-900">
-              hackathon.rumdik@kemendikdasmen.go.id
-            </span>
-          </p>
+        <div class="faq-right" style="--j:1">
+          <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 md:p-7">
+            <h3 class="text-base md:text-lg font-extrabold text-slate-900">Kontak Kami</h3>
+            <p class="mt-2 text-sm text-slate-600">
+              Surel :<br>
+              <span class="font-semibold text-slate-900">hackathon.rumdik@kemendikdasmen.go.id</span>
+            </p>
+          </div>
         </div>
+
       </div>
 
     </div>
@@ -556,13 +699,44 @@
       from { opacity: 0; transform: translateY(-4px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    details[open] summary span[aria-hidden] {
-      background-color: #FFF9BF;
-      border-color: #c8c27e;
+    .faq-up {
+      opacity: 0;
+      transform: translateX(-20px);
+      transition:
+        opacity  0.65s cubic-bezier(0.16,1,0.3,1) calc(var(--i,0) * 70ms),
+        transform 0.65s cubic-bezier(0.16,1,0.3,1) calc(var(--i,0) * 70ms);
     }
+    .faq-up.in-view { opacity: 1; transform: translateX(0); }
+
+    .faq-right {
+      opacity: 0;
+      transform: translateX(24px);
+      transition:
+        opacity  0.7s cubic-bezier(0.16,1,0.3,1) calc(var(--j,0) * 120ms + 200ms),
+        transform 0.7s cubic-bezier(0.16,1,0.3,1) calc(var(--j,0) * 120ms + 200ms);
+    }
+    .faq-right.in-view { opacity: 1; transform: translateX(0); }
   </style>
 </section>
 
+<script>
+  (function () {
+    const all = document.querySelectorAll('.faq-up, .faq-right');
+    if (!all.length) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add('in-view');
+            io.unobserve(e.target);
+          }
+        });
+      },
+      { threshold: 0.07, rootMargin: '0px 0px -50px 0px' }
+    );
+    all.forEach((el) => io.observe(el));
+  })();
+</script>
 
 <!-- YOUTUBE -->
 <section class="{{ $bleed }} py-24 md:py-32 bg-white">

@@ -8,6 +8,7 @@ use App\Models\LombaKetentuanItem;
 use App\Models\LombaTahapanStep;
 use App\Models\Pengumuman;
 use App\Models\PengumumanGroup;
+use App\Http\Controllers\RegistrasiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -136,7 +137,10 @@ Route::get('/faq', function () {
 | REGISTRASI
 |--------------------------------------------------------------------------
 */
-Route::view('/registrasi', 'pages.registrasi')->name('registrasi');
+
+Route::get('/registrasi', [RegistrasiController::class, 'index'])->name('registrasi');
+Route::post('/registrasi/cek', [RegistrasiController::class, 'cekNuptk'])->name('registrasi.cek');
+Route::post('/registrasi/store', [RegistrasiController::class, 'store'])->name('registrasi.store');
 
 /*
 |--------------------------------------------------------------------------
