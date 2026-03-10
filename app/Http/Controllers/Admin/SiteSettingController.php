@@ -13,6 +13,8 @@ use App\Models\PengumumanEntry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Timeline;
+use App\Models\InformasiPenting;
+
 
 class SiteSettingController extends Controller
 {
@@ -82,6 +84,13 @@ class SiteSettingController extends Controller
     ->get();
 
 
+        //Informasi Penting
+        $informasiPentingItems =
+        InformasiPenting::query()
+         ->orderBy('sort_order')
+         ->orderBy('id')
+         ->get();
+
         // tab agar tetap kebuka
         $tab = $request->query('tab', 'hero');
 
@@ -96,6 +105,7 @@ class SiteSettingController extends Controller
             'pengumumanGroups',
             'pengumumanEntries',
             'timelineItems',
+            'informasiPentingItems',
         ));
     }
 
@@ -329,6 +339,57 @@ class SiteSettingController extends Controller
         return redirect()->route('admin.site-settings.edit', ['tab' => 'lomba'])
             ->with('success', 'Tahapan berhasil dihapus!');
     }
+
+
+
+    // =========================
+    // INFORMASI PENTING CRUD
+    // =========================
+    public function informasiPentingStore(Request $request)
+    {
+        $data = $request->validate([
+            'content' => 'required|string',
+            'sort_order' => 'nullable|integer|min:0',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        InformasiPenting::create([
+            'content' => $data['content'],
+            'sort_order' => $data['sort_order'] ?? 0,
+            'is_active' => $request->has('is_active') ? 1 : 0,
+        ]);
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'informasi-penting'])
+            ->with('success', 'Informasi penting berhasil ditambahkan.');
+    }
+
+    public function informasiPentingUpdate(Request $request, InformasiPenting $informasiPenting)
+    {
+        $data = $request->validate([
+            'content' => 'required|string',
+            'sort_order' => 'nullable|integer|min:0',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $informasiPenting->update([
+            'content' => $data['content'],
+            'sort_order' => $data['sort_order'] ?? 0,
+            'is_active' => $request->has('is_active') ? 1 : 0,
+        ]);
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'informasi-penting'])
+            ->with('success', 'Informasi penting berhasil diupdate.');
+    }
+
+    public function informasiPentingDestroy(InformasiPenting $informasiPenting)
+    {
+        $informasiPenting->delete();
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'informasi-penting'])
+            ->with('success', 'Informasi penting berhasil dihapus.');
+    }
+
+
 
     // =========================
     // PENGUMUMAN UTAMA CRUD

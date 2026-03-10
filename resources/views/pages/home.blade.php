@@ -11,53 +11,93 @@
   $inner = 'mx-auto w-full max-w-6xl px-4 md:px-6';
 @endphp
 
-<!-- HERO (FULL BLEED, FEEL PROTOTYPE) -->
+<!-- HERO VERSI 1: PARALLAX + SHIMMER -->
 <section
   class="{{ $bleed }} relative overflow-hidden"
+  id="hero-section"
   style="
     background-image: url('{{ asset('image/header/sekolah.jpg') }}');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    will-change: background-position;
   "
 >
   <div class="absolute inset-0 bg-black/55"></div>
 
-  <div class="relative min-h-[480px] md:min-h-[540px] lg:min-h-[580px]">
-    <div class="absolute left-10 md:left-16 lg:left-24 top-1/2 -translate-y-1/2 text-white max-w-2xl">
+  {{-- SHIMMER LINE --}}
+  <div class="hero-shimmer"></div>
 
-      <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-wide drop-shadow mt-6">
-        <span class="block leading-tight hero-anim" style="animation-delay:0ms">
+  <div class="relative min-h-[380px] md:min-h-[540px] lg:min-h-[580px]">
+
+    {{-- MOBILE: center layout --}}
+    <div class="flex md:hidden absolute inset-0 items-center justify-center px-6">
+      <div class="text-white text-center max-w-sm">
+
+        <h1 class="text-3xl font-extrabold tracking-wide drop-shadow leading-tight hero-anim" style="animation-delay:0ms">
           {!! e($setting->hero_title ? explode("\n", $setting->hero_title)[0] : "HACKATHON RUMAH") !!}
-        </span>
-        <span class="block leading-tight mt-1 hero-anim" style="animation-delay:120ms">
-          {!! e($setting->hero_title ? (explode("\n", $setting->hero_title)[1] ?? '') : "PENDIDIKAN 2026") !!}
-        </span>
-      </h1>
+          <span class="block mt-1">
+            {!! e($setting->hero_title ? (explode("\n", $setting->hero_title)[1] ?? '') : "PENDIDIKAN 2026") !!}
+          </span>
+        </h1>
 
-      <div class="mt-4">
-        <p class="text-lg md:text-xl lg:text-2xl font-extrabold leading-snug drop-shadow hero-anim" style="animation-delay:260ms">
-          {{ $setting->hero_subtitle ?? 'Wujudkan Indonesia Cerdas' }}
-        </p>
-        <p class="mt-1 text-sm md:text-base lg:text-lg font-semibold leading-snug opacity-90 drop-shadow hero-anim" style="animation-delay:360ms">
-          "{{ $setting->hero_tagline ?? 'Gim Edukasi untuk Pembelajaran Seru' }}"
-        </p>
+        <div class="mt-3">
+          <p class="text-base font-extrabold leading-snug drop-shadow hero-anim" style="animation-delay:200ms">
+            {{ $setting->hero_subtitle ?? 'Wujudkan Indonesia Cerdas' }}
+          </p>
+          <p class="mt-1 text-xs font-semibold leading-snug opacity-90 drop-shadow hero-anim" style="animation-delay:300ms">
+            "{{ $setting->hero_tagline ?? 'Gim Edukasi untuk Pembelajaran Seru' }}"
+          </p>
+        </div>
+
+        <div class="hero-anim flex justify-center" style="animation-delay:420ms">
+          <a href="{{ $setting->primary_button_url ?? route('registrasi') }}"
+             class="inline-flex items-center justify-center mt-5 px-6 py-2.5
+                    text-white text-sm font-bold rounded-full
+                    transition-all duration-300 hero-btn btn-premium"
+             style="background-color:#0072BC;">
+            {{ $setting->primary_button_text ?? 'Registrasi' }}
+          </a>
+        </div>
+
       </div>
-
-      <div class="hero-anim" style="animation-delay:480ms">
-        <a href="{{ $setting->primary_button_url ?? route('registrasi') }}"
-           class="inline-flex items-center justify-center mt-5 px-5 py-2
-                  text-white text-sm font-bold
-                  rounded-full shadow-sm hover:shadow-md
-                  transition-all duration-200 hero-btn"
-           style="background-color:#0072BC;"
-           onmouseover="this.style.backgroundColor='#005fa3'"
-           onmouseout="this.style.backgroundColor='#0072BC'">
-          {{ $setting->primary_button_text ?? 'Registrasi' }}
-        </a>
-      </div>
-
     </div>
+
+    {{-- DESKTOP: left layout --}}
+    <div class="hidden md:flex absolute inset-0 items-center">
+      <div class="text-white max-w-2xl ml-16 lg:ml-24">
+
+        <h1 class="text-5xl lg:text-6xl font-extrabold tracking-wide drop-shadow mt-6">
+          <span class="block leading-tight hero-anim" style="animation-delay:0ms">
+            {!! e($setting->hero_title ? explode("\n", $setting->hero_title)[0] : "HACKATHON RUMAH") !!}
+          </span>
+          <span class="block leading-tight mt-1 hero-anim" style="animation-delay:120ms">
+            {!! e($setting->hero_title ? (explode("\n", $setting->hero_title)[1] ?? '') : "PENDIDIKAN 2026") !!}
+          </span>
+        </h1>
+
+        <div class="mt-1">
+          <p class="text-xl lg:text-2xl font-extrabold leading-snug drop-shadow hero-anim" style="animation-delay:260ms">
+            {{ $setting->hero_subtitle ?? 'Wujudkan Indonesia Cerdas' }}
+          </p>
+          <p class="mt-1 text-base lg:text-lg font-semibold leading-snug opacity-90 drop-shadow hero-anim" style="animation-delay:360ms">
+            "{{ $setting->hero_tagline ?? 'Gim Edukasi untuk Pembelajaran Seru' }}"
+          </p>
+        </div>
+
+        <div class="hero-anim" style="animation-delay:480ms">
+          <a href="{{ $setting->primary_button_url ?? route('registrasi') }}"
+             class="inline-flex items-center justify-center mt-5 px-5 py-2
+                    text-white text-sm font-bold rounded-full
+                    transition-all duration-300 hero-btn btn-premium"
+             style="background-color:#0072BC;">
+            {{ $setting->primary_button_text ?? 'Registrasi' }}
+          </a>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 
   <style>
@@ -69,6 +109,12 @@
       0%, 100% { box-shadow: 0 0 0 0 rgba(0,114,188,0.5); }
       50%       { box-shadow: 0 0 0 8px rgba(0,114,188,0); }
     }
+    @keyframes heroShimmer {
+      0%   { transform: translateX(-100%) skewX(-12deg); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { transform: translateX(200vw) skewX(-12deg); opacity: 0; }
+    }
     .hero-anim {
       opacity: 0;
       animation: heroFadeUp 0.65s cubic-bezier(0.22,1,0.36,1) forwards;
@@ -76,8 +122,58 @@
     .hero-btn {
       animation: heroPulse 2.4s ease-in-out 1.2s infinite;
     }
+    .hero-shimmer {
+      position: absolute;
+      top: 0; left: 0;
+      width: 80px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent);
+      animation: heroShimmer 1.8s cubic-bezier(0.4,0,0.2,1) 0.3s 1 forwards;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .btn-premium {
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,114,188,0.3);
+    }
+    .btn-premium::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
+    }
+    .btn-premium:hover::after { transform: translateX(100%); }
+    .btn-premium:hover {
+      background-color: #005fa3 !important;
+      box-shadow: 0 6px 20px rgba(0,114,188,0.45);
+      transform: translateY(-1px);
+    }
   </style>
 </section>
+
+<script>
+  (function () {
+    const hero = document.getElementById('hero-section');
+    if (!hero) return;
+    // Disable parallax on mobile (tidak efektif & bisa lambat)
+    if (window.innerWidth < 768) return;
+    let ticking = false;
+    window.addEventListener('scroll', function () {
+      if (!ticking) {
+        requestAnimationFrame(function () {
+          const scrollY = window.scrollY;
+          const offset = scrollY * 0.25;
+          hero.style.backgroundPosition = `center calc(50% + ${offset}px)`;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  })();
+</script>
 
 <!-- DESKRIPSI -->
 <section class="{{ $bleed ?? '' }} pt-16 pb-12 md:pt-20 md:pb-16">
@@ -89,7 +185,8 @@
         <h2 class="desc-up text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900 leading-tight" style="--i:0">
           HACKATHON RUMAH PENDIDIKAN
         </h2>
-        <h3 class="desc-up mt-1 text-xl md:text-2xl font-bold text-[#0072BC] leading-tight" style="--i:1">
+        
+        <h3 class="desc-up mt-1 text-xl md:text-2xl font-bold leading-tight" style="--i:1; color:#0072BC;">
           Wujudkan Indonesia Cerdas
         </h3>
 
@@ -194,7 +291,7 @@
 </script>
 
 <!-- INFORMASI PENTING -->
-<section class="{{ $bleed }} py-24 bg-gradient-to-b from-sky-50 to-sky-100/40">
+<section class="{{ $bleed }} py-24" style="background: linear-gradient(180deg, #ffffff 0%, #f2f8fd 35%, #eaf4fb 70%, #ffffff 100%);">
   <div class="{{ $inner }}">
 
     <!-- Heading -->
@@ -210,21 +307,33 @@
       </h2>
     </div>
 
+    @php
+      $defaultInformasiPenting = collect([
+        (object) [
+          'content' => 'Informasi lanjutan terkait pelatihan dan tahapan berikutnya telah dikirimkan melalui email kepada masing-masing Ketua Tim yang lolos.',
+          'sort_order' => 1,
+          'is_active' => true,
+        ],
+        (object) [
+          'content' => 'Mohon segera melakukan pengecekan email (termasuk folder spam/promosi) agar tidak ada informasi terlewat.',
+          'sort_order' => 2,
+          'is_active' => true,
+        ],
+      ]);
+
+      $infoItems = collect($informasiPentingItems ?? [])
+        ->filter(fn ($item) => (int) ($item->is_active ?? 0) === 1 || ($item->is_active ?? false) === true)
+        ->sortBy('sort_order')
+        ->values();
+
+      if ($infoItems->count() === 0) {
+        $infoItems = $defaultInformasiPenting;
+      }
+    @endphp
+
     <!-- Content -->
     <div class="mt-16 max-w-6xl mx-auto">
-      <div class="grid md:grid-cols-2 gap-14 items-start">
-
-        <!-- Ilustrasi kiri -->
-        <div class="info-up flex justify-center md:justify-center" style="--i:1">
-          <img
-            src="{{ asset('image/header/pengumuman.png') }}"
-            alt="Ilustrasi Informasi Penting"
-            class="w-full max-w-xs md:max-w-sm object-contain
-                   md:-mt-16
-                   drop-shadow-[0_20px_40px_rgba(0,0,0,0.08)]"
-            loading="lazy"
-          />
-        </div>
+     <div class="flex justify-center">
 
         <!-- Card Informasi -->
         <div class="info-up flex justify-center" style="--i:2">
@@ -234,43 +343,36 @@
                       hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)]">
 
             <div class="space-y-10">
-
-              <!-- Item 1 -->
-              <div class="info-up flex gap-5" style="--i:3">
-                <div class="shrink-0">
-                  <div class="w-14 h-14 rounded-2xl bg-sky-50 flex items-center justify-center border border-sky-100">
-                    <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M4 6h16v12H4z"/>
-                      <path d="M4 8l8 5 8-5"/>
-                    </svg>
+              @foreach($infoItems as $index => $item)
+                <div class="info-up flex gap-5" style="--i:{{ $index + 3 }}">
+                  <div class="shrink-0">
+                    <div class="w-14 h-14 rounded-2xl bg-sky-50 flex items-center justify-center border border-sky-100">
+                      @if($index % 2 === 0)
+                        <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M4 6h16v12H4z"/>
+                          <path d="M4 8l8 5 8-5"/>
+                        </svg>
+                      @else
+                        <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M3 10l9 5 9-5"/>
+                          <path d="M21 10v10H3V10"/>
+                          <path d="M3 10l9-6 9 6"/>
+                        </svg>
+                      @endif
+                    </div>
                   </div>
+
+                  <p class="text-slate-900 leading-relaxed font-medium">
+                    {{ $item->content }}
+                  </p>
                 </div>
-                <p class="text-slate-900 leading-relaxed font-medium">
-                  Informasi lanjutan terkait pelatihan dan tahapan berikutnya telah dikirimkan melalui email kepada
-                  masing-masing Ketua Tim yang lolos.
-                </p>
-              </div>
 
-              <div class="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
-
-              <!-- Item 2 -->
-              <div class="info-up flex gap-5" style="--i:4">
-                <div class="shrink-0">
-                  <div class="w-14 h-14 rounded-2xl bg-sky-50 flex items-center justify-center border border-sky-100">
-                    <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M3 10l9 5 9-5"/>
-                      <path d="M21 10v10H3V10"/>
-                      <path d="M3 10l9-6 9 6"/>
-                    </svg>
-                  </div>
-                </div>
-                <p class="text-slate-900 leading-relaxed font-medium">
-                  Mohon segera melakukan pengecekan email (termasuk folder spam/promosi)
-                  agar tidak ada informasi terlewat.
-                </p>
-              </div>
-
+                @if(!$loop->last)
+                  <div class="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
+                @endif
+              @endforeach
             </div>
+
           </div>
         </div>
 
@@ -285,7 +387,7 @@
     opacity: 0;
     transform: translateY(32px);
     transition:
-      opacity  0.7s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i, 0) * 90ms),
+      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i, 0) * 90ms),
       transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i, 0) * 90ms);
   }
   .info-up.in-view {
@@ -318,12 +420,11 @@
   })();
 </script>
 
-
 <!-- TIMELINE -->
 <section class="{{ $bleed ?? '' }} py-12 md:py-16 px-4">
 <style>
   .tl-line {
-    background: linear-gradient(to bottom, transparent, #ddd880 15%, #ddd880 85%, transparent);
+    background: linear-gradient(to bottom, transparent, #e8dfc8 15%, #e8dfc8 85%, transparent);
     width: 1.5px;
   }
   .tl-dot {
@@ -331,27 +432,26 @@
     height: 10px;
     border-radius: 50%;
     background-color: #fff;
-    border: 2px solid #ddd880;
+    border: 2px solid #d4c9a8;
     transition: transform 0.25s ease, background-color 0.25s ease;
     flex-shrink: 0;
   }
   .tl-group:hover .tl-dot {
     transform: scale(1.3);
-    background-color: #FEFCE8;
+    background-color: #fdf8ee;
   }
   .tl-card {
-    background-color: #FEFBD0;
-    border: 1px solid #e8e27a;
+    background-color: #fdf8ee;
+    border: 1px solid #e8dfc8;
     border-radius: 10px;
     padding: 10px 16px;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
   .tl-group:hover .tl-card {
     transform: translateX(3px);
-    box-shadow: 0 4px 16px rgba(200, 195, 80, 0.15);
+    box-shadow: 0 4px 16px rgba(180,160,100,0.12);
   }
 
-  /* Scroll animation */
   .tl-heading {
     opacity: 0;
     transform: translateY(24px);
@@ -429,9 +529,7 @@
 
 <script>
   (function () {
-    // Heading
     const heading = document.querySelector('.tl-heading');
-    // Items
     const items = document.querySelectorAll('.tl-item');
 
     const observer = new IntersectionObserver(
@@ -443,10 +541,7 @@
           }
         });
       },
-      {
-        threshold: 0.08,
-        rootMargin: '0px 0px -50px 0px'
-      }
+      { threshold: 0.08, rootMargin: '0px 0px -50px 0px' }
     );
 
     if (heading) observer.observe(heading);
@@ -468,61 +563,25 @@
     <div class="mt-14 flex justify-center gap-12 md:gap-16 flex-wrap">
 
       <!-- Google for Education -->
-      <a
-        href="https://edu.google.com/"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="tools-card group flex flex-col items-center"
-        style="--i:2"
-      >
-        <div
-          class="w-40 h-40 md:w-48 md:h-48
-                bg-sky-50 border border-sky-100
-                 rounded-full
-                 shadow-sm flex items-center justify-center
-                 transition duration-300
-                 group-hover:-translate-y-2
-                 group-hover:shadow-xl
-                 tools-circle"
-        >
-          <img
-            src="{{ asset('image/header/google edu.png') }}"
-            alt="Google for Education"
-            class="w-32 md:w-36 object-contain transition duration-300 group-hover:scale-110"
-            loading="lazy"
-          />
+      <a href="https://edu.google.com/" target="_blank" rel="noopener noreferrer"
+         class="tools-card group flex flex-col items-center" style="--i:2">
+        <div class="w-40 h-40 md:w-48 md:h-48 rounded-full flex items-center justify-center tools-circle">
+          <img src="{{ asset('image/header/google edu.png') }}" alt="Google for Education"
+               class="w-32 md:w-36 object-contain transition duration-500 group-hover:scale-110" loading="lazy"/>
         </div>
         <p class="mt-5 font-semibold text-slate-900">Google for Education</p>
-        <p class="mt-1 text-sm text-slate-800 group-hover:text-slate-500 transition">Kunjungi halaman</p>
+        <p class="mt-1 text-sm text-slate-500 group-hover:text-[#0072BC] transition duration-300">Kunjungi halaman</p>
       </a>
 
       <!-- Canva -->
-      <a
-        href="https://www.canva.com/"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="tools-card group flex flex-col items-center"
-        style="--i:3"
-      >
-        <div
-          class="w-40 h-40 md:w-48 md:h-48
-                 bg-sky-50 border border-sky-100
-                 rounded-full
-                 shadow-sm flex items-center justify-center
-                 transition duration-300
-                 group-hover:-translate-y-2
-                 group-hover:shadow-xl
-                 tools-circle"
-        >
-          <img
-            src="{{ asset('image/header/canva.png') }}"
-            alt="Canva"
-            class="w-28 md:w-32 object-contain transition duration-300 group-hover:scale-110"
-            loading="lazy"
-          />
+      <a href="https://www.canva.com/" target="_blank" rel="noopener noreferrer"
+         class="tools-card group flex flex-col items-center" style="--i:3">
+        <div class="w-40 h-40 md:w-48 md:h-48 rounded-full flex items-center justify-center tools-circle">
+          <img src="{{ asset('image/header/canva.png') }}" alt="Canva"
+               class="w-28 md:w-32 object-contain transition duration-500 group-hover:scale-110" loading="lazy"/>
         </div>
         <p class="mt-5 font-semibold text-slate-900">Canva</p>
-        <p class="mt-1 text-sm text-slate-800 group-hover:text-slate-500 transition">Kunjungi halaman</p>
+        <p class="mt-1 text-sm text-slate-500 group-hover:text-[#0072BC] transition duration-300">Kunjungi halaman</p>
       </a>
 
     </div>
@@ -530,7 +589,23 @@
 </section>
 
 <style>
-  /* Fade + slide up for text */
+  .tools-circle {
+    background: linear-gradient(135deg, #ffffff 0%, #f2f8fd 50%, #eaf4fb 100%);
+    border: 1px solid rgba(0, 114, 188, 0.12);
+    box-shadow:
+      0 4px 20px rgba(0, 114, 188, 0.08),
+      inset 0 1px 0 rgba(255,255,255,0.9);
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1),
+                box-shadow 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .tools-card:hover .tools-circle {
+    transform: translateY(-8px);
+    box-shadow:
+      0 20px 50px rgba(0, 114, 188, 0.18),
+      0 8px 20px rgba(0, 114, 188, 0.10),
+      inset 0 1px 0 rgba(255,255,255,0.9);
+  }
+
   .tools-up {
     opacity: 0;
     transform: translateY(28px);
@@ -538,12 +613,8 @@
       opacity  0.7s cubic-bezier(0.16,1,0.3,1) calc(var(--i,0) * 100ms),
       transform 0.7s cubic-bezier(0.16,1,0.3,1) calc(var(--i,0) * 100ms);
   }
-  .tools-up.in-view {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  .tools-up.in-view { opacity: 1; transform: translateY(0); }
 
-  /* Scale + fade for cards */
   .tools-card {
     opacity: 0;
     transform: translateY(40px) scale(0.92);
@@ -551,19 +622,15 @@
       opacity  0.75s cubic-bezier(0.16,1,0.3,1) calc(var(--i,0) * 120ms),
       transform 0.75s cubic-bezier(0.16,1,0.3,1) calc(var(--i,0) * 120ms);
   }
-  .tools-card.in-view {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  .tools-card.in-view { opacity: 1; transform: translateY(0) scale(1); }
 
-  /* Subtle orbit pulse on circle when in view */
   @keyframes tools-glow {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(56,189,248,0.15); }
-    50%       { box-shadow: 0 0 0 12px rgba(56,189,248,0); }
+    0%, 100% { box-shadow: 0 4px 20px rgba(0,114,188,0.08), inset 0 1px 0 rgba(255,255,255,0.9); }
+    50%       { box-shadow: 0 4px 28px rgba(0,114,188,0.18), inset 0 1px 0 rgba(255,255,255,0.9); }
   }
   .tools-card.in-view .tools-circle {
     animation: tools-glow 3s ease-in-out infinite;
-    animation-delay: calc(var(--i,0) * 200ms);
+    animation-delay: calc(var(--i, 0) * 300ms);
   }
 </style>
 
@@ -571,7 +638,6 @@
   (function () {
     const els = document.querySelectorAll('.tools-up, .tools-card');
     if (!els.length) return;
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -583,16 +649,12 @@
       },
       { threshold: 0.1, rootMargin: '0px 0px -60px 0px' }
     );
-
     els.forEach((el) => observer.observe(el));
   })();
 </script>
 
-
-
-
- <!-- FAQ + PANDUAN (FULL BLEED BG) -->
-<section class="{{ $bleed }} pt-16 pb-12 md:pt-20 md:pb-14 bg-sky-50">
+<!-- FAQ + PANDUAN -->
+<section class="{{ $bleed }} pt-16 pb-12 md:pt-20 md:pb-14" style="background: linear-gradient(180deg, #ffffff 0%, #f2f8fd 35%, #eaf4fb 70%, #ffffff 100%);">
   <div class="{{ $inner }}">
     <div class="grid md:grid-cols-2 gap-8 items-start">
 
@@ -644,16 +706,14 @@
             </div>
           @endforeach
 
-          <div class="faq-up" style="--i:{{ ($faqItems instanceof \Illuminate\Support\Collection ? $faqItems->count() : count($faqItems)) + 2 }}">
-            <a href="/faq"
-               class="inline-flex mt-3 items-center justify-center rounded-full px-5 py-2 text-sm font-extrabold text-slate-900 transition"
-               style="background-color:#FFF9BF;"
-               onmouseover="this.style.backgroundColor='#FEFBD0'"
-               onmouseout="this.style.backgroundColor='#FFF9BF'">
-              Pertanyaan lainnya
-            </a>
-          </div>
-        </div>
+        <div class="faq-up" style="--i:{{ ($faqItems instanceof \Illuminate\Support\Collection ? $faqItems->count() : count($faqItems)) + 2 }}">
+    <a href="/faq"
+       class="inline-flex mt-3 items-center justify-center rounded-full px-5 py-2 text-sm font-extrabold text-white transition-all duration-300 btn-premium"
+       style="background-color:#0072BC;">
+      Pertanyaan lainnya
+    </a>
+  </div>
+</div>
       </div>
 
       <!-- RIGHT: PANDUAN + KONTAK -->
@@ -670,10 +730,8 @@
             </p>
             <a href="https://drive.google.com/file/d/1LuQ8j2MEuPMePAEccTWSw-7OQaS5GAyS/view"
                target="_blank" rel="noopener noreferrer"
-               class="inline-flex mt-4 items-center justify-center rounded-full px-5 py-2 text-sm font-extrabold text-slate-900 transition"
-               style="background-color:#FFF9BF;"
-               onmouseover="this.style.backgroundColor='#FEFBD0'"
-               onmouseout="this.style.backgroundColor='#FFF9BF'">
+               class="inline-flex mt-4 items-center justify-center rounded-full px-5 py-2 text-sm font-extrabold text-white transition-all duration-300 btn-premium"
+               style="background-color:#0072BC;">
               Lihat Pedoman
             </a>
           </div>
@@ -716,6 +774,32 @@
         transform 0.7s cubic-bezier(0.16,1,0.3,1) calc(var(--j,0) * 120ms + 200ms);
     }
     .faq-right.in-view { opacity: 1; transform: translateX(0); }
+
+    .btn-premium {
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,114,188,0.3);
+    }
+    .btn-premium::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
+    }
+    .btn-premium:hover::after {
+      transform: translateX(100%);
+    }
+    .btn-premium:hover {
+      background-color: #005fa3 !important;
+      box-shadow: 0 6px 20px rgba(0,114,188,0.45);
+      transform: translateY(-1px);
+    }
+    .btn-premium:active {
+      transform: translateY(0px);
+      box-shadow: 0 3px 10px rgba(0,114,188,0.3);
+    }
   </style>
 </section>
 

@@ -190,6 +190,7 @@
             $tabs = [
               ['key'=>'hero',        'label'=>'Beranda – Hero',    'desc'=>'Judul, subtitle, tombol, gambar'],
               ['key'=>'homeimg',     'label'=>'Beranda – Gambar',  'desc'=>'3 gambar konten beranda'],
+              ['key'=>'informasi-penting',       'label'=>'Informasi Penting',             'desc'=>'Informasi Penting di Beranda'],
               ['key'=>'lomba',       'label'=>'Lomba',             'desc'=>'Ketentuan & tahapan'],
               ['key'=>'pengumuman',  'label'=>'Pengumuman',        'desc'=>'3 Besar & Lolos Proposal'],
               ['key'=>'timeline',    'label'=>'Timeline',          'desc'=>'Tahapan timeline beranda'],
@@ -387,6 +388,101 @@
       </div>
 
      
+    {{-- ===========================
+    TAB: INFORMASI PENTING
+    ============================ --}}
+<div x-show="tab==='informasi-penting'" x-cloak class="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
+  <div>
+    <h2 class="text-xl font-extrabold text-slate-900">Informasi Penting</h2>
+    <p class="mt-1 text-sm text-slate-600">Kelola konten informasi penting yang tampil di beranda.</p>
+  </div>
+
+  {{-- FORM TAMBAH --}}
+  <div class="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+    <h3 class="text-lg font-extrabold text-slate-900">Tambah Informasi Penting</h3>
+
+    <form action="{{ route('admin.site-settings.informasi-penting.store') }}" method="POST" class="mt-4 space-y-4">
+      @csrf
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-bold mb-1">Urutan</label>
+          <input type="number" name="sort_order" value="1" min="0" class="w-full border rounded-xl px-4 py-3">
+        </div>
+
+        <div class="flex items-end">
+          <label class="inline-flex items-center gap-2">
+            <input type="checkbox" name="is_active" value="1" checked class="w-4 h-4">
+            <span class="text-sm">Aktif</span>
+          </label>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold mb-1">Isi Informasi</label>
+        <textarea name="content" class="w-full border rounded-xl px-4 py-3 min-h-[120px]" required></textarea>
+      </div>
+
+      <div>
+        <button type="submit" class="px-5 py-2.5 rounded-full text-white font-extrabold"
+          style="background-color:#0072BC;"
+          onmouseover="this.style.backgroundColor='#005fa3'"
+          onmouseout="this.style.backgroundColor='#0072BC'">
+          Tambah Informasi
+        </button>
+      </div>
+    </form>
+  </div>
+
+  {{-- LIST DATA --}}
+  <div class="mt-8 space-y-4">
+    @forelse(($informasiPentingItems ?? collect()) as $item)
+      <div class="rounded-xl border border-slate-200 p-4 bg-white">
+        <form action="{{ route('admin.site-settings.informasi-penting.update', $item->id) }}" method="POST" class="space-y-3">
+          @csrf
+          @method('PUT')
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold mb-1">Urutan</label>
+              <input type="number" name="sort_order" value="{{ $item->sort_order }}" min="0" class="w-full border rounded-xl px-4 py-3">
+            </div>
+
+            <div class="flex items-end">
+              <label class="inline-flex items-center gap-2">
+                <input type="checkbox" name="is_active" value="1" {{ $item->is_active ? 'checked' : '' }} class="w-4 h-4">
+                <span class="text-sm">Aktif</span>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold mb-1">Isi Informasi</label>
+            <textarea name="content" class="w-full border rounded-xl px-4 py-3 min-h-[120px]" required>{{ $item->content }}</textarea>
+          </div>
+
+          <div class="flex justify-end gap-2">
+            <button type="submit" class="px-4 py-2 rounded-xl bg-slate-900 text-white text-sm font-bold">
+              Simpan
+            </button>
+        </form>
+
+            <form action="{{ route('admin.site-settings.informasi-penting.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus informasi ini?')">
+              @csrf
+              @method('DELETE')
+              <button type="submit" class="px-4 py-2 rounded-xl bg-red-600 text-white text-sm font-bold">
+                Hapus
+              </button>
+            </form>
+          </div>
+      </div>
+    @empty
+      <div class="text-sm text-slate-500">Belum ada data informasi penting.</div>
+    @endforelse
+  </div>
+</div>
+
+
     {{-- ===========================
       TAB: YOUTUBE
 ============================ --}}

@@ -142,11 +142,7 @@ Route::get('/registrasi', [RegistrasiController::class, 'index'])->name('registr
 Route::post('/registrasi/cek', [RegistrasiController::class, 'cekNuptk'])->name('registrasi.cek');
 Route::post('/registrasi/store', [RegistrasiController::class, 'store'])->name('registrasi.store');
 
-/*
-|--------------------------------------------------------------------------
-| ADMIN - Site Settings (CMS)
-|--------------------------------------------------------------------------
-*/
+/* ADMIN - Site Settings (CMS) */
 Route::prefix('admin')->name('admin.')->group(function () {
 
     // CMS utama
@@ -156,11 +152,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('/site-settings', [SiteSettingController::class, 'update'])
         ->name('site-settings.update');
 
-    /*
-    |--------------------------------------------------------------------------
-    | FAQ CRUD
-    |--------------------------------------------------------------------------
-    */
+    /* FAQ CRUD */
     Route::post('/site-settings/faqs', [SiteSettingController::class, 'faqStore'])
         ->name('site-settings.faqs.store');
 
@@ -181,6 +173,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::delete('/site-settings/timeline/{timeline}', [SiteSettingController::class, 'timelineDestroy'])
         ->name('site-settings.timeline.destroy');
+
+
+    // Informasi Penting
+    Route::post('/site-settings/informasi-penting', [SiteSettingController::class, 'informasiPentingStore'])
+        ->name('site-settings.informasi-penting.store');
+
+    Route::put('/site-settings/informasi-penting/{informasiPenting}', [SiteSettingController::class, 'informasiPentingUpdate'])
+        ->name('site-settings.informasi-penting.update');
+
+    Route::delete('/site-settings/informasi-penting/{informasiPenting}', [SiteSettingController::class, 'informasiPentingDestroy'])
+        ->name('site-settings.informasi-penting.destroy');
+    
 
     /*
     |--------------------------------------------------------------------------
