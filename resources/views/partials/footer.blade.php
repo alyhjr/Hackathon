@@ -45,9 +45,9 @@
                 <path d="M4 7l8 6 8-6" />
               </svg>
               <a href="mailto:hackathon.rumdik@kemendikdasmen.go.id"
-                 class="footer-link hover:text-sky-700 transition-colors duration-200">
-                hackathon.rumdik@kemendikdasmen.go.id
-              </a>
+   class="footer-link hover:text-sky-700 transition-colors duration-200">
+  hackathon.rumdik@kemendikdasmen.go.id
+</a>
             </div>
 
           </div>
