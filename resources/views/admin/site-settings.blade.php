@@ -388,10 +388,26 @@
       </div>
 
      
-    {{-- ===========================
+    {{-- =========================== 
     TAB: INFORMASI PENTING
     ============================ --}}
 <div x-show="tab==='informasi-penting'" x-cloak class="rounded-2xl border border-slate-200 bg-white shadow-sm p-6">
+  @php
+    $informasiPentingItems = $informasiPentingItems ?? collect();
+
+    $usedSortOrders = $informasiPentingItems
+        ->pluck('sort_order')
+        ->filter(fn ($value) => $value !== null && $value !== '')
+        ->map(fn ($value) => (int) $value)
+        ->filter(fn ($value) => $value >= 1)
+        ->unique()
+        ->sort()
+        ->values();
+
+    $maxUsedSortOrder = (int) ($usedSortOrders->max() ?? 0);
+    $maxSortOption = max($maxUsedSortOrder, $informasiPentingItems->count(), 1) + 5;
+  @endphp
+
   <div>
     <h2 class="text-xl font-extrabold text-slate-900">Informasi Penting</h2>
     <p class="mt-1 text-sm text-slate-600">Kelola konten informasi penting yang tampil di beranda.</p>
@@ -404,15 +420,41 @@
     <form action="{{ route('admin.site-settings.informasi-penting.store') }}" method="POST" class="mt-4 space-y-4">
       @csrf
 
+      @php
+        $firstAvailableSortOrder = null;
+        for ($i = 1; $i <= $maxSortOption; $i++) {
+            if (! $usedSortOrders->contains($i)) {
+                $firstAvailableSortOrder = $i;
+                break;
+            }
+        }
+
+        $selectedCreateSortOrder = old('sort_order', $firstAvailableSortOrder);
+      @endphp
+
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-bold mb-1">Urutan</label>
-          <input type="number" name="sort_order" value="1" min="0" class="w-full border rounded-xl px-4 py-3">
+          <select name="sort_order" class="w-full border rounded-xl px-4 py-3" required>
+            @for ($i = 1; $i <= $maxSortOption; $i++)
+              @php
+                $isUsed = $usedSortOrders->contains($i);
+              @endphp
+
+              <option
+                value="{{ $i }}"
+                {{ $isUsed ? 'disabled' : '' }}
+                {{ (string) $selectedCreateSortOrder === (string) $i && ! $isUsed ? 'selected' : '' }}
+              >
+                {{ $i }}{{ $isUsed ? ' (used)' : '' }}
+              </option>
+            @endfor
+          </select>
         </div>
 
         <div class="flex items-end">
           <label class="inline-flex items-center gap-2">
-            <input type="checkbox" name="is_active" value="1" checked class="w-4 h-4">
+            <input type="checkbox" name="is_active" value="1" {{ old('is_active', 1) ? 'checked' : '' }} class="w-4 h-4">
             <span class="text-sm">Aktif</span>
           </label>
         </div>
@@ -420,7 +462,7 @@
 
       <div>
         <label class="block text-sm font-bold mb-1">Isi Informasi</label>
-        <textarea name="content" class="w-full border rounded-xl px-4 py-3 min-h-[120px]" required></textarea>
+        <textarea name="content" class="w-full border rounded-xl px-4 py-3 min-h-[120px]" required>{{ old('content') }}</textarea>
       </div>
 
       <div>
@@ -436,7 +478,12 @@
 
   {{-- LIST DATA --}}
   <div class="mt-8 space-y-4">
-    @forelse(($informasiPentingItems ?? collect()) as $item)
+    @forelse($informasiPentingItems as $item)
+      @php
+        $currentSortOrder = (int) $item->sort_order;
+        $selectedEditSortOrder = old('sort_order', $currentSortOrder);
+      @endphp
+
       <div class="rounded-xl border border-slate-200 p-4 bg-white">
         <form action="{{ route('admin.site-settings.informasi-penting.update', $item->id) }}" method="POST" class="space-y-3">
           @csrf
@@ -445,12 +492,26 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-bold mb-1">Urutan</label>
-              <input type="number" name="sort_order" value="{{ $item->sort_order }}" min="0" class="w-full border rounded-xl px-4 py-3">
+              <select name="sort_order" class="w-full border rounded-xl px-4 py-3" required>
+                @for ($i = 1; $i <= $maxSortOption; $i++)
+                  @php
+                    $isUsedByOtherItem = $usedSortOrders->contains($i) && $i !== $currentSortOrder;
+                  @endphp
+
+                  <option
+                    value="{{ $i }}"
+                    {{ $isUsedByOtherItem ? 'disabled' : '' }}
+                    {{ (string) $selectedEditSortOrder === (string) $i ? 'selected' : '' }}
+                  >
+                    {{ $i }}{{ $isUsedByOtherItem ? ' (used)' : '' }}
+                  </option>
+                @endfor
+              </select>
             </div>
 
             <div class="flex items-end">
               <label class="inline-flex items-center gap-2">
-                <input type="checkbox" name="is_active" value="1" {{ $item->is_active ? 'checked' : '' }} class="w-4 h-4">
+                <input type="checkbox" name="is_active" value="1" {{ old('is_active', $item->is_active) ? 'checked' : '' }} class="w-4 h-4">
                 <span class="text-sm">Aktif</span>
               </label>
             </div>
@@ -458,7 +519,7 @@
 
           <div>
             <label class="block text-xs font-bold mb-1">Isi Informasi</label>
-            <textarea name="content" class="w-full border rounded-xl px-4 py-3 min-h-[120px]" required>{{ $item->content }}</textarea>
+            <textarea name="content" class="w-full border rounded-xl px-4 py-3 min-h-[120px]" required>{{ old('content', $item->content) }}</textarea>
           </div>
 
           <div class="flex justify-end gap-2">
@@ -552,9 +613,32 @@
   </div>
 </div>
 
-     {{-- ===========================
+    {{-- ===========================
     TAB: TIMELINE
 ============================ --}}
+@php
+  $timelineItems = $timelineItems ?? collect();
+
+  $usedTimelineSortOrders = $timelineItems
+      ->pluck('sort_order')
+      ->filter(fn ($value) => $value !== null && $value !== '')
+      ->map(fn ($value) => (int) $value)
+      ->filter(fn ($value) => $value >= 1)
+      ->unique()
+      ->sort()
+      ->values();
+
+  $timelineMaxSortOption = max((int) ($usedTimelineSortOrders->max() ?? 0), $timelineItems->count(), 1) + 5;
+
+  $timelineFirstAvailableSortOrder = 1;
+  for ($i = 1; $i <= $timelineMaxSortOption; $i++) {
+      if (! $usedTimelineSortOrders->contains($i)) {
+          $timelineFirstAvailableSortOrder = $i;
+          break;
+      }
+  }
+@endphp
+
 <div x-show="tab==='timeline'" x-cloak class="tab-content">
   <div class="card">
 
@@ -565,7 +649,7 @@
         <div class="card-sub">Kelola tahapan timeline yang tampil di beranda.</div>
       </div>
       <div class="text-xs text-slate-400">
-        <span class="font-bold text-slate-700">{{ ($timelineItems ?? collect())->count() }}</span> tahapan
+        <span class="font-bold text-slate-700">{{ $timelineItems->count() }}</span> tahapan
       </div>
     </div>
 
@@ -580,30 +664,43 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="field-label">Judul</label>
-            <input type="text" name="title" class="field-input" placeholder="Contoh: Pendaftaran Dibuka" required>
+            <input type="text" name="title" value="{{ old('title') }}" class="field-input" placeholder="Contoh: Pendaftaran Dibuka" required>
           </div>
           <div>
             <label class="field-label">Tanggal</label>
-            <input type="text" name="date_label" class="field-input" placeholder="Contoh: 18 Nov 2025" required>
+            <input type="text" name="date_label" value="{{ old('date_label') }}" class="field-input" placeholder="Contoh: 18 Nov 2025" required>
           </div>
         </div>
 
         <div>
           <label class="field-label">Deskripsi (opsional)</label>
-          <textarea name="description" class="field-input min-h-[80px]" placeholder="Deskripsi singkat tahapan..."></textarea>
+          <textarea name="description" class="field-input min-h-[80px]" placeholder="Deskripsi singkat tahapan...">{{ old('description') }}</textarea>
         </div>
 
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-4">
-            <div class="w-24">
+            <div class="w-32">
               <label class="field-label">Urutan</label>
-              <input type="number" name="sort_order" value="1" min="1" class="field-input">
+              <select name="sort_order" class="field-input" required>
+                @for ($i = 1; $i <= $timelineMaxSortOption; $i++)
+                  @php $isUsed = $usedTimelineSortOrders->contains($i); @endphp
+                  <option
+                    value="{{ $i }}"
+                    {{ $isUsed ? 'disabled' : '' }}
+                    {{ (string) old('sort_order', $timelineFirstAvailableSortOrder) === (string) $i && ! $isUsed ? 'selected' : '' }}
+                  >
+                    {{ $i }}{{ $isUsed ? ' (used)' : '' }}
+                  </option>
+                @endfor
+              </select>
             </div>
+
             <label class="inline-flex items-center gap-2 mt-5 cursor-pointer">
-              <input type="checkbox" name="is_active" value="1" checked class="w-4 h-4 accent-[#0072BC]">
+              <input type="checkbox" name="is_active" value="1" {{ old('is_active', 1) ? 'checked' : '' }} class="w-4 h-4 accent-[#0072BC]">
               <span class="text-sm font-medium text-slate-700">Aktif</span>
             </label>
           </div>
+
           <button type="submit" class="btn-primary mt-5">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
@@ -616,7 +713,11 @@
 
     {{-- ===== LIST TIMELINE ===== --}}
     <div class="space-y-2.5">
-      @forelse(($timelineItems ?? collect())->sortBy('sort_order') as $item)
+      @forelse($timelineItems->sortBy('sort_order') as $item)
+        @php
+          $currentSortOrder = (int) $item->sort_order;
+        @endphp
+
         <div class="item-row" x-data="{ editing: false }">
 
           {{-- VIEW MODE --}}
@@ -634,6 +735,7 @@
                 style="padding:0.3rem 0.7rem;font-size:0.74rem;"
                 @click="editing = true">Edit</button>
             </div>
+
             @if($item->description)
               <div class="px-4 py-2.5 text-xs text-slate-500 leading-relaxed bg-slate-50/60 border-t border-slate-100 line-clamp-2">
                 {{ $item->description }}
@@ -644,7 +746,8 @@
           {{-- EDIT MODE --}}
           <div x-show="editing" class="item-row-body">
             <form action="{{ route('admin.site-settings.timeline.update', $item->id) }}" method="POST" class="space-y-3">
-              @csrf @method('PUT')
+              @csrf
+              @method('PUT')
 
               <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
@@ -663,14 +766,27 @@
               </div>
 
               <div class="flex items-center gap-3">
-                <div class="w-24">
+                <div class="w-32">
                   <label class="field-label">Urutan</label>
-                  <input type="number" name="sort_order" value="{{ $item->sort_order }}" min="1" class="field-input">
+                  <select name="sort_order" class="field-input" required>
+                    @for ($i = 1; $i <= $timelineMaxSortOption; $i++)
+                      @php $isUsedByOther = $usedTimelineSortOrders->contains($i) && $i !== $currentSortOrder; @endphp
+                      <option
+                        value="{{ $i }}"
+                        {{ $isUsedByOther ? 'disabled' : '' }}
+                        {{ (string) $currentSortOrder === (string) $i ? 'selected' : '' }}
+                      >
+                        {{ $i }}{{ $isUsedByOther ? ' (used)' : '' }}
+                      </option>
+                    @endfor
+                  </select>
                 </div>
+
                 <label class="inline-flex items-center gap-2 mt-5 cursor-pointer">
                   <input type="checkbox" name="is_active" value="1" {{ $item->is_active ? 'checked' : '' }} class="w-4 h-4 accent-[#0072BC]">
                   <span class="text-sm font-medium text-slate-700">Aktif</span>
                 </label>
+
                 <div class="ml-auto mt-5 flex gap-2">
                   <button type="button" class="btn-ghost"
                     style="padding:0.35rem 0.8rem;font-size:0.78rem;"
@@ -683,7 +799,8 @@
 
             <form action="{{ route('admin.site-settings.timeline.destroy', $item->id) }}" method="POST"
                   onsubmit="return confirm('Hapus timeline ini?')" class="mt-2.5">
-              @csrf @method('DELETE')
+              @csrf
+              @method('DELETE')
               <button type="submit" class="btn-danger">Hapus</button>
             </form>
           </div>
@@ -703,9 +820,14 @@
   </div>
 </div>
 
-      {{-- ===========================
+    
+{{-- ===========================
     TAB: FAQ
 ============================ --}}
+@php
+  $groupedFaqs = ($faqs ?? collect())->groupBy('category');
+@endphp
+
 <div x-show="tab==='faq'" x-cloak class="tab-content"
      x-data="{
        faqView: '',
@@ -740,13 +862,8 @@
     <hr class="section-divider">
 
     {{-- ===== LANDING: GRID KATEGORI ===== --}}
-    @php
-      $groupedFaqs = ($faqs ?? collect())->groupBy('category');
-    @endphp
-
     <div x-show="faqView === ''" class="lomba-fade">
 
-      {{-- Summary --}}
       @if($groupedFaqs->isNotEmpty())
         <div class="text-xs text-slate-400 mb-4">
           <span class="font-bold text-slate-700">{{ $groupedFaqs->count() }}</span> kategori ·
@@ -755,8 +872,6 @@
       @endif
 
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-
-        {{-- Kartu per kategori --}}
         @forelse($groupedFaqs as $category => $items)
           <button type="button"
             class="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-slate-200 bg-white p-4 text-center hover:border-[#0072BC] hover:bg-blue-50/30 transition-all group"
@@ -781,7 +896,6 @@
           </div>
         @endforelse
 
-        {{-- Tombol tambah kategori baru --}}
         <button type="button"
           class="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 p-4 text-center hover:border-[#0072BC] hover:bg-blue-50/20 transition-all group"
           @click="faqView = 'add_cat'">
@@ -792,7 +906,6 @@
           </div>
           <div class="font-bold text-xs text-slate-500 group-hover:text-[#0072BC] transition-colors">Tambah Kategori</div>
         </button>
-
       </div>
     </div>
 
@@ -802,6 +915,11 @@
         <div class="font-bold text-sm text-slate-900 mb-3">+ FAQ dengan Kategori Baru</div>
         <form action="{{ route('admin.site-settings.faqs.store') }}" method="POST" class="space-y-4">
           @csrf
+
+          @php
+            $newCategoryMaxSortOption = 6;
+          @endphp
+
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="md:col-span-2">
               <label class="field-label">Nama Kategori Baru</label>
@@ -809,17 +927,24 @@
             </div>
             <div>
               <label class="field-label">Urutan</label>
-              <input type="number" name="sort_order" value="1" min="1" class="field-input">
+              <select name="sort_order" class="field-input" required>
+                @for ($i = 1; $i <= $newCategoryMaxSortOption; $i++)
+                  <option value="{{ $i }}" {{ $i === 1 ? 'selected' : '' }}>{{ $i }}</option>
+                @endfor
+              </select>
             </div>
           </div>
+
           <div>
             <label class="field-label">Pertanyaan Pertama</label>
             <input name="question" class="field-input" placeholder="Tulis pertanyaan..." required>
           </div>
+
           <div>
             <label class="field-label">Jawaban</label>
             <textarea name="answer" class="field-input min-h-[100px]" placeholder="Tulis jawaban lengkap..." required></textarea>
           </div>
+
           <div class="flex items-center justify-between">
             <label class="inline-flex items-center gap-2 cursor-pointer">
               <input type="checkbox" name="is_active" value="1" checked class="w-4 h-4 accent-[#0072BC]">
@@ -838,15 +963,37 @@
 
     {{-- ===== LIST FAQ PER KATEGORI ===== --}}
     <div x-show="faqView === 'list'" x-cloak class="lomba-fade space-y-5">
-
-      {{-- Form tambah FAQ di kategori ini --}}
       @foreach($groupedFaqs as $category => $items)
+        @php
+          $items = $items->sortBy('sort_order')->values();
+
+          $usedFaqSortOrders = $items
+              ->pluck('sort_order')
+              ->filter(fn ($value) => $value !== null && $value !== '')
+              ->map(fn ($value) => (int) $value)
+              ->filter(fn ($value) => $value >= 1)
+              ->unique()
+              ->sort()
+              ->values();
+
+          $faqMaxSortOption = max((int) ($usedFaqSortOrders->max() ?? 0), $items->count(), 1) + 5;
+
+          $faqFirstAvailableSortOrder = 1;
+          for ($i = 1; $i <= $faqMaxSortOption; $i++) {
+              if (! $usedFaqSortOrders->contains($i)) {
+                  $faqFirstAvailableSortOrder = $i;
+                  break;
+              }
+          }
+        @endphp
+
         <div x-show="activeCategory === @js($category)">
           <div class="add-form-box mb-5">
             <div class="font-bold text-sm text-slate-900 mb-3">+ Tambah Pertanyaan</div>
             <form action="{{ route('admin.site-settings.faqs.store') }}" method="POST" class="space-y-4">
               @csrf
               <input type="hidden" name="category" value="{{ $category }}">
+
               <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div class="md:col-span-3">
                   <label class="field-label">Pertanyaan</label>
@@ -854,13 +1001,26 @@
                 </div>
                 <div>
                   <label class="field-label">Urutan</label>
-                  <input type="number" name="sort_order" value="{{ $items->max('sort_order') + 1 }}" min="1" class="field-input">
+                  <select name="sort_order" class="field-input" required>
+                    @for ($i = 1; $i <= $faqMaxSortOption; $i++)
+                      @php $isUsed = $usedFaqSortOrders->contains($i); @endphp
+                      <option
+                        value="{{ $i }}"
+                        {{ $isUsed ? 'disabled' : '' }}
+                        {{ (string) $faqFirstAvailableSortOrder === (string) $i && ! $isUsed ? 'selected' : '' }}
+                      >
+                        {{ $i }}{{ $isUsed ? ' (used)' : '' }}
+                      </option>
+                    @endfor
+                  </select>
                 </div>
               </div>
+
               <div>
                 <label class="field-label">Jawaban</label>
                 <textarea name="answer" class="field-input min-h-[90px]" placeholder="Tulis jawaban..." required></textarea>
               </div>
+
               <div class="flex items-center justify-between">
                 <label class="inline-flex items-center gap-2 cursor-pointer">
                   <input type="checkbox" name="is_active" value="1" checked class="w-4 h-4 accent-[#0072BC]">
@@ -876,15 +1036,17 @@
             </form>
           </div>
 
-          {{-- List FAQ --}}
           <div class="text-xs text-slate-400 mb-3">
             <span class="font-bold text-slate-700">{{ $items->count() }}</span> pertanyaan di kategori ini
           </div>
 
           <div class="space-y-2.5">
-            @forelse($items->sortBy('sort_order') as $faq)
-              <div class="item-row" x-data="{ editing: false }">
+            @forelse($items as $faq)
+              @php
+                $currentSortOrder = (int) $faq->sort_order;
+              @endphp
 
+              <div class="item-row" x-data="{ editing: false }">
                 {{-- View mode --}}
                 <div x-show="!editing">
                   <div class="item-row-head">
@@ -904,8 +1066,10 @@
                 {{-- Edit mode --}}
                 <div x-show="editing" class="item-row-body">
                   <form action="{{ route('admin.site-settings.faqs.update', $faq->id) }}" method="POST" class="space-y-3">
-                    @csrf @method('PUT')
+                    @csrf
+                    @method('PUT')
                     <input type="hidden" name="category" value="{{ $faq->category }}">
+
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
                       <div class="md:col-span-3">
                         <label class="field-label">Pertanyaan</label>
@@ -913,13 +1077,26 @@
                       </div>
                       <div>
                         <label class="field-label">Urutan</label>
-                        <input type="number" name="sort_order" value="{{ $faq->sort_order }}" min="1" class="field-input">
+                        <select name="sort_order" class="field-input" required>
+                          @for ($i = 1; $i <= $faqMaxSortOption; $i++)
+                            @php $isUsedByOther = $usedFaqSortOrders->contains($i) && $i !== $currentSortOrder; @endphp
+                            <option
+                              value="{{ $i }}"
+                              {{ $isUsedByOther ? 'disabled' : '' }}
+                              {{ (string) $currentSortOrder === (string) $i ? 'selected' : '' }}
+                            >
+                              {{ $i }}{{ $isUsedByOther ? ' (used)' : '' }}
+                            </option>
+                          @endfor
+                        </select>
                       </div>
                     </div>
+
                     <div>
                       <label class="field-label">Jawaban</label>
                       <textarea name="answer" class="field-input min-h-[90px]" required>{{ $faq->answer }}</textarea>
                     </div>
+
                     <div class="flex items-center gap-3">
                       <label class="inline-flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" name="is_active" value="1" {{ $faq->is_active ? 'checked' : '' }} class="w-4 h-4 accent-[#0072BC]">
@@ -932,13 +1109,14 @@
                       </div>
                     </div>
                   </form>
+
                   <form action="{{ route('admin.site-settings.faqs.destroy', $faq->id) }}" method="POST"
                         onsubmit="return confirm('Hapus FAQ ini?')" class="mt-2.5">
-                    @csrf @method('DELETE')
+                    @csrf
+                    @method('DELETE')
                     <button type="submit" class="btn-danger">Hapus</button>
                   </form>
                 </div>
-
               </div>
             @empty
               <div class="empty-state">
@@ -948,14 +1126,13 @@
           </div>
         </div>
       @endforeach
-
     </div>
 
   </div>
 </div>
 
-    {{-- ===========================
-    TAB: LOMBA — Full Alpine, no page reload
+{{-- ===========================
+    TAB: LOMBA
 ============================ --}}
 
 <style>
@@ -967,7 +1144,6 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* Sub-tab pill */
   .sub-pill {
     display: inline-flex;
     align-items: center;
@@ -996,7 +1172,6 @@
     background: #eff8ff;
   }
 
-  /* Section card */
   .lomba-nav-card {
     display: flex;
     align-items: center;
@@ -1043,7 +1218,6 @@
     flex-shrink: 0;
   }
 
-  /* Breadcrumb back button */
   .back-btn {
     display: inline-flex;
     align-items: center;
@@ -1064,7 +1238,6 @@
     background: #eff8ff;
   }
 
-  /* Section header strip */
   .section-header-strip {
     display: flex;
     align-items: center;
@@ -1076,7 +1249,6 @@
     flex-wrap: wrap;
   }
 
-  /* Add form box */
   .add-form-box {
     background: linear-gradient(135deg, #f8fafc 0%, #f0f7ff 100%);
     border: 1.5px solid #e2e8f0;
@@ -1085,7 +1257,6 @@
     margin-bottom: 1.25rem;
   }
 
-  /* Item row */
   .item-row {
     border: 1.5px solid #e2e8f0;
     border-radius: 0.875rem;
@@ -1108,7 +1279,6 @@
     padding: 1rem;
   }
 
-  /* Step bubble */
   .step-bubble {
     display: inline-flex;
     align-items: center;
@@ -1123,7 +1293,6 @@
     flex-shrink: 0;
   }
 
-  /* Empty state */
   .empty-state {
     display: flex;
     flex-direction: column;
@@ -1138,27 +1307,123 @@
 </style>
 
 @php
-  $kt       = $lombaKetentuan ?? collect();
+  $kt = $lombaKetentuan ?? collect();
   $selected = request('lomba_tab', 'kategori');
-  if (!in_array($selected, ['kategori','persyaratan','pendaftaran'])) $selected = 'kategori';
-  $items    = $kt[$selected] ?? collect();
+  if (!in_array($selected, ['kategori', 'persyaratan', 'pendaftaran'])) {
+      $selected = 'kategori';
+  }
+
+  $kategoriItems = $kt['kategori'] ?? collect();
+  $persyaratanItems = $kt['persyaratan'] ?? collect();
+  $pendaftaranItems = $kt['pendaftaran'] ?? collect();
+  $tahapanItems = $lombaTahapan ?? collect();
+
+  $kategoriUsedSortOrders = $kategoriItems->pluck('sort_order')
+      ->filter(fn ($value) => $value !== null && $value !== '')
+      ->map(fn ($value) => (int) $value)
+      ->filter(fn ($value) => $value >= 1)
+      ->unique()
+      ->sort()
+      ->values();
+
+  $persyaratanUsedSortOrders = $persyaratanItems->pluck('sort_order')
+      ->filter(fn ($value) => $value !== null && $value !== '')
+      ->map(fn ($value) => (int) $value)
+      ->filter(fn ($value) => $value >= 1)
+      ->unique()
+      ->sort()
+      ->values();
+
+  $pendaftaranUsedSortOrders = $pendaftaranItems->pluck('sort_order')
+      ->filter(fn ($value) => $value !== null && $value !== '')
+      ->map(fn ($value) => (int) $value)
+      ->filter(fn ($value) => $value >= 1)
+      ->unique()
+      ->sort()
+      ->values();
+
+  $usedStepNumbers = $tahapanItems->pluck('step_number')
+      ->filter(fn ($value) => $value !== null && $value !== '')
+      ->map(fn ($value) => (int) $value)
+      ->filter(fn ($value) => $value >= 1)
+      ->unique()
+      ->sort()
+      ->values();
+
+  $usedSortOrdersTahapan = $tahapanItems->pluck('sort_order')
+      ->filter(fn ($value) => $value !== null && $value !== '')
+      ->map(fn ($value) => (int) $value)
+      ->filter(fn ($value) => $value >= 1)
+      ->unique()
+      ->sort()
+      ->values();
+
+  $kategoriMaxSortOption = max((int) ($kategoriUsedSortOrders->max() ?? 0), $kategoriItems->count(), 1) + 5;
+  $persyaratanMaxSortOption = max((int) ($persyaratanUsedSortOrders->max() ?? 0), $persyaratanItems->count(), 1) + 5;
+  $pendaftaranMaxSortOption = max((int) ($pendaftaranUsedSortOrders->max() ?? 0), $pendaftaranItems->count(), 1) + 5;
+  $maxStepNumberOption = max((int) ($usedStepNumbers->max() ?? 0), $tahapanItems->count(), 1) + 5;
+  $maxSortOrderOptionTahapan = max((int) ($usedSortOrdersTahapan->max() ?? 0), $tahapanItems->count(), 1) + 5;
+
+  $kategoriFirstAvailableSortOrder = 1;
+  for ($i = 1; $i <= $kategoriMaxSortOption; $i++) {
+      if (! $kategoriUsedSortOrders->contains($i)) {
+          $kategoriFirstAvailableSortOrder = $i;
+          break;
+      }
+  }
+
+  $persyaratanFirstAvailableSortOrder = 1;
+  for ($i = 1; $i <= $persyaratanMaxSortOption; $i++) {
+      if (! $persyaratanUsedSortOrders->contains($i)) {
+          $persyaratanFirstAvailableSortOrder = $i;
+          break;
+      }
+  }
+
+  $pendaftaranFirstAvailableSortOrder = 1;
+  for ($i = 1; $i <= $pendaftaranMaxSortOption; $i++) {
+      if (! $pendaftaranUsedSortOrders->contains($i)) {
+          $pendaftaranFirstAvailableSortOrder = $i;
+          break;
+      }
+  }
+
+  $firstAvailableStepNumber = 1;
+  for ($i = 1; $i <= $maxStepNumberOption; $i++) {
+      if (! $usedStepNumbers->contains($i)) {
+          $firstAvailableStepNumber = $i;
+          break;
+      }
+  }
+
+  $firstAvailableSortOrderTahapan = 1;
+  for ($i = 1; $i <= $maxSortOrderOptionTahapan; $i++) {
+      if (! $usedSortOrdersTahapan->contains($i)) {
+          $firstAvailableSortOrderTahapan = $i;
+          break;
+      }
+  }
 @endphp
 
-<div x-show="tab==='lomba'" x-cloak class="tab-content"
-     x-data="{
-       lombaSection: '{{ request()->has('lomba_tab') ? 'ketentuan' : '' }}',
-       kTab: '{{ $selected }}'
-     }">
+<div
+  x-show="tab==='lomba'"
+  x-cloak
+  class="tab-content"
+  x-data="{
+    lombaSection: '{{ request()->has('lomba_tab') ? 'ketentuan' : '' }}',
+    kTab: '{{ $selected }}'
+  }"
+>
   <div class="card">
-
     {{-- ===== CARD HEADER ===== --}}
     <div class="flex items-center gap-3 mb-1">
-      {{-- Back button (shown inside section) --}}
-      <button type="button"
+      <button
+        type="button"
         x-show="lombaSection !== ''"
         x-cloak
         class="back-btn"
-        @click="lombaSection = ''">
+        @click="lombaSection = ''"
+      >
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
         </svg>
@@ -1166,8 +1431,14 @@
       </button>
 
       <div>
-        <div class="card-title" x-text="lombaSection === '' ? 'Lomba' : (lombaSection === 'ketentuan' ? 'Ketentuan Lomba' : 'Tahapan Lomba')"></div>
-        <div class="card-sub" x-text="lombaSection === '' ? 'Pilih bagian yang ingin dikelola.' : (lombaSection === 'ketentuan' ? 'Kelola kategori, persyaratan, & pendaftaran.' : 'Kelola langkah-langkah kegiatan lomba.')"></div>
+        <div
+          class="card-title"
+          x-text="lombaSection === '' ? 'Lomba' : (lombaSection === 'ketentuan' ? 'Ketentuan Lomba' : 'Tahapan Lomba')"
+        ></div>
+        <div
+          class="card-sub"
+          x-text="lombaSection === '' ? 'Pilih bagian yang ingin dikelola.' : (lombaSection === 'ketentuan' ? 'Kelola kategori, persyaratan, & pendaftaran.' : 'Kelola langkah-langkah kegiatan lomba.')"
+        ></div>
       </div>
     </div>
 
@@ -1175,7 +1446,6 @@
 
     {{-- ===== LANDING: 2 PILIHAN ===== --}}
     <div x-show="lombaSection === ''" class="lomba-fade grid grid-cols-1 sm:grid-cols-2 gap-4">
-
       <button type="button" class="lomba-nav-card" @click="lombaSection = 'ketentuan'">
         <div class="lnc-icon">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1207,33 +1477,36 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
         </svg>
       </button>
-
     </div>
 
     {{-- =========================
         SECTION: KETENTUAN
     ========================= --}}
     <div x-show="lombaSection === 'ketentuan'" x-cloak class="lomba-fade">
-
-      {{-- Sub-tab pills (pure Alpine, no page reload) --}}
       <div class="section-header-strip">
         <div class="flex gap-1.5 flex-wrap">
-          <button type="button"
+          <button
+            type="button"
             class="sub-pill"
             :class="kTab === 'kategori' ? 'sub-pill-active' : 'sub-pill-inactive'"
-            @click="kTab = 'kategori'">
+            @click="kTab = 'kategori'"
+          >
             Kategori
           </button>
-          <button type="button"
+          <button
+            type="button"
             class="sub-pill"
             :class="kTab === 'persyaratan' ? 'sub-pill-active' : 'sub-pill-inactive'"
-            @click="kTab = 'persyaratan'">
+            @click="kTab = 'persyaratan'"
+          >
             Persyaratan
           </button>
-          <button type="button"
+          <button
+            type="button"
             class="sub-pill"
             :class="kTab === 'pendaftaran' ? 'sub-pill-active' : 'sub-pill-inactive'"
-            @click="kTab = 'pendaftaran'">
+            @click="kTab = 'pendaftaran'"
+          >
             Pendaftaran
           </button>
         </div>
@@ -1247,39 +1520,72 @@
       <div x-show="kTab === 'kategori'" x-cloak class="lomba-fade space-y-4">
         <div class="add-form-box">
           <div class="font-bold text-sm text-slate-900 mb-3">+ Tambah Kategori</div>
+
           <form action="{{ route('admin.site-settings.lomba.ketentuan.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
             @csrf
             <input type="hidden" name="tab" value="kategori">
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label class="field-label">Title</label>
-                <input name="title" class="field-input" placeholder="Contoh: PAUD / Sederajat">
+                <input
+                  name="title"
+                  value="{{ old('tab') === 'kategori' ? old('title') : '' }}"
+                  class="field-input"
+                  placeholder="Contoh: PAUD / Sederajat"
+                >
               </div>
+
               <div>
                 <label class="field-label">Gambar (opsional)</label>
                 <label class="flex items-center gap-2 w-full border border-dashed border-slate-200 rounded-lg px-3 py-2.5 cursor-pointer hover:border-[#0072BC] hover:bg-blue-50/20 transition-colors text-sm text-slate-500 bg-white">
-                  <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+                  <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+                  </svg>
                   Pilih gambar
                   <input type="file" name="image" class="hidden" accept="image/*">
                 </label>
               </div>
             </div>
+
             <div>
               <label class="field-label">Deskripsi / Konten</label>
-              <textarea name="content" required class="field-input min-h-[80px]" placeholder="Deskripsi singkat kategori..."></textarea>
+              <textarea name="content" required class="field-input min-h-[80px]" placeholder="Deskripsi singkat kategori...">{{ old('tab') === 'kategori' ? old('content') : '' }}</textarea>
             </div>
+
             <div class="flex items-center gap-4">
-              <div class="w-24">
+              <div class="w-32">
                 <label class="field-label">Urutan</label>
-                <input type="number" name="sort_order" value="1" min="1" class="field-input">
+                <select name="sort_order" class="field-input" required>
+                  @for ($i = 1; $i <= $kategoriMaxSortOption; $i++)
+                    @php $isUsed = $kategoriUsedSortOrders->contains($i); @endphp
+                    <option
+                      value="{{ $i }}"
+                      {{ $isUsed ? 'disabled' : '' }}
+                      {{ (string) (old('tab') === 'kategori' ? old('sort_order', $kategoriFirstAvailableSortOrder) : $kategoriFirstAvailableSortOrder) === (string) $i && ! $isUsed ? 'selected' : '' }}
+                    >
+                      {{ $i }}{{ $isUsed ? ' (used)' : '' }}
+                    </option>
+                  @endfor
+                </select>
               </div>
+
               <label class="inline-flex items-center gap-2 mt-5 cursor-pointer">
-                <input type="checkbox" name="is_active" value="1" checked class="w-4 h-4 accent-[#0072BC]">
+                <input
+                  type="checkbox"
+                  name="is_active"
+                  value="1"
+                  {{ old('tab') === 'kategori' ? (old('is_active', 1) ? 'checked' : '') : 'checked' }}
+                  class="w-4 h-4 accent-[#0072BC]"
+                >
                 <span class="text-sm font-medium text-slate-700">Aktif</span>
               </label>
+
               <div class="mt-5 ml-auto">
                 <button type="submit" class="btn-primary">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+                  </svg>
                   Tambah
                 </button>
               </div>
@@ -1287,53 +1593,82 @@
           </form>
         </div>
 
-        {{-- List Kategori --}}
-        @php $kItems = $kt['kategori'] ?? collect(); @endphp
-        <div class="text-xs text-slate-400 mb-2"><span class="font-bold text-slate-700">{{ $kItems->count() }}</span> item</div>
+        <div class="text-xs text-slate-400 mb-2"><span class="font-bold text-slate-700">{{ $kategoriItems->count() }}</span> item</div>
+
         <div class="space-y-2.5">
-          @forelse($kItems as $item)
+          @forelse($kategoriItems as $item)
+            @php $currentSortOrder = (int) $item->sort_order; @endphp
+
             <div class="item-row">
               <div class="item-row-head">
                 <span class="text-xs font-black text-slate-400">#{{ $item->id }}</span>
-                @if($item->title)<span class="text-sm font-semibold text-slate-700">{{ $item->title }}</span>@endif
-                <span class="badge ml-auto {{ $item->is_active ? 'badge-active' : 'badge-inactive' }}">{{ $item->is_active ? 'Aktif' : 'Nonaktif' }}</span>
+                @if($item->title)
+                  <span class="text-sm font-semibold text-slate-700">{{ $item->title }}</span>
+                @endif
+                <span class="badge ml-auto {{ $item->is_active ? 'badge-active' : 'badge-inactive' }}">
+                  {{ $item->is_active ? 'Aktif' : 'Nonaktif' }}
+                </span>
                 <span class="text-xs text-slate-400">Urut: {{ $item->sort_order }}</span>
               </div>
+
               <div class="item-row-body">
                 <form action="{{ route('admin.site-settings.lomba.ketentuan.update', $item->id) }}" method="POST" enctype="multipart/form-data" class="space-y-3">
-                  @csrf @method('PUT')
+                  @csrf
+                  @method('PUT')
                   <input type="hidden" name="tab" value="kategori">
+
                   <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div class="md:col-span-2">
                       <label class="field-label">Title</label>
                       <input name="title" value="{{ $item->title }}" class="field-input">
                     </div>
+
                     <div>
                       <label class="field-label">Urutan</label>
-                      <input type="number" name="sort_order" value="{{ $item->sort_order }}" min="1" class="field-input">
+                      <select name="sort_order" class="field-input" required>
+                        @for ($i = 1; $i <= $kategoriMaxSortOption; $i++)
+                          @php $isUsedByOtherItem = $kategoriUsedSortOrders->contains($i) && $i !== $currentSortOrder; @endphp
+                          <option
+                            value="{{ $i }}"
+                            {{ $isUsedByOtherItem ? 'disabled' : '' }}
+                            {{ (string) $currentSortOrder === (string) $i ? 'selected' : '' }}
+                          >
+                            {{ $i }}{{ $isUsedByOtherItem ? ' (used)' : '' }}
+                          </option>
+                        @endfor
+                      </select>
                     </div>
                   </div>
+
                   <div>
                     <label class="field-label">Konten</label>
                     <textarea name="content" required class="field-input min-h-[60px]">{{ $item->content }}</textarea>
                   </div>
+
                   <div class="flex items-center gap-3">
                     <label class="inline-flex items-center gap-2 cursor-pointer">
                       <input type="checkbox" name="is_active" value="1" {{ $item->is_active ? 'checked' : '' }} class="w-4 h-4 accent-[#0072BC]">
                       <span class="text-sm font-medium text-slate-700">Aktif</span>
                     </label>
-                    <button type="submit" class="btn-primary ml-auto" style="padding:0.4rem 1rem;font-size:0.78rem;">Simpan</button>
+
+                    <button type="submit" class="btn-primary ml-auto" style="padding:0.4rem 1rem;font-size:0.78rem;">
+                      Simpan
+                    </button>
                   </div>
                 </form>
+
                 <form action="{{ route('admin.site-settings.lomba.ketentuan.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus?')" class="mt-2.5">
-                  @csrf @method('DELETE')
+                  @csrf
+                  @method('DELETE')
                   <button type="submit" class="btn-danger">Hapus</button>
                 </form>
               </div>
             </div>
           @empty
             <div class="empty-state">
-              <svg class="w-9 h-9 text-slate-200 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              <svg class="w-9 h-9 text-slate-200 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
               <div class="text-sm font-medium text-slate-500">Belum ada kategori</div>
             </div>
           @endforelse
@@ -1344,29 +1679,54 @@
       <div x-show="kTab === 'persyaratan'" x-cloak class="lomba-fade space-y-4">
         <div class="add-form-box">
           <div class="font-bold text-sm text-slate-900 mb-3">+ Tambah Persyaratan</div>
+
           <form action="{{ route('admin.site-settings.lomba.ketentuan.store') }}" method="POST" class="space-y-4">
             @csrf
             <input type="hidden" name="tab" value="persyaratan">
+
             <div>
               <label class="field-label">Title (opsional)</label>
-              <input name="title" class="field-input" placeholder="Opsional">
+              <input name="title" value="{{ old('tab') === 'persyaratan' ? old('title') : '' }}" class="field-input" placeholder="Opsional">
             </div>
+
             <div>
               <label class="field-label">Konten</label>
-              <textarea name="content" required class="field-input min-h-[80px]" placeholder="Contoh: Peserta merupakan siswa aktif..."></textarea>
+              <textarea name="content" required class="field-input min-h-[80px]" placeholder="Contoh: Peserta merupakan siswa aktif...">{{ old('tab') === 'persyaratan' ? old('content') : '' }}</textarea>
             </div>
+
             <div class="flex items-center gap-4">
-              <div class="w-24">
+              <div class="w-32">
                 <label class="field-label">Urutan</label>
-                <input type="number" name="sort_order" value="1" min="1" class="field-input">
+                <select name="sort_order" class="field-input" required>
+                  @for ($i = 1; $i <= $persyaratanMaxSortOption; $i++)
+                    @php $isUsed = $persyaratanUsedSortOrders->contains($i); @endphp
+                    <option
+                      value="{{ $i }}"
+                      {{ $isUsed ? 'disabled' : '' }}
+                      {{ (string) (old('tab') === 'persyaratan' ? old('sort_order', $persyaratanFirstAvailableSortOrder) : $persyaratanFirstAvailableSortOrder) === (string) $i && ! $isUsed ? 'selected' : '' }}
+                    >
+                      {{ $i }}{{ $isUsed ? ' (used)' : '' }}
+                    </option>
+                  @endfor
+                </select>
               </div>
+
               <label class="inline-flex items-center gap-2 mt-5 cursor-pointer">
-                <input type="checkbox" name="is_active" value="1" checked class="w-4 h-4 accent-[#0072BC]">
+                <input
+                  type="checkbox"
+                  name="is_active"
+                  value="1"
+                  {{ old('tab') === 'persyaratan' ? (old('is_active', 1) ? 'checked' : '') : 'checked' }}
+                  class="w-4 h-4 accent-[#0072BC]"
+                >
                 <span class="text-sm font-medium text-slate-700">Aktif</span>
               </label>
+
               <div class="mt-5 ml-auto">
                 <button type="submit" class="btn-primary">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+                  </svg>
                   Tambah
                 </button>
               </div>
@@ -1374,52 +1734,82 @@
           </form>
         </div>
 
-        @php $pItems = $kt['persyaratan'] ?? collect(); @endphp
-        <div class="text-xs text-slate-400 mb-2"><span class="font-bold text-slate-700">{{ $pItems->count() }}</span> item</div>
+        <div class="text-xs text-slate-400 mb-2"><span class="font-bold text-slate-700">{{ $persyaratanItems->count() }}</span> item</div>
+
         <div class="space-y-2.5">
-          @forelse($pItems as $item)
+          @forelse($persyaratanItems as $item)
+            @php $currentSortOrder = (int) $item->sort_order; @endphp
+
             <div class="item-row">
               <div class="item-row-head">
                 <span class="text-xs font-black text-slate-400">#{{ $item->id }}</span>
-                @if($item->title)<span class="text-sm font-semibold text-slate-700">{{ $item->title }}</span>@endif
-                <span class="badge ml-auto {{ $item->is_active ? 'badge-active' : 'badge-inactive' }}">{{ $item->is_active ? 'Aktif' : 'Nonaktif' }}</span>
+                @if($item->title)
+                  <span class="text-sm font-semibold text-slate-700">{{ $item->title }}</span>
+                @endif
+                <span class="badge ml-auto {{ $item->is_active ? 'badge-active' : 'badge-inactive' }}">
+                  {{ $item->is_active ? 'Aktif' : 'Nonaktif' }}
+                </span>
                 <span class="text-xs text-slate-400">Urut: {{ $item->sort_order }}</span>
               </div>
+
               <div class="item-row-body">
                 <form action="{{ route('admin.site-settings.lomba.ketentuan.update', $item->id) }}" method="POST" class="space-y-3">
-                  @csrf @method('PUT')
+                  @csrf
+                  @method('PUT')
                   <input type="hidden" name="tab" value="persyaratan">
+
                   <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div class="md:col-span-2">
                       <label class="field-label">Title</label>
                       <input name="title" value="{{ $item->title }}" class="field-input">
                     </div>
+
                     <div>
                       <label class="field-label">Urutan</label>
-                      <input type="number" name="sort_order" value="{{ $item->sort_order }}" min="1" class="field-input">
+                      <select name="sort_order" class="field-input" required>
+                        @for ($i = 1; $i <= $persyaratanMaxSortOption; $i++)
+                          @php $isUsedByOtherItem = $persyaratanUsedSortOrders->contains($i) && $i !== $currentSortOrder; @endphp
+                          <option
+                            value="{{ $i }}"
+                            {{ $isUsedByOtherItem ? 'disabled' : '' }}
+                            {{ (string) $currentSortOrder === (string) $i ? 'selected' : '' }}
+                          >
+                            {{ $i }}{{ $isUsedByOtherItem ? ' (used)' : '' }}
+                          </option>
+                        @endfor
+                      </select>
                     </div>
                   </div>
+
                   <div>
                     <label class="field-label">Konten</label>
                     <textarea name="content" required class="field-input min-h-[60px]">{{ $item->content }}</textarea>
                   </div>
+
                   <div class="flex items-center gap-3">
                     <label class="inline-flex items-center gap-2 cursor-pointer">
                       <input type="checkbox" name="is_active" value="1" {{ $item->is_active ? 'checked' : '' }} class="w-4 h-4 accent-[#0072BC]">
                       <span class="text-sm font-medium text-slate-700">Aktif</span>
                     </label>
-                    <button type="submit" class="btn-primary ml-auto" style="padding:0.4rem 1rem;font-size:0.78rem;">Simpan</button>
+
+                    <button type="submit" class="btn-primary ml-auto" style="padding:0.4rem 1rem;font-size:0.78rem;">
+                      Simpan
+                    </button>
                   </div>
                 </form>
+
                 <form action="{{ route('admin.site-settings.lomba.ketentuan.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus?')" class="mt-2.5">
-                  @csrf @method('DELETE')
+                  @csrf
+                  @method('DELETE')
                   <button type="submit" class="btn-danger">Hapus</button>
                 </form>
               </div>
             </div>
           @empty
             <div class="empty-state">
-              <svg class="w-9 h-9 text-slate-200 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              <svg class="w-9 h-9 text-slate-200 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
               <div class="text-sm font-medium text-slate-500">Belum ada persyaratan</div>
             </div>
           @endforelse
@@ -1430,29 +1820,54 @@
       <div x-show="kTab === 'pendaftaran'" x-cloak class="lomba-fade space-y-4">
         <div class="add-form-box">
           <div class="font-bold text-sm text-slate-900 mb-3">+ Tambah Pendaftaran</div>
+
           <form action="{{ route('admin.site-settings.lomba.ketentuan.store') }}" method="POST" class="space-y-4">
             @csrf
             <input type="hidden" name="tab" value="pendaftaran">
+
             <div>
               <label class="field-label">Title (opsional)</label>
-              <input name="title" class="field-input" placeholder="Opsional">
+              <input name="title" value="{{ old('tab') === 'pendaftaran' ? old('title') : '' }}" class="field-input" placeholder="Opsional">
             </div>
+
             <div>
               <label class="field-label">Konten</label>
-              <textarea name="content" required class="field-input min-h-[80px]" placeholder="Contoh: Pendaftaran dibuka mulai..."></textarea>
+              <textarea name="content" required class="field-input min-h-[80px]" placeholder="Contoh: Pendaftaran dibuka mulai...">{{ old('tab') === 'pendaftaran' ? old('content') : '' }}</textarea>
             </div>
+
             <div class="flex items-center gap-4">
-              <div class="w-24">
+              <div class="w-32">
                 <label class="field-label">Urutan</label>
-                <input type="number" name="sort_order" value="1" min="1" class="field-input">
+                <select name="sort_order" class="field-input" required>
+                  @for ($i = 1; $i <= $pendaftaranMaxSortOption; $i++)
+                    @php $isUsed = $pendaftaranUsedSortOrders->contains($i); @endphp
+                    <option
+                      value="{{ $i }}"
+                      {{ $isUsed ? 'disabled' : '' }}
+                      {{ (string) (old('tab') === 'pendaftaran' ? old('sort_order', $pendaftaranFirstAvailableSortOrder) : $pendaftaranFirstAvailableSortOrder) === (string) $i && ! $isUsed ? 'selected' : '' }}
+                    >
+                      {{ $i }}{{ $isUsed ? ' (used)' : '' }}
+                    </option>
+                  @endfor
+                </select>
               </div>
+
               <label class="inline-flex items-center gap-2 mt-5 cursor-pointer">
-                <input type="checkbox" name="is_active" value="1" checked class="w-4 h-4 accent-[#0072BC]">
+                <input
+                  type="checkbox"
+                  name="is_active"
+                  value="1"
+                  {{ old('tab') === 'pendaftaran' ? (old('is_active', 1) ? 'checked' : '') : 'checked' }}
+                  class="w-4 h-4 accent-[#0072BC]"
+                >
                 <span class="text-sm font-medium text-slate-700">Aktif</span>
               </label>
+
               <div class="mt-5 ml-auto">
                 <button type="submit" class="btn-primary">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+                  </svg>
                   Tambah
                 </button>
               </div>
@@ -1460,209 +1875,332 @@
           </form>
         </div>
 
-        @php $dItems = $kt['pendaftaran'] ?? collect(); @endphp
-        <div class="text-xs text-slate-400 mb-2"><span class="font-bold text-slate-700">{{ $dItems->count() }}</span> item</div>
+        <div class="text-xs text-slate-400 mb-2"><span class="font-bold text-slate-700">{{ $pendaftaranItems->count() }}</span> item</div>
+
         <div class="space-y-2.5">
-          @forelse($dItems as $item)
+          @forelse($pendaftaranItems as $item)
+            @php $currentSortOrder = (int) $item->sort_order; @endphp
+
             <div class="item-row">
               <div class="item-row-head">
                 <span class="text-xs font-black text-slate-400">#{{ $item->id }}</span>
-                @if($item->title)<span class="text-sm font-semibold text-slate-700">{{ $item->title }}</span>@endif
-                <span class="badge ml-auto {{ $item->is_active ? 'badge-active' : 'badge-inactive' }}">{{ $item->is_active ? 'Aktif' : 'Nonaktif' }}</span>
+                @if($item->title)
+                  <span class="text-sm font-semibold text-slate-700">{{ $item->title }}</span>
+                @endif
+                <span class="badge ml-auto {{ $item->is_active ? 'badge-active' : 'badge-inactive' }}">
+                  {{ $item->is_active ? 'Aktif' : 'Nonaktif' }}
+                </span>
                 <span class="text-xs text-slate-400">Urut: {{ $item->sort_order }}</span>
               </div>
+
               <div class="item-row-body">
                 <form action="{{ route('admin.site-settings.lomba.ketentuan.update', $item->id) }}" method="POST" class="space-y-3">
-                  @csrf @method('PUT')
+                  @csrf
+                  @method('PUT')
                   <input type="hidden" name="tab" value="pendaftaran">
+
                   <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div class="md:col-span-2">
                       <label class="field-label">Title</label>
                       <input name="title" value="{{ $item->title }}" class="field-input">
                     </div>
+
                     <div>
                       <label class="field-label">Urutan</label>
-                      <input type="number" name="sort_order" value="{{ $item->sort_order }}" min="1" class="field-input">
+                      <select name="sort_order" class="field-input" required>
+                        @for ($i = 1; $i <= $pendaftaranMaxSortOption; $i++)
+                          @php $isUsedByOtherItem = $pendaftaranUsedSortOrders->contains($i) && $i !== $currentSortOrder; @endphp
+                          <option
+                            value="{{ $i }}"
+                            {{ $isUsedByOtherItem ? 'disabled' : '' }}
+                            {{ (string) $currentSortOrder === (string) $i ? 'selected' : '' }}
+                          >
+                            {{ $i }}{{ $isUsedByOtherItem ? ' (used)' : '' }}
+                          </option>
+                        @endfor
+                      </select>
                     </div>
                   </div>
+
                   <div>
                     <label class="field-label">Konten</label>
                     <textarea name="content" required class="field-input min-h-[60px]">{{ $item->content }}</textarea>
                   </div>
+
                   <div class="flex items-center gap-3">
                     <label class="inline-flex items-center gap-2 cursor-pointer">
                       <input type="checkbox" name="is_active" value="1" {{ $item->is_active ? 'checked' : '' }} class="w-4 h-4 accent-[#0072BC]">
                       <span class="text-sm font-medium text-slate-700">Aktif</span>
                     </label>
-                    <button type="submit" class="btn-primary ml-auto" style="padding:0.4rem 1rem;font-size:0.78rem;">Simpan</button>
+
+                    <button type="submit" class="btn-primary ml-auto" style="padding:0.4rem 1rem;font-size:0.78rem;">
+                      Simpan
+                    </button>
                   </div>
                 </form>
+
                 <form action="{{ route('admin.site-settings.lomba.ketentuan.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus?')" class="mt-2.5">
-                  @csrf @method('DELETE')
+                  @csrf
+                  @method('DELETE')
                   <button type="submit" class="btn-danger">Hapus</button>
                 </form>
               </div>
             </div>
           @empty
             <div class="empty-state">
-              <svg class="w-9 h-9 text-slate-200 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+              <svg class="w-9 h-9 text-slate-200 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
               <div class="text-sm font-medium text-slate-500">Belum ada item pendaftaran</div>
             </div>
           @endforelse
         </div>
       </div>
-
-    </div>{{-- end ketentuan --}}
+    </div>
 
     {{-- =========================
         SECTION: TAHAPAN
     ========================= --}}
     <div x-show="lombaSection === 'tahapan'" x-cloak class="lomba-fade">
-
-      {{-- Form tambah tahapan --}}
       <div class="add-form-box">
         <div class="font-bold text-sm text-slate-900 mb-3">+ Tambah Tahapan</div>
+
         <form action="{{ route('admin.site-settings.lomba.tahapan.store') }}" method="POST" class="space-y-4">
           @csrf
+
           <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
             <div>
               <label class="field-label">Step</label>
-              <input type="number" name="step_number" value="1" min="1" class="field-input" required>
+              <select name="step_number" class="field-input" required>
+                @for ($i = 1; $i <= $maxStepNumberOption; $i++)
+                  @php $isUsed = $usedStepNumbers->contains($i); @endphp
+                  <option
+                    value="{{ $i }}"
+                    {{ $isUsed ? 'disabled' : '' }}
+                    {{ (string) old('step_number', $firstAvailableStepNumber) === (string) $i && ! $isUsed ? 'selected' : '' }}
+                  >
+                    {{ $i }}{{ $isUsed ? ' (used)' : '' }}
+                  </option>
+                @endfor
+              </select>
             </div>
+
             <div class="md:col-span-2">
               <label class="field-label">Judul</label>
-              <input name="title" class="field-input" placeholder="Contoh: Pendaftaran" required>
+              <input
+                type="text"
+                name="title"
+                value="{{ old('title') }}"
+                class="field-input"
+                placeholder="Contoh: Pendaftaran"
+                required
+              >
             </div>
+
             <div>
               <label class="field-label">Urutan</label>
-              <input type="number" name="sort_order" value="1" min="1" class="field-input">
+              <select name="sort_order" class="field-input" required>
+                @for ($i = 1; $i <= $maxSortOrderOptionTahapan; $i++)
+                  @php $isUsed = $usedSortOrdersTahapan->contains($i); @endphp
+                  <option
+                    value="{{ $i }}"
+                    {{ $isUsed ? 'disabled' : '' }}
+                    {{ (string) old('sort_order', $firstAvailableSortOrderTahapan) === (string) $i && ! $isUsed ? 'selected' : '' }}
+                  >
+                    {{ $i }}{{ $isUsed ? ' (used)' : '' }}
+                  </option>
+                @endfor
+              </select>
             </div>
           </div>
-        <div>
-  <label class="field-label">Deskripsi (opsional)</label>
-  <textarea
-    name="bullets_text"
-    class="w-full border rounded-xl px-3 py-2 min-h-[70px]"
-    placeholder="1 baris = 1 bullet"
-  >{{ old('bullets_text', '') }}</textarea>
-</div>
 
-<div class="flex items-center gap-4">
-  <label class="inline-flex items-center gap-2 cursor-pointer">
-    <input
-      type="checkbox"
-      name="is_active"
-      value="1"
-      {{ old('is_active', 1) ? 'checked' : '' }}
-      class="w-4 h-4 accent-[#0072BC]"
-    >
-    <span class="text-sm font-medium text-slate-700">Aktif</span>
-  </label>
+          <div>
+            <label class="field-label">Deskripsi (opsional)</label>
+            <textarea
+              name="description"
+              class="w-full border rounded-xl px-3 py-2 min-h-[70px]"
+              placeholder="1 baris = 1 bullet"
+            >{{ old('description') }}</textarea>
+          </div>
 
-  <div class="ml-auto">
-    <button type="submit" class="btn-primary">
-      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
-      </svg>
-      Tambah Tahapan
-    </button>
-  </div>
-</div>
+          <div class="flex items-center gap-4">
+            <label class="inline-flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                name="is_active"
+                value="1"
+                {{ old('is_active', 1) ? 'checked' : '' }}
+                class="w-4 h-4 accent-[#0072BC]"
+              >
+              <span class="text-sm font-medium text-slate-700">Aktif</span>
+            </label>
+
+            <div class="ml-auto">
+              <button type="submit" class="btn-primary">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+                </svg>
+                Tambah Tahapan
+              </button>
+            </div>
+          </div>
         </form>
       </div>
 
-      {{-- LIST TAHAPAN --}}
-<div class="space-y-4 mt-6">
+      <div class="space-y-4 mt-6">
+        @forelse($tahapanItems as $step)
+          @php
+            $currentStepNumber = (int) $step->step_number;
+            $currentSortOrder = (int) $step->sort_order;
+            $bulletsText = is_array($step->bullets) && count($step->bullets) ? implode("\n", $step->bullets) : '';
+          @endphp
 
-@foreach($lombaTahapan as $step)
+          <div class="rounded-xl border p-4 bg-white">
+            <form method="POST" action="{{ route('admin.site-settings.lomba.tahapan.update', $step->id) }}" class="space-y-3">
+              @csrf
+              @method('PUT')
 
-<div class="rounded-xl border p-4 bg-white">
+              <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                <div>
+                  <label class="field-label">Step</label>
+                  <select name="step_number" class="w-full border rounded-xl px-3 py-2" required>
+                    @for ($i = 1; $i <= $maxStepNumberOption; $i++)
+                      @php $isUsedByOther = $usedStepNumbers->contains($i) && $i !== $currentStepNumber; @endphp
+                      <option
+                        value="{{ $i }}"
+                        {{ $isUsedByOther ? 'disabled' : '' }}
+                        {{ (string) $currentStepNumber === (string) $i ? 'selected' : '' }}
+                      >
+                        {{ $i }}{{ $isUsedByOther ? ' (used)' : '' }}
+                      </option>
+                    @endfor
+                  </select>
+                </div>
 
-<form method="POST" action="{{ route('admin.site-settings.lomba.tahapan.update', $step->id) }}">
-@csrf
-@method('PUT')
+                <div class="md:col-span-2">
+                  <label class="field-label">Judul</label>
+                  <input
+                    type="text"
+                    name="title"
+                    value="{{ $step->title }}"
+                    class="w-full border rounded-xl px-3 py-2"
+                    required
+                  >
+                </div>
 
-<div class="grid grid-cols-3 gap-3">
+                <div>
+                  <label class="field-label">Urutan</label>
+                  <select name="sort_order" class="w-full border rounded-xl px-3 py-2" required>
+                    @for ($i = 1; $i <= $maxSortOrderOptionTahapan; $i++)
+                      @php $isUsedByOther = $usedSortOrdersTahapan->contains($i) && $i !== $currentSortOrder; @endphp
+                      <option
+                        value="{{ $i }}"
+                        {{ $isUsedByOther ? 'disabled' : '' }}
+                        {{ (string) $currentSortOrder === (string) $i ? 'selected' : '' }}
+                      >
+                        {{ $i }}{{ $isUsedByOther ? ' (used)' : '' }}
+                      </option>
+                    @endfor
+                  </select>
+                </div>
+              </div>
 
-<div>
-<label class="field-label">Step</label>
-<input type="number"
-name="step_number"
-value="{{ $step->step_number }}"
-class="w-full border rounded-xl px-3 py-2">
-</div>
+              <div>
+                <label class="field-label">Deskripsi (opsional)</label>
+                <textarea
+                  name="description"
+                  class="w-full border rounded-xl px-3 py-2 min-h-[70px]"
+                  placeholder="1 baris = 1 bullet"
+                >{{ $bulletsText }}</textarea>
+              </div>
 
-<div class="col-span-2">
-<label class="field-label">Judul</label>
-<input
-name="title"
-value="{{ $step->title }}"
-class="w-full border rounded-xl px-3 py-2">
-</div>
+              <div class="flex items-center gap-3">
+                <label class="inline-flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    name="is_active"
+                    value="1"
+                    {{ $step->is_active ? 'checked' : '' }}
+                    class="w-4 h-4 accent-[#0072BC]"
+                  >
+                  <span class="text-sm font-medium text-slate-700">Aktif</span>
+                </label>
 
-</div>
+                <button type="submit" class="btn-primary ml-auto" style="padding:0.4rem 1rem;font-size:0.78rem;">
+                  Simpan
+                </button>
+              </div>
+            </form>
 
-
-<div class="mt-3">
-
-<label class="field-label">Deskripsi (opsional)</label>
-
-<textarea
-  name="description"
-  class="w-full border rounded-xl px-3 py-2 min-h-[70px]"
-  placeholder="1 baris = 1 bullet">{{ old('description') }}</textarea>
-
-</div>
-
-
-<div class="flex items-center gap-3 mt-3">
-
-<label class="flex items-center gap-2">
-<input type="checkbox"
-name="is_active"
-value="1"
-{{ $step->is_active ? 'checked' : '' }}>
-<span>Aktif</span>
-</label>
-
-<button
-type="submit"
-class="px-4 py-2 bg-blue-600 text-white rounded-xl">
-Simpan
-</button>
-
-</form>
-
-
-<form method="POST"
-action="{{ route('admin.site-settings.lomba.tahapan.destroy',$step->id) }}">
-@csrf
-@method('DELETE')
-
-<button
-class="px-4 py-2 bg-red-600 text-white rounded-xl">
-Hapus
-</button>
-
-</form>
-
-</div>
-
-</div>
-
-@endforeach
-
-</div>
-
-    </div>{{-- end tahapan --}}
-
+            <form method="POST" action="{{ route('admin.site-settings.lomba.tahapan.destroy', $step->id) }}" class="mt-2.5">
+              @csrf
+              @method('DELETE')
+              <button type="submit" class="btn-danger">Hapus</button>
+            </form>
+          </div>
+        @empty
+          <div class="empty-state">
+            <svg class="w-9 h-9 text-slate-200 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <div class="text-sm font-medium text-slate-500">Belum ada tahapan</div>
+          </div>
+        @endforelse
+      </div>
+    </div>
   </div>
 </div>
 
      
-    {{-- ===========================
+   {{-- ===========================
     TAB: PENGUMUMAN
 ============================ --}}
+@php
+  $tigaBesar  = ($pengumuman ?? collect())->where('type', 'tiga_besar')->first();
+  $lolosItem  = ($pengumuman ?? collect())->where('type', 'lolos')->first();
+
+  $allGroups   = $pengumumanGroups ?? collect();
+  $allEntries  = $pengumumanEntries ?? collect();
+
+  $groupsTB    = $allGroups->where('pengumuman_id', optional($tigaBesar)->id)->values();
+  $groupsLolos = $allGroups->where('pengumuman_id', optional($lolosItem)->id)->values();
+
+  $groupsTBUsedSortOrders = $groupsTB->pluck('sort_order')
+      ->filter(fn ($value) => $value !== null && $value !== '')
+      ->map(fn ($value) => (int) $value)
+      ->filter(fn ($value) => $value >= 1)
+      ->unique()
+      ->sort()
+      ->values();
+
+  $groupsLolosUsedSortOrders = $groupsLolos->pluck('sort_order')
+      ->filter(fn ($value) => $value !== null && $value !== '')
+      ->map(fn ($value) => (int) $value)
+      ->filter(fn ($value) => $value >= 1)
+      ->unique()
+      ->sort()
+      ->values();
+
+  $groupsTBMaxSortOption = max((int) ($groupsTBUsedSortOrders->max() ?? 0), $groupsTB->count(), 1) + 5;
+  $groupsLolosMaxSortOption = max((int) ($groupsLolosUsedSortOrders->max() ?? 0), $groupsLolos->count(), 1) + 5;
+
+  $groupsTBFirstAvailableSortOrder = 1;
+  for ($i = 1; $i <= $groupsTBMaxSortOption; $i++) {
+      if (! $groupsTBUsedSortOrders->contains($i)) {
+          $groupsTBFirstAvailableSortOrder = $i;
+          break;
+      }
+  }
+
+  $groupsLolosFirstAvailableSortOrder = 1;
+  for ($i = 1; $i <= $groupsLolosMaxSortOption; $i++) {
+      if (! $groupsLolosUsedSortOrders->contains($i)) {
+          $groupsLolosFirstAvailableSortOrder = $i;
+          break;
+      }
+  }
+@endphp
+
 <div x-show="tab==='pengumuman'" x-cloak class="tab-content"
      x-data="{
        pgSection: '',
@@ -1686,13 +2224,13 @@ Hapus
       </button>
       <div>
         <div class="card-title" x-text="
-          pgView === 'entries' ? activeGroupName :
+          pgView === 'entries' || pgView === 'entries_lolos' ? activeGroupName :
           pgSection === 'tiga_besar' ? 'Pengumuman – 3 Besar' :
           pgSection === 'lolos' ? 'Pengumuman – Lolos Seleksi Proposal' :
           'Pengumuman'
         "></div>
         <div class="card-sub" x-text="
-          pgView === 'entries' ? 'Kelola daftar tim di jenjang ini.' :
+          pgView === 'entries' || pgView === 'entries_lolos' ? 'Kelola daftar tim di jenjang ini.' :
           pgSection !== '' ? 'Pilih bagian yang ingin dikelola.' :
           'Pilih jenis pengumuman yang ingin dikelola.'
         "></div>
@@ -1729,22 +2267,6 @@ Hapus
         <svg class="lnc-arrow w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
       </button>
     </div>
-
-    {{-- ============================================================
-        SECTION UTAMA — dipakai untuk TIGA BESAR & LOLOS (template sama)
-        x-show dikondisikan per type di dalam masing-masing blok
-    ============================================================ --}}
-
-    @php
-      $tigaBesar  = ($pengumuman ?? collect())->where('type','tiga_besar')->first();
-      $lolosItem  = ($pengumuman ?? collect())->where('type','lolos')->first();
-
-      $allGroups   = $pengumumanGroups  ?? collect();
-      $allEntries  = $pengumumanEntries ?? collect();
-
-      $groupsTB    = $allGroups->where('pengumuman_id', optional($tigaBesar)->id);
-      $groupsLolos = $allGroups->where('pengumuman_id', optional($lolosItem)->id);
-    @endphp
 
     {{-- ====== 3 BESAR - MAIN VIEW ====== --}}
     <div x-show="pgSection === 'tiga_besar' && pgView === 'main'" x-cloak class="lomba-fade space-y-5">
@@ -1813,7 +2335,6 @@ Hapus
           </div>
         </div>
 
-        {{-- Grid jenjang --}}
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-4">
           @foreach($groupsTB as $group)
             <button type="button"
@@ -1831,7 +2352,6 @@ Hapus
             </button>
           @endforeach
 
-          {{-- Tombol tambah jenjang --}}
           <button type="button"
             class="flex flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50 p-4 text-center hover:border-[#0072BC] hover:bg-blue-50/20 transition-all group"
             @click="pgView = 'add_group'">
@@ -1877,7 +2397,18 @@ Hapus
             </div>
             <div>
               <label class="field-label">Urutan</label>
-              <input type="number" name="sort_order" value="1" min="1" class="field-input">
+              <select name="sort_order" class="field-input" required>
+                @for ($i = 1; $i <= $groupsTBMaxSortOption; $i++)
+                  @php $isUsed = $groupsTBUsedSortOrders->contains($i); @endphp
+                  <option
+                    value="{{ $i }}"
+                    {{ $isUsed ? 'disabled' : '' }}
+                    {{ (string) $groupsTBFirstAvailableSortOrder === (string) $i && ! $isUsed ? 'selected' : '' }}
+                  >
+                    {{ $i }}{{ $isUsed ? ' (used)' : '' }}
+                  </option>
+                @endfor
+              </select>
             </div>
           </div>
           <div class="flex items-center justify-between">
@@ -1903,12 +2434,12 @@ Hapus
         </button>
       </div>
 
-      {{-- Form tambah tim --}}
       <div class="add-form-box">
         <div class="font-bold text-sm text-slate-900 mb-3">+ Tambah Tim</div>
         <form action="{{ route('admin.site-settings.pengumuman-entries.store') }}" method="POST" class="space-y-4">
           @csrf
           <input type="hidden" name="pengumuman_group_id" :value="activeGroupId">
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="field-label">Nama Tim</label>
@@ -1919,26 +2450,73 @@ Hapus
               <input type="text" name="school_name" class="field-input" required>
             </div>
           </div>
-          <div class="grid grid-cols-3 gap-4">
-            <div>
-              <label class="field-label">Rank</label>
-              <input type="number" name="rank_order" value="1" min="1" class="field-input">
+
+          <template x-for="group in {{ \Illuminate\Support\Js::from($groupsTB->map(function ($group) use ($allEntries) {
+              $entries = $allEntries->where('pengumuman_group_id', $group->id)->values();
+
+              $usedRankOrders = $entries->pluck('rank_order')
+                  ->filter(fn ($value) => $value !== null && $value !== '')
+                  ->map(fn ($value) => (int) $value)
+                  ->filter(fn ($value) => $value >= 1)
+                  ->unique()
+                  ->sort()
+                  ->values();
+
+              $usedSortOrders = $entries->pluck('sort_order')
+                  ->filter(fn ($value) => $value !== null && $value !== '')
+                  ->map(fn ($value) => (int) $value)
+                  ->filter(fn ($value) => $value >= 1)
+                  ->unique()
+                  ->sort()
+                  ->values();
+
+              $maxRankOption = max((int) ($usedRankOrders->max() ?? 0), $entries->count(), 1) + 5;
+              $maxSortOption = max((int) ($usedSortOrders->max() ?? 0), $entries->count(), 1) + 5;
+
+              return [
+                  'id' => $group->id,
+                  'rankOptions' => collect(range(1, $maxRankOption))->map(fn ($i) => [
+                      'value' => $i,
+                      'used' => $usedRankOrders->contains($i),
+                  ])->values(),
+                  'sortOptions' => collect(range(1, $maxSortOption))->map(fn ($i) => [
+                      'value' => $i,
+                      'used' => $usedSortOrders->contains($i),
+                  ])->values(),
+              ];
+          })->values()) }}" :key="group.id">
+            <div x-show="activeGroupId === group.id" class="grid grid-cols-3 gap-4">
+              <div>
+                <label class="field-label">Rank</label>
+                <select name="rank_order" class="field-input" required>
+                  <template x-for="option in group.rankOptions" :key="'rank-' + group.id + '-' + option.value">
+                    <option :value="option.value" :disabled="option.used" x-text="option.value + (option.used ? ' (used)' : '')"></option>
+                  </template>
+                </select>
+              </div>
+
+              <div>
+                <label class="field-label">Urutan</label>
+                <select name="sort_order" class="field-input" required>
+                  <template x-for="option in group.sortOptions" :key="'sort-' + group.id + '-' + option.value">
+                    <option :value="option.value" :disabled="option.used" x-text="option.value + (option.used ? ' (used)' : '')"></option>
+                  </template>
+                </select>
+              </div>
+
+              <div class="flex flex-col justify-end pb-1 gap-2">
+                <label class="inline-flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="is_preview" value="1" class="w-4 h-4 accent-[#0072BC]">
+                  <span class="text-xs font-medium text-slate-700">Preview</span>
+                </label>
+                <label class="inline-flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="is_active" value="1" checked class="w-4 h-4 accent-[#0072BC]">
+                  <span class="text-xs font-medium text-slate-700">Aktif</span>
+                </label>
+              </div>
             </div>
-            <div>
-              <label class="field-label">Urutan</label>
-              <input type="number" name="sort_order" value="1" min="1" class="field-input">
-            </div>
-            <div class="flex flex-col justify-end pb-1 gap-2">
-              <label class="inline-flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" name="is_preview" value="1" class="w-4 h-4 accent-[#0072BC]">
-                <span class="text-xs font-medium text-slate-700">Preview</span>
-              </label>
-              <label class="inline-flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" name="is_active" value="1" checked class="w-4 h-4 accent-[#0072BC]">
-                <span class="text-xs font-medium text-slate-700">Aktif</span>
-              </label>
-            </div>
-          </div>
+          </template>
+
           <div class="flex justify-end">
             <button type="submit" class="btn-primary">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
@@ -1948,16 +2526,42 @@ Hapus
         </form>
       </div>
 
-      {{-- List tim per group --}}
       @foreach($groupsTB as $group)
+        @php
+          $groupEntries = $allEntries->where('pengumuman_group_id', $group->id)->values();
+
+          $usedRankOrders = $groupEntries->pluck('rank_order')
+              ->filter(fn ($value) => $value !== null && $value !== '')
+              ->map(fn ($value) => (int) $value)
+              ->filter(fn ($value) => $value >= 1)
+              ->unique()
+              ->sort()
+              ->values();
+
+          $usedSortOrders = $groupEntries->pluck('sort_order')
+              ->filter(fn ($value) => $value !== null && $value !== '')
+              ->map(fn ($value) => (int) $value)
+              ->filter(fn ($value) => $value >= 1)
+              ->unique()
+              ->sort()
+              ->values();
+
+          $maxRankOption = max((int) ($usedRankOrders->max() ?? 0), $groupEntries->count(), 1) + 5;
+          $maxSortOption = max((int) ($usedSortOrders->max() ?? 0), $groupEntries->count(), 1) + 5;
+        @endphp
+
         <div x-show="activeGroupId === {{ $group->id }}">
-          @php $groupEntries = $allEntries->where('pengumuman_group_id', $group->id); @endphp
           <div class="text-xs text-slate-400 mb-3">
             <span class="font-bold text-slate-700">{{ $groupEntries->count() }}</span> tim di jenjang <span class="font-bold text-[#0072BC]">{{ $group->subtitle }}</span>
           </div>
 
           <div class="space-y-2.5">
             @forelse($groupEntries as $entry)
+              @php
+                $currentRankOrder = (int) $entry->rank_order;
+                $currentSortOrder = (int) $entry->sort_order;
+              @endphp
+
               <div class="item-row">
                 <div class="item-row-head">
                   <span class="step-bubble">{{ $entry->rank_order }}</span>
@@ -1965,10 +2569,12 @@ Hapus
                   <span class="text-xs text-slate-400 truncate">{{ $entry->school_name }}</span>
                   <span class="badge ml-auto {{ $entry->is_active ? 'badge-active' : 'badge-inactive' }}">{{ $entry->is_active ? 'Aktif' : 'Nonaktif' }}</span>
                 </div>
+
                 <div class="item-row-body">
                   <form action="{{ route('admin.site-settings.pengumuman-entries.update', $entry->id) }}" method="POST" class="space-y-3">
                     @csrf @method('PUT')
                     <input type="hidden" name="pengumuman_group_id" value="{{ $entry->pengumuman_group_id }}">
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
                         <label class="field-label">Nama Tim</label>
@@ -1979,15 +2585,40 @@ Hapus
                         <input type="text" name="school_name" value="{{ $entry->school_name }}" class="field-input" required>
                       </div>
                     </div>
+
                     <div class="grid grid-cols-3 gap-3">
                       <div>
                         <label class="field-label">Rank</label>
-                        <input type="number" name="rank_order" value="{{ $entry->rank_order }}" min="1" class="field-input">
+                        <select name="rank_order" class="field-input" required>
+                          @for ($i = 1; $i <= $maxRankOption; $i++)
+                            @php $isUsedByOther = $usedRankOrders->contains($i) && $i !== $currentRankOrder; @endphp
+                            <option
+                              value="{{ $i }}"
+                              {{ $isUsedByOther ? 'disabled' : '' }}
+                              {{ (string) $currentRankOrder === (string) $i ? 'selected' : '' }}
+                            >
+                              {{ $i }}{{ $isUsedByOther ? ' (used)' : '' }}
+                            </option>
+                          @endfor
+                        </select>
                       </div>
+
                       <div>
                         <label class="field-label">Urutan</label>
-                        <input type="number" name="sort_order" value="{{ $entry->sort_order }}" min="1" class="field-input">
+                        <select name="sort_order" class="field-input" required>
+                          @for ($i = 1; $i <= $maxSortOption; $i++)
+                            @php $isUsedByOther = $usedSortOrders->contains($i) && $i !== $currentSortOrder; @endphp
+                            <option
+                              value="{{ $i }}"
+                              {{ $isUsedByOther ? 'disabled' : '' }}
+                              {{ (string) $currentSortOrder === (string) $i ? 'selected' : '' }}
+                            >
+                              {{ $i }}{{ $isUsedByOther ? ' (used)' : '' }}
+                            </option>
+                          @endfor
+                        </select>
                       </div>
+
                       <div class="flex flex-col justify-end pb-1 gap-1.5">
                         <label class="inline-flex items-center gap-2 cursor-pointer">
                           <input type="checkbox" name="is_preview" value="1" {{ $entry->is_preview ? 'checked' : '' }} class="w-4 h-4 accent-[#0072BC]">
@@ -1999,10 +2630,12 @@ Hapus
                         </label>
                       </div>
                     </div>
+
                     <div class="flex justify-end">
                       <button type="submit" class="btn-primary" style="padding:0.4rem 1rem;font-size:0.78rem;">Simpan</button>
                     </div>
                   </form>
+
                   <form action="{{ route('admin.site-settings.pengumuman-entries.destroy', $entry->id) }}" method="POST" onsubmit="return confirm('Hapus tim ini?')" class="mt-2.5">
                     @csrf @method('DELETE')
                     <button type="submit" class="btn-danger">Hapus</button>
@@ -2020,13 +2653,8 @@ Hapus
       @endforeach
     </div>
 
-    {{-- ==================================================
-        LOLOS SELEKSI — struktur identik dengan 3 Besar
-    ================================================== --}}
-
     {{-- LOLOS - MAIN VIEW --}}
     <div x-show="pgSection === 'lolos' && pgView === 'main'" x-cloak class="lomba-fade space-y-5">
-
       <div class="rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/50 p-5">
         <div class="flex items-center gap-2 mb-4">
           <div class="w-7 h-7 rounded-lg bg-amber-100 flex items-center justify-center shrink-0">
@@ -2129,6 +2757,7 @@ Hapus
         </button>
         <span class="text-sm font-bold text-slate-700">Tambah Jenjang Baru</span>
       </div>
+
       <div class="add-form-box">
         <form action="{{ route('admin.site-settings.pengumuman-groups.store') }}" method="POST" class="space-y-4">
           @csrf
@@ -2150,7 +2779,18 @@ Hapus
             </div>
             <div>
               <label class="field-label">Urutan</label>
-              <input type="number" name="sort_order" value="1" min="1" class="field-input">
+              <select name="sort_order" class="field-input" required>
+                @for ($i = 1; $i <= $groupsLolosMaxSortOption; $i++)
+                  @php $isUsed = $groupsLolosUsedSortOrders->contains($i); @endphp
+                  <option
+                    value="{{ $i }}"
+                    {{ $isUsed ? 'disabled' : '' }}
+                    {{ (string) $groupsLolosFirstAvailableSortOrder === (string) $i && ! $isUsed ? 'selected' : '' }}
+                  >
+                    {{ $i }}{{ $isUsed ? ' (used)' : '' }}
+                  </option>
+                @endfor
+              </select>
             </div>
           </div>
           <div class="flex items-center justify-between">
@@ -2181,6 +2821,7 @@ Hapus
         <form action="{{ route('admin.site-settings.pengumuman-entries.store') }}" method="POST" class="space-y-4">
           @csrf
           <input type="hidden" name="pengumuman_group_id" :value="activeGroupId">
+
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label class="field-label">Nama Tim</label>
@@ -2191,26 +2832,73 @@ Hapus
               <input type="text" name="school_name" class="field-input" required>
             </div>
           </div>
-          <div class="grid grid-cols-3 gap-4">
-            <div>
-              <label class="field-label">Rank</label>
-              <input type="number" name="rank_order" value="1" min="1" class="field-input">
+
+          <template x-for="group in {{ \Illuminate\Support\Js::from($groupsLolos->map(function ($group) use ($allEntries) {
+              $entries = $allEntries->where('pengumuman_group_id', $group->id)->values();
+
+              $usedRankOrders = $entries->pluck('rank_order')
+                  ->filter(fn ($value) => $value !== null && $value !== '')
+                  ->map(fn ($value) => (int) $value)
+                  ->filter(fn ($value) => $value >= 1)
+                  ->unique()
+                  ->sort()
+                  ->values();
+
+              $usedSortOrders = $entries->pluck('sort_order')
+                  ->filter(fn ($value) => $value !== null && $value !== '')
+                  ->map(fn ($value) => (int) $value)
+                  ->filter(fn ($value) => $value >= 1)
+                  ->unique()
+                  ->sort()
+                  ->values();
+
+              $maxRankOption = max((int) ($usedRankOrders->max() ?? 0), $entries->count(), 1) + 5;
+              $maxSortOption = max((int) ($usedSortOrders->max() ?? 0), $entries->count(), 1) + 5;
+
+              return [
+                  'id' => $group->id,
+                  'rankOptions' => collect(range(1, $maxRankOption))->map(fn ($i) => [
+                      'value' => $i,
+                      'used' => $usedRankOrders->contains($i),
+                  ])->values(),
+                  'sortOptions' => collect(range(1, $maxSortOption))->map(fn ($i) => [
+                      'value' => $i,
+                      'used' => $usedSortOrders->contains($i),
+                  ])->values(),
+              ];
+          })->values()) }}" :key="group.id">
+            <div x-show="activeGroupId === group.id" class="grid grid-cols-3 gap-4">
+              <div>
+                <label class="field-label">Rank</label>
+                <select name="rank_order" class="field-input" required>
+                  <template x-for="option in group.rankOptions" :key="'rank-lolos-' + group.id + '-' + option.value">
+                    <option :value="option.value" :disabled="option.used" x-text="option.value + (option.used ? ' (used)' : '')"></option>
+                  </template>
+                </select>
+              </div>
+
+              <div>
+                <label class="field-label">Urutan</label>
+                <select name="sort_order" class="field-input" required>
+                  <template x-for="option in group.sortOptions" :key="'sort-lolos-' + group.id + '-' + option.value">
+                    <option :value="option.value" :disabled="option.used" x-text="option.value + (option.used ? ' (used)' : '')"></option>
+                  </template>
+                </select>
+              </div>
+
+              <div class="flex flex-col justify-end pb-1 gap-2">
+                <label class="inline-flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="is_preview" value="1" class="w-4 h-4 accent-[#0072BC]">
+                  <span class="text-xs font-medium text-slate-700">Preview</span>
+                </label>
+                <label class="inline-flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="is_active" value="1" checked class="w-4 h-4 accent-[#0072BC]">
+                  <span class="text-xs font-medium text-slate-700">Aktif</span>
+                </label>
+              </div>
             </div>
-            <div>
-              <label class="field-label">Urutan</label>
-              <input type="number" name="sort_order" value="1" min="1" class="field-input">
-            </div>
-            <div class="flex flex-col justify-end pb-1 gap-2">
-              <label class="inline-flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" name="is_preview" value="1" class="w-4 h-4 accent-[#0072BC]">
-                <span class="text-xs font-medium text-slate-700">Preview</span>
-              </label>
-              <label class="inline-flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" name="is_active" value="1" checked class="w-4 h-4 accent-[#0072BC]">
-                <span class="text-xs font-medium text-slate-700">Aktif</span>
-              </label>
-            </div>
-          </div>
+          </template>
+
           <div class="flex justify-end">
             <button type="submit" class="btn-primary">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
@@ -2221,13 +2909,41 @@ Hapus
       </div>
 
       @foreach($groupsLolos as $group)
+        @php
+          $groupEntries = $allEntries->where('pengumuman_group_id', $group->id)->values();
+
+          $usedRankOrders = $groupEntries->pluck('rank_order')
+              ->filter(fn ($value) => $value !== null && $value !== '')
+              ->map(fn ($value) => (int) $value)
+              ->filter(fn ($value) => $value >= 1)
+              ->unique()
+              ->sort()
+              ->values();
+
+          $usedSortOrders = $groupEntries->pluck('sort_order')
+              ->filter(fn ($value) => $value !== null && $value !== '')
+              ->map(fn ($value) => (int) $value)
+              ->filter(fn ($value) => $value >= 1)
+              ->unique()
+              ->sort()
+              ->values();
+
+          $maxRankOption = max((int) ($usedRankOrders->max() ?? 0), $groupEntries->count(), 1) + 5;
+          $maxSortOption = max((int) ($usedSortOrders->max() ?? 0), $groupEntries->count(), 1) + 5;
+        @endphp
+
         <div x-show="activeGroupId === {{ $group->id }}">
-          @php $groupEntries = $allEntries->where('pengumuman_group_id', $group->id); @endphp
           <div class="text-xs text-slate-400 mb-3">
             <span class="font-bold text-slate-700">{{ $groupEntries->count() }}</span> tim di jenjang <span class="font-bold text-[#0072BC]">{{ $group->subtitle }}</span>
           </div>
+
           <div class="space-y-2.5">
             @forelse($groupEntries as $entry)
+              @php
+                $currentRankOrder = (int) $entry->rank_order;
+                $currentSortOrder = (int) $entry->sort_order;
+              @endphp
+
               <div class="item-row">
                 <div class="item-row-head">
                   <span class="step-bubble">{{ $entry->rank_order }}</span>
@@ -2235,10 +2951,12 @@ Hapus
                   <span class="text-xs text-slate-400 truncate">{{ $entry->school_name }}</span>
                   <span class="badge ml-auto {{ $entry->is_active ? 'badge-active' : 'badge-inactive' }}">{{ $entry->is_active ? 'Aktif' : 'Nonaktif' }}</span>
                 </div>
+
                 <div class="item-row-body">
                   <form action="{{ route('admin.site-settings.pengumuman-entries.update', $entry->id) }}" method="POST" class="space-y-3">
                     @csrf @method('PUT')
                     <input type="hidden" name="pengumuman_group_id" value="{{ $entry->pengumuman_group_id }}">
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div>
                         <label class="field-label">Nama Tim</label>
@@ -2249,15 +2967,40 @@ Hapus
                         <input type="text" name="school_name" value="{{ $entry->school_name }}" class="field-input" required>
                       </div>
                     </div>
+
                     <div class="grid grid-cols-3 gap-3">
                       <div>
                         <label class="field-label">Rank</label>
-                        <input type="number" name="rank_order" value="{{ $entry->rank_order }}" min="1" class="field-input">
+                        <select name="rank_order" class="field-input" required>
+                          @for ($i = 1; $i <= $maxRankOption; $i++)
+                            @php $isUsedByOther = $usedRankOrders->contains($i) && $i !== $currentRankOrder; @endphp
+                            <option
+                              value="{{ $i }}"
+                              {{ $isUsedByOther ? 'disabled' : '' }}
+                              {{ (string) $currentRankOrder === (string) $i ? 'selected' : '' }}
+                            >
+                              {{ $i }}{{ $isUsedByOther ? ' (used)' : '' }}
+                            </option>
+                          @endfor
+                        </select>
                       </div>
+
                       <div>
                         <label class="field-label">Urutan</label>
-                        <input type="number" name="sort_order" value="{{ $entry->sort_order }}" min="1" class="field-input">
+                        <select name="sort_order" class="field-input" required>
+                          @for ($i = 1; $i <= $maxSortOption; $i++)
+                            @php $isUsedByOther = $usedSortOrders->contains($i) && $i !== $currentSortOrder; @endphp
+                            <option
+                              value="{{ $i }}"
+                              {{ $isUsedByOther ? 'disabled' : '' }}
+                              {{ (string) $currentSortOrder === (string) $i ? 'selected' : '' }}
+                            >
+                              {{ $i }}{{ $isUsedByOther ? ' (used)' : '' }}
+                            </option>
+                          @endfor
+                        </select>
                       </div>
+
                       <div class="flex flex-col justify-end pb-1 gap-1.5">
                         <label class="inline-flex items-center gap-2 cursor-pointer">
                           <input type="checkbox" name="is_preview" value="1" {{ $entry->is_preview ? 'checked' : '' }} class="w-4 h-4 accent-[#0072BC]">
@@ -2269,10 +3012,12 @@ Hapus
                         </label>
                       </div>
                     </div>
+
                     <div class="flex justify-end">
                       <button type="submit" class="btn-primary" style="padding:0.4rem 1rem;font-size:0.78rem;">Simpan</button>
                     </div>
                   </form>
+
                   <form action="{{ route('admin.site-settings.pengumuman-entries.destroy', $entry->id) }}" method="POST" onsubmit="return confirm('Hapus tim ini?')" class="mt-2.5">
                     @csrf @method('DELETE')
                     <button type="submit" class="btn-danger">Hapus</button>
@@ -2290,10 +3035,6 @@ Hapus
       @endforeach
     </div>
 
-  </div>
-</div>
-
-    </section>
   </div>
 </div>
 
