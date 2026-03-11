@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'failed' => 'Email atau kata sandi yang kamu masukkan salah.',
-    'password' => 'Kata sandi yang kamu masukkan salah.',
-    'throttle' => 'Terlalu banyak percobaan login. Silakan coba lagi dalam :seconds detik.',
+    'failed' => 'Email dan Password tidak terdaftar!',
+    'password' => 'Password Salah!',
+    'throttle' => 'Terlalu banyak percobaan login. Silakan coba lagi dalam :seconds detik.'
 ];
