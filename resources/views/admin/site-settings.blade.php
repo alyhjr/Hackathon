@@ -188,6 +188,7 @@
 
           @php
             $tabs = [
+              ['key'=>'peserta-submission',        'label'=>'Kelola Peserta',    'desc'=>'Nama Tim & Anggota, Upload Karya, dan Upload Proposal'],
               ['key'=>'hero',        'label'=>'Beranda – Hero',    'desc'=>'Judul, subtitle, tombol, gambar'],
               ['key'=>'homeimg',     'label'=>'Beranda – Gambar',  'desc'=>'3 gambar konten beranda'],
               ['key'=>'informasi-penting',       'label'=>'Informasi Penting',             'desc'=>'Informasi Penting di Beranda'],
@@ -306,6 +307,567 @@
           </form>
         </div>
       </div>
+
+
+{{-- ===========================
+    TAB: PESERTA SUBMISSION
+    Design: Premium Clean — selaras tema biru/hijau existing
+============================ --}}
+
+@once
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --ps-blue:        #1565C0;
+    --ps-blue-mid:    #1976D2;
+    --ps-blue-light:  #E3F0FF;
+    --ps-blue-soft:   #EEF5FF;
+    --ps-green:       #16a34a;
+    --ps-green-light: #dcfce7;
+    --ps-green-mid:   #bbf7d0;
+    --ps-text:        #0f172a;
+    --ps-text-2:      #334155;
+    --ps-text-3:      #64748b;
+    --ps-text-4:      #94a3b8;
+    --ps-border:      #e2e8f0;
+    --ps-border-2:    #f1f5f9;
+    --ps-bg:          #ffffff;
+    --ps-bg-2:        #f8fafc;
+    --ps-red:         #dc2626;
+    --ps-red-light:   #fef2f2;
+    --ps-red-mid:     #fecaca;
+    --ps-shadow:      0 1px 3px rgba(15,23,42,0.08), 0 4px 16px rgba(15,23,42,0.06);
+    --ps-shadow-md:   0 4px 24px rgba(15,23,42,0.10), 0 1px 4px rgba(15,23,42,0.06);
+    --ps-font:        'Plus Jakarta Sans', sans-serif;
+    --ps-radius:      16px;
+    --ps-radius-sm:   10px;
+  }
+
+  .ps-wrap * { box-sizing: border-box; }
+
+  .ps-wrap {
+    font-family: var(--ps-font);
+    background: var(--ps-bg);
+    border: 1px solid var(--ps-border);
+    border-radius: var(--ps-radius);
+    padding: 2rem 2rem 2.25rem;
+    box-shadow: var(--ps-shadow);
+    animation: ps-in 0.45s cubic-bezier(.22,1,.36,1) both;
+  }
+
+  @keyframes ps-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Header ── */
+  .ps-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--ps-border);
+    margin-bottom: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .ps-header { flex-direction: row; align-items: center; justify-content: space-between; }
+  }
+
+  .ps-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--ps-text);
+    margin: 0 0 0.2rem;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+  }
+
+  .ps-subtitle {
+    font-size: 0.82rem;
+    color: var(--ps-text-3);
+    margin: 0;
+    font-weight: 400;
+  }
+
+  /* ── Export Button ── */
+  .ps-export-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.6rem 1.3rem;
+    border-radius: 99px;
+    background: var(--ps-green);
+    color: #fff;
+    font-family: var(--ps-font);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+    box-shadow: 0 2px 10px rgba(22,163,74,0.25);
+  }
+
+  .ps-export-btn:hover {
+    background: #15803d;
+    box-shadow: 0 4px 18px rgba(22,163,74,0.35);
+    transform: translateY(-1px);
+  }
+
+  .ps-export-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+  /* ── Alert ── */
+  .ps-alert {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: var(--ps-green-light);
+    border: 1px solid var(--ps-green-mid);
+    border-radius: var(--ps-radius-sm);
+    padding: 0.7rem 1rem;
+    color: #166534;
+    font-size: 0.82rem;
+    font-weight: 500;
+    margin-bottom: 1.25rem;
+    animation: ps-in 0.35s ease both;
+  }
+
+  .ps-alert svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+  /* ── Stats ── */
+  .ps-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 640px) {
+    .ps-stats { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .ps-stat {
+    background: var(--ps-bg-2);
+    border: 1px solid var(--ps-border);
+    border-radius: var(--ps-radius-sm);
+    padding: 1rem 1.1rem;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+
+  .ps-stat:hover {
+    box-shadow: var(--ps-shadow-md);
+    transform: translateY(-2px);
+  }
+
+  .ps-stat::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ps-blue-mid), var(--ps-blue));
+    border-radius: 99px 99px 0 0;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .ps-stat:hover::after { opacity: 1; }
+
+  .ps-stat-num {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--ps-blue);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .ps-stat-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--ps-text-3);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+  }
+
+  /* ── Table Wrapper ── */
+  .ps-table-wrap {
+    border: 1px solid var(--ps-border);
+    border-radius: var(--ps-radius-sm);
+    overflow: hidden;
+    overflow-x: auto;
+  }
+
+  .ps-table-wrap::-webkit-scrollbar { height: 4px; }
+  .ps-table-wrap::-webkit-scrollbar-track { background: var(--ps-bg-2); }
+  .ps-table-wrap::-webkit-scrollbar-thumb { background: var(--ps-border); border-radius: 99px; }
+
+  /* ── Table ── */
+  .ps-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+  }
+
+  .ps-table thead tr {
+    background: var(--ps-bg-2);
+    border-bottom: 1px solid var(--ps-border);
+  }
+
+  .ps-table thead th {
+    padding: 0.8rem 1rem;
+    text-align: left;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ps-text-3);
+    white-space: nowrap;
+  }
+
+  .ps-table tbody tr {
+    border-bottom: 1px solid var(--ps-border-2);
+    transition: background 0.15s;
+    animation: ps-row-in 0.38s cubic-bezier(.22,1,.36,1) both;
+  }
+
+  @keyframes ps-row-in {
+    from { opacity: 0; transform: translateY(5px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .ps-table tbody tr:nth-child(1) { animation-delay: 0.04s; }
+  .ps-table tbody tr:nth-child(2) { animation-delay: 0.08s; }
+  .ps-table tbody tr:nth-child(3) { animation-delay: 0.12s; }
+  .ps-table tbody tr:nth-child(4) { animation-delay: 0.16s; }
+  .ps-table tbody tr:nth-child(n+5) { animation-delay: 0.20s; }
+
+  .ps-table tbody tr:last-child { border-bottom: none; }
+  .ps-table tbody tr:hover { background: var(--ps-blue-soft); }
+
+  .ps-table td {
+    padding: 0.9rem 1rem;
+    vertical-align: top;
+    font-size: 0.82rem;
+    color: var(--ps-text-2);
+  }
+
+  /* ── Team name ── */
+  .ps-team-name {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--ps-text);
+  }
+
+  .ps-badge {
+    display: inline-block;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--ps-blue-light);
+    color: var(--ps-blue);
+    padding: 0.15rem 0.55rem;
+    border-radius: 99px;
+    margin-top: 0.25rem;
+  }
+
+  /* ── Members ── */
+  .ps-member {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--ps-text-2);
+    font-size: 0.8rem;
+    margin-bottom: 0.12rem;
+    font-weight: 400;
+  }
+
+  .ps-member-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--ps-blue-mid);
+    opacity: 0.4;
+    flex-shrink: 0;
+  }
+
+  /* ── File link ── */
+  .ps-file-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 7px;
+    background: var(--ps-blue-light);
+    color: var(--ps-blue);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid rgba(21,101,192,0.12);
+    transition: all 0.18s;
+    white-space: nowrap;
+  }
+
+  .ps-file-link:hover {
+    background: var(--ps-blue-mid);
+    color: #fff;
+    border-color: var(--ps-blue-mid);
+    text-decoration: none;
+    box-shadow: 0 3px 10px rgba(21,101,192,0.2);
+  }
+
+  .ps-file-link svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+  .ps-file-none {
+    color: var(--ps-text-4);
+    font-size: 0.78rem;
+    font-style: italic;
+  }
+
+  /* ── Date ── */
+  .ps-date-main {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--ps-text-2);
+  }
+
+  .ps-date-time {
+    font-size: 0.72rem;
+    color: var(--ps-text-4);
+    font-weight: 400;
+    margin-top: 0.1rem;
+  }
+
+  /* ── Delete ── */
+  .ps-delete-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.38rem 0.85rem;
+    border-radius: 8px;
+    background: var(--ps-red-light);
+    border: 1px solid var(--ps-red-mid);
+    color: var(--ps-red);
+    font-family: var(--ps-font);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+    white-space: nowrap;
+  }
+
+  .ps-delete-btn:hover {
+    background: var(--ps-red);
+    border-color: var(--ps-red);
+    color: #fff;
+    box-shadow: 0 3px 12px rgba(220,38,38,0.25);
+    transform: translateY(-1px);
+  }
+
+  .ps-delete-btn svg { width: 12px; height: 12px; }
+
+  /* ── Empty ── */
+  .ps-empty-cell {
+    text-align: center;
+    padding: 3.5rem 1rem !important;
+  }
+
+  .ps-empty-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .ps-empty-icon {
+    width: 40px; height: 40px;
+    color: var(--ps-text-4);
+    opacity: 0.5;
+    margin-bottom: 0.25rem;
+  }
+
+  .ps-empty-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ps-text-3);
+  }
+
+  .ps-empty-desc {
+    font-size: 0.76rem;
+    color: var(--ps-text-4);
+  }
+</style>
+@endonce
+
+<div x-show="tab==='peserta-submission'" x-cloak class="ps-wrap">
+
+  {{-- Header --}}
+  <div class="ps-header">
+    <div>
+      <h2 class="ps-title">Kelola Peserta</h2>
+      <p class="ps-subtitle">Daftar tim peserta beserta proposal dan karya yang diupload.</p>
+    </div>
+    <a href="{{ route('admin.site-settings.peserta-submission.export') }}" class="ps-export-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Export Excel
+    </a>
+  </div>
+
+  {{-- Alert --}}
+  @if(session('success'))
+    <div class="ps-alert">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+      {{ session('success') }}
+    </div>
+  @endif
+
+  {{-- Stats --}}
+  @php
+    $all       = $pesertaSubmissions ?? collect();
+    $total     = $all->count();
+    $pProposal = $all->whereNotNull('proposal_file')->count();
+    $pKarya    = $all->whereNotNull('karya_file')->count();
+    $pct       = $total > 0 ? round(($pKarya / $total) * 100) : 0;
+  @endphp
+  <div class="ps-stats">
+    <div class="ps-stat">
+      <div class="ps-stat-num">{{ $total }}</div>
+      <div class="ps-stat-label">Total Tim</div>
+    </div>
+    <div class="ps-stat">
+      <div class="ps-stat-num">{{ $pProposal }}</div>
+      <div class="ps-stat-label">Total Proposal</div>
+    </div>
+    <div class="ps-stat">
+      <div class="ps-stat-num">{{ $pKarya }}</div>
+      <div class="ps-stat-label">Total Karya</div>
+    </div>
+    <div class="ps-stat">
+      <div class="ps-stat-num">{{ $pct }}%</div>
+      <div class="ps-stat-label">Submission Lengkap</div>
+    </div>
+  </div>
+
+  {{-- Table --}}
+  <div class="ps-table-wrap">
+    <table class="ps-table">
+      <thead>
+        <tr>
+          <th>Nama Tim</th>
+          <th>Anggota</th>
+          <th>Proposal</th>
+          <th>Karya</th>
+          <th>Tanggal</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        @forelse(($pesertaSubmissions ?? collect()) as $item)
+          <tr>
+            <td>
+              <div class="ps-team-name">{{ $item->nama_tim }}</div>
+              <span class="ps-badge">Tim</span>
+            </td>
+
+            <td>
+              <div class="ps-member">
+                <span class="ps-member-dot"></span>{{ $item->anggota_1 }}
+              </div>
+              @if($item->anggota_2)
+                <div class="ps-member">
+                  <span class="ps-member-dot"></span>{{ $item->anggota_2 }}
+                </div>
+              @endif
+              @if($item->anggota_3)
+                <div class="ps-member">
+                  <span class="ps-member-dot"></span>{{ $item->anggota_3 }}
+                </div>
+              @endif
+            </td>
+
+            <td>
+              @if($item->proposal_file)
+                <a href="{{ asset('storage/' . $item->proposal_file) }}" target="_blank" class="ps-file-link">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                  Lihat / Download
+                </a>
+              @else
+                <span class="ps-file-none">Belum diupload</span>
+              @endif
+            </td>
+
+            <td>
+              @if($item->karya_file)
+                <a href="{{ asset('storage/' . $item->karya_file) }}" target="_blank" class="ps-file-link">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                    <polyline points="2 17 12 22 22 17"/>
+                    <polyline points="2 12 12 17 22 12"/>
+                  </svg>
+                  Lihat / Download
+                </a>
+              @else
+                <span class="ps-file-none">Belum diupload</span>
+              @endif
+            </td>
+
+            <td>
+              <div class="ps-date-main">{{ $item->created_at?->format('d M Y') }}</div>
+              <div class="ps-date-time">{{ $item->created_at?->format('H:i') }} WIB</div>
+            </td>
+
+            <td>
+              <form action="{{ route('admin.site-settings.peserta-submission.destroy', $item->id) }}"
+                    method="POST"
+                    onsubmit="return confirm('Yakin ingin menghapus submission peserta ini?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="ps-delete-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                    <path d="M10 11v6"/><path d="M14 11v6"/>
+                    <path d="M9 6V4h6v2"/>
+                  </svg>
+                  Hapus
+                </button>
+              </form>
+            </td>
+          </tr>
+        @empty
+          <tr>
+            <td colspan="6" class="ps-empty-cell">
+              <div class="ps-empty-inner">
+                <svg class="ps-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z"/>
+                </svg>
+                <div class="ps-empty-title">Belum ada submission peserta</div>
+                <div class="ps-empty-desc">Data akan muncul setelah peserta mengupload karya mereka.</div>
+              </div>
+            </td>
+          </tr>
+        @endforelse
+      </tbody>
+    </table>
+  </div>
+
+</div>
 
       {{-- ===========================
           TAB: HOME IMAGES

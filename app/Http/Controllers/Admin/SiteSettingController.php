@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Timeline;
 use App\Models\InformasiPenting;
+use App\Models\PesertaSubmission;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 
 class SiteSettingController extends Controller
@@ -40,6 +42,12 @@ class SiteSettingController extends Controller
             ->orderBy('category')
             ->pluck('category')
             ->toArray();
+
+
+        // CMS Peserta
+        $pesertaSubmissions = PesertaSubmission::latest()
+        ->get();
+
 
         // LOMBA - ketentuan grouped per tab
         $lombaKetentuan = LombaKetentuanItem::query()
@@ -106,6 +114,7 @@ class SiteSettingController extends Controller
             'pengumumanEntries',
             'timelineItems',
             'informasiPentingItems',
+            'pesertaSubmissions',
         ));
     }
 
@@ -162,6 +171,14 @@ class SiteSettingController extends Controller
     }
 
     
+    // DATA PESERTA MASUK KE CMS ADMIN
+public function pesertaSubmissionIndex()
+{
+    $submissions = PesertaSubmission::latest()->get();
+
+    return view('admin.peserta-submission', compact('submissions'));
+}
+
     // =========================================
 // FAQ CRUD
 // =========================================
@@ -708,6 +725,69 @@ public function destroyPengumumanEntry(PengumumanEntry $entry)
 }
 
 
+
+// =========================
+    // PESERTA SUBMISSION
+    // =========================
+    public function pesertaSubmissionDestroy(PesertaSubmission $pesertaSubmission)
+    {
+        if (!empty($pesertaSubmission->proposal_file) && Storage::disk('public')->exists($pesertaSubmission->proposal_file)) {
+            Storage::disk('public')->delete($pesertaSubmission->proposal_file);
+        }
+
+        if (!empty($pesertaSubmission->karya_file) && Storage::disk('public')->exists($pesertaSubmission->karya_file)) {
+            Storage::disk('public')->delete($pesertaSubmission->karya_file);
+        }
+
+        $pesertaSubmission->delete();
+
+        return redirect()->route('admin.site-settings.edit', ['tab' => 'peserta-submission'])
+            ->with('success', 'Submission peserta berhasil dihapus.');
+    }
+
+    public function pesertaSubmissionExport()
+    {
+        $submissions = PesertaSubmission::orderBy('created_at', 'desc')->get();
+
+        $filename = 'peserta-submissions-' . now()->format('Y-m-d_H-i-s') . '.csv';
+
+        $response = new StreamedResponse(function () use ($submissions) {
+            $handle = fopen('php://output', 'w');
+
+            // BOM UTF-8 supaya Excel baca karakter dengan benar
+            fprintf($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+            fputcsv($handle, [
+                'Nama Tim',
+                'Anggota 1',
+                'Anggota 2',
+                'Anggota 3',
+                'Proposal File',
+                'Karya File',
+                'Tanggal Submit',
+            ]);
+
+            foreach ($submissions as $item) {
+                fputcsv($handle, [
+                    $item->nama_tim,
+                    $item->anggota_1,
+                    $item->anggota_2,
+                    $item->anggota_3,
+                    $item->proposal_file ? asset('storage/' . $item->proposal_file) : '',
+                    $item->karya_file ? asset('storage/' . $item->karya_file) : '',
+                    optional($item->created_at)->format('d M Y H:i'),
+                ]);
+            }
+
+            fclose($handle);
+        });
+
+        $response->headers->set('Content-Type', 'text/csv; charset=UTF-8');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $filename . '"');
+
+        return $response;
+    }
+    
     // =========================
 // TIMELINE CRUD
 // =========================
