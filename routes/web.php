@@ -248,3 +248,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('/site-settings/lomba/tahapan/{step}', [SiteSettingController::class, 'lombaTahapanDestroy'])
         ->name('site-settings.lomba.tahapan.destroy');
 });
+
+/*
+|--------------------------------------------------------------------------
+| AUTH ROUTES (login, logout, register, dll)
+|--------------------------------------------------------------------------
+*/
+require __DIR__.'/auth.php';
