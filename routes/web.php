@@ -137,13 +137,37 @@ Route::get('/faq', function () {
 | REGISTRASI
 |--------------------------------------------------------------------------
 */
-
 Route::get('/registrasi', [RegistrasiController::class, 'index'])->name('registrasi');
 Route::post('/registrasi/cek', [RegistrasiController::class, 'cekNuptk'])->name('registrasi.cek');
 Route::post('/registrasi/store', [RegistrasiController::class, 'store'])->name('registrasi.store');
 
-/* ADMIN - Site Settings (CMS) */
+/*
+|--------------------------------------------------------------------------
+| ADMIN LOGIN (terpisah dari user)
+|--------------------------------------------------------------------------
+*/
+Route::middleware('guest')->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/login', [\App\Http\Controllers\Auth\AdminSessionController::class, 'create'])
+        ->name('login');
+    Route::post('/login', [\App\Http\Controllers\Auth\AdminSessionController::class, 'store']);
+});
+
+/*
+|--------------------------------------------------------------------------
+| ADMIN - Site Settings (CMS)
+|--------------------------------------------------------------------------
+*/
 Route::prefix('admin')->name('admin.')->group(function () {
+
+    // Logout admin
+    Route::post('/logout', [\App\Http\Controllers\Auth\AdminSessionController::class, 'destroy'])
+        ->name('logout');
+
+    // Pengaturan Akun Admin
+    Route::put('/akun/email', [SiteSettingController::class, 'updateEmail'])
+        ->name('akun.email');
+    Route::put('/akun/password', [SiteSettingController::class, 'updatePassword'])
+        ->name('akun.password');
 
     // CMS utama
     Route::get('/site-settings', [SiteSettingController::class, 'edit'])
@@ -162,8 +186,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('/site-settings/faqs/{faq}', [SiteSettingController::class, 'faqDestroy'])
         ->name('site-settings.faqs.destroy');
 
-
-
     // Timeline
     Route::post('/site-settings/timeline', [SiteSettingController::class, 'timelineStore'])
         ->name('site-settings.timeline.store');
@@ -174,7 +196,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('/site-settings/timeline/{timeline}', [SiteSettingController::class, 'timelineDestroy'])
         ->name('site-settings.timeline.destroy');
 
-
     // Informasi Penting
     Route::post('/site-settings/informasi-penting', [SiteSettingController::class, 'informasiPentingStore'])
         ->name('site-settings.informasi-penting.store');
@@ -184,7 +205,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::delete('/site-settings/informasi-penting/{informasiPenting}', [SiteSettingController::class, 'informasiPentingDestroy'])
         ->name('site-settings.informasi-penting.destroy');
-    
 
     /*
     |--------------------------------------------------------------------------
@@ -251,7 +271,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| AUTH ROUTES (login, logout, register, dll)
+| AUTH ROUTES (login user, logout, register, dll)
 |--------------------------------------------------------------------------
 */
 require __DIR__.'/auth.php';
