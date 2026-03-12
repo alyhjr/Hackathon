@@ -8,410 +8,332 @@
 
 <style>
   :root {
-    --f-blue:         #1565C0;
-    --f-blue-mid:     #1976D2;
-    --f-blue-light:   #E3F0FF;
-    --f-blue-soft:    #F0F6FF;
-    --f-green:        #16a34a;
-    --f-green-light:  #dcfce7;
-    --f-green-mid:    #bbf7d0;
-    --f-red:          #dc2626;
-    --f-red-light:    #fef2f2;
-    --f-red-mid:      #fecaca;
-    --f-text:         #0f172a;
-    --f-text-2:       #334155;
-    --f-text-3:       #64748b;
-    --f-text-4:       #94a3b8;
-    --f-border:       #e2e8f0;
-    --f-border-focus: #1976D2;
-    --f-bg:           #ffffff;
-    --f-bg-2:         #f8fafc;
-    --f-font:         'Plus Jakarta Sans', sans-serif;
-    --f-radius:       14px;
-    --f-shadow:       0 1px 3px rgba(15,23,42,0.07), 0 8px 24px rgba(15,23,42,0.06);
+    --pf-blue: #1d7cf2;
+    --pf-blue-dark: #1565C0;
+    --pf-blue-soft: #eef6ff;
+    --pf-text: #0f172a;
+    --pf-text-2: #334155;
+    --pf-text-3: #64748b;
+    --pf-text-4: #94a3b8;
+    --pf-border: #e2e8f0;
+    --pf-green: #16a34a;
+    --pf-green-light: #dcfce7;
+    --pf-green-mid: #bbf7d0;
+    --pf-red: #dc2626;
+    --pf-red-light: #fef2f2;
+    --pf-red-mid: #fecaca;
+    --pf-bg: #ffffff;
+    --pf-bg-soft: #f8fafc;
+    --pf-font: 'Plus Jakarta Sans', sans-serif;
+    --pf-shadow: 0 1px 3px rgba(15,23,42,0.07), 0 8px 24px rgba(15,23,42,0.06);
   }
 
-  .pf-page * { box-sizing: border-box; }
+  [x-cloak] { display: none !important; }
 
-  .pf-page {
-    font-family: var(--f-font);
-    max-width: 680px;
+  .ps-page * { box-sizing: border-box; }
+
+  .ps-page {
+    max-width: 1220px;
     margin: 0 auto;
-    padding: 3rem 1.25rem 5rem;
-    animation: pf-in 0.45s cubic-bezier(.22,1,.36,1) both;
+    padding: 2.5rem 1.25rem 4rem;
+    font-family: var(--pf-font);
   }
 
-  @keyframes pf-in {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
+  .ps-header {
+    margin-bottom: 1.8rem;
   }
 
-  /* ── Page Header ── */
-  .pf-page-header {
-    margin-bottom: 2rem;
-  }
-
-  .pf-eyebrow {
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--f-blue);
-    margin-bottom: 0.4rem;
-  }
-
-  .pf-page-title {
-    font-size: 1.75rem;
+  .ps-eyebrow {
+    font-size: .72rem;
     font-weight: 800;
-    color: var(--f-text);
-    letter-spacing: -0.03em;
-    line-height: 1.2;
-    margin: 0 0 0.4rem;
-  }
-
-  .pf-page-desc {
-    font-size: 0.83rem;
-    color: var(--f-text-3);
-    font-weight: 400;
-    margin: 0;
-  }
-
-  /* ── Alerts ── */
-  .pf-alert {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.65rem;
-    border-radius: 10px;
-    padding: 0.85rem 1rem;
-    font-size: 0.82rem;
-    font-weight: 500;
-    margin-bottom: 1.25rem;
-    animation: pf-in 0.3s ease both;
-  }
-
-  .pf-alert svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
-
-  .pf-alert-success {
-    background: var(--f-green-light);
-    border: 1px solid var(--f-green-mid);
-    color: #166534;
-  }
-
-  .pf-alert-error {
-    background: var(--f-red-light);
-    border: 1px solid var(--f-red-mid);
-    color: var(--f-red);
-  }
-
-  .pf-alert-error ul {
-    margin: 0.35rem 0 0;
-    padding-left: 1.1rem;
-    font-weight: 400;
-    line-height: 1.7;
-  }
-
-  /* ── Form Card ── */
-  .pf-card {
-    background: var(--f-bg);
-    border: 1px solid var(--f-border);
-    border-radius: 20px;
-    padding: 2rem;
-    box-shadow: var(--f-shadow);
-  }
-
-  /* ── Section divider ── */
-  .pf-section {
-    margin-bottom: 1.75rem;
-  }
-
-  .pf-section-label {
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
+    letter-spacing: .14em;
     text-transform: uppercase;
-    color: var(--f-text-4);
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--f-border);
-    margin-bottom: 1.25rem;
+    color: var(--pf-text-4);
+    margin-bottom: .35rem;
   }
 
-  .pf-fields { display: flex; flex-direction: column; gap: 1.1rem; }
+  .ps-title {
+    font-size: 2.2rem;
+    line-height: 1.15;
+    font-weight: 800;
+    color: var(--pf-text);
+    margin: 0 0 .45rem;
+  }
 
-  /* ── Field ── */
-  .pf-field {}
+  .ps-desc {
+    margin: 0;
+    font-size: .92rem;
+    color: var(--pf-text-3);
+  }
 
-  .pf-label {
+  .ps-alert {
     display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--f-text-2);
-    margin-bottom: 0.45rem;
-  }
-
-  .pf-required {
-    color: var(--f-blue);
-    font-size: 0.85rem;
-    line-height: 1;
-  }
-
-  .pf-optional {
-    font-size: 0.68rem;
+    gap: .75rem;
+    border-radius: 14px;
+    padding: .9rem 1rem;
+    font-size: .85rem;
     font-weight: 500;
-    color: var(--f-text-4);
-    background: var(--f-bg-2);
-    border: 1px solid var(--f-border);
-    border-radius: 99px;
-    padding: 0.1rem 0.5rem;
-    letter-spacing: 0.03em;
+    margin-bottom: 1.2rem;
   }
 
-  /* ── Text input ── */
-  .pf-input {
-    width: 100%;
-    border: 1px solid var(--f-border);
-    border-radius: 10px;
-    padding: 0.7rem 0.95rem;
-    font-family: var(--f-font);
-    font-size: 0.85rem;
-    font-weight: 400;
-    color: var(--f-text);
-    background: var(--f-bg);
-    outline: none;
-    transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
-    -webkit-appearance: none;
-  }
-
-  .pf-input::placeholder { color: var(--f-text-4); }
-
-  .pf-input:hover { border-color: #c0cfe0; }
-
-  .pf-input:focus {
-    border-color: var(--f-border-focus);
-    box-shadow: 0 0 0 3px rgba(25,118,210,0.12);
-    background: var(--f-blue-soft);
-  }
-
-  /* ── File input wrapper ── */
-  .pf-file-wrap {
-    position: relative;
-  }
-
-  .pf-file-input {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    cursor: pointer;
-    width: 100%;
-    height: 100%;
-    z-index: 2;
-  }
-
-  .pf-file-ui {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    border: 1.5px dashed var(--f-border);
-    border-radius: 10px;
-    padding: 0.85rem 1rem;
-    background: var(--f-bg-2);
-    transition: border-color 0.18s, background 0.18s;
-    cursor: pointer;
-  }
-
-  .pf-file-wrap:hover .pf-file-ui,
-  .pf-file-wrap:focus-within .pf-file-ui {
-    border-color: var(--f-blue-mid);
-    background: var(--f-blue-soft);
-  }
-
-  .pf-file-icon {
-    width: 34px; height: 34px;
-    border-radius: 8px;
-    background: var(--f-blue-light);
-    display: flex; align-items: center; justify-content: center;
+  .ps-alert svg {
+    width: 18px;
+    height: 18px;
     flex-shrink: 0;
+    margin-top: 2px;
   }
 
-  .pf-file-icon svg { width: 16px; height: 16px; color: var(--f-blue); }
-
-  .pf-file-text {}
-
-  .pf-file-cta {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--f-blue);
-  }
-
-  .pf-file-hint {
-    font-size: 0.72rem;
-    color: var(--f-text-4);
-    margin-top: 0.1rem;
-  }
-
-  /* ── File preview ── */
-  .pf-file-preview {
-    display: none;
-    align-items: center;
-    gap: 0.75rem;
-    margin-top: 0.6rem;
-    padding: 0.7rem 0.9rem;
-    background: var(--f-green-light);
-    border: 1px solid var(--f-green-mid);
-    border-radius: 10px;
-    animation: pf-preview-in 0.25s cubic-bezier(.22,1,.36,1) both;
-  }
-
-  .pf-file-preview.visible { display: flex; }
-
-  @keyframes pf-preview-in {
-    from { opacity: 0; transform: translateY(-4px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .pf-preview-icon {
-    width: 32px; height: 32px;
-    border-radius: 7px;
-    background: #fff;
-    border: 1px solid var(--f-green-mid);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .pf-preview-icon svg { width: 15px; height: 15px; color: var(--f-green); }
-
-  .pf-preview-info { flex: 1; min-width: 0; }
-
-  .pf-preview-name {
-    font-size: 0.8rem;
-    font-weight: 600;
+  .ps-alert-success {
+    background: var(--pf-green-light);
+    border: 1px solid var(--pf-green-mid);
     color: #166534;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 340px;
   }
 
-  .pf-preview-meta {
-    font-size: 0.7rem;
-    color: #4ade80;
-    color: #22863a;
-    margin-top: 0.1rem;
-    font-weight: 400;
+  .ps-alert-error {
+    background: var(--pf-red-light);
+    border: 1px solid var(--pf-red-mid);
+    color: var(--pf-red);
   }
 
-  .pf-preview-check {
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    background: var(--f-green);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
+  .ps-alert-error ul {
+    margin: .35rem 0 0;
+    padding-left: 1rem;
   }
 
-  .pf-preview-check svg { width: 11px; height: 11px; color: #fff; }
+  .ps-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
 
-  .pf-preview-remove {
-    background: none;
-    border: none;
+  .ps-sidebar,
+  .ps-content {
+    background: #fff;
+    border: 1px solid var(--pf-border);
+    border-radius: 22px;
+    box-shadow: var(--pf-shadow);
+  }
+
+  .ps-sidebar {
+    padding: 1rem;
+    position: sticky;
+    top: 100px;
+  }
+
+  .ps-content {
+    padding: 1.5rem;
+  }
+
+  .ps-menu-label {
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--pf-text-4);
+    margin: .2rem 0 1rem;
+    padding: 0 .3rem;
+  }
+
+  .ps-menu-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    border: 0;
+    background: transparent;
+    border-radius: 16px;
+    padding: .95rem 1rem;
     cursor: pointer;
-    padding: 0.2rem;
-    color: #4a7c59;
-    border-radius: 5px;
-    display: flex; align-items: center;
-    transition: color 0.15s, background 0.15s;
-    flex-shrink: 0;
+    transition: .2s ease;
+    margin-bottom: .4rem;
   }
 
-  .pf-preview-remove:hover { color: var(--f-red); background: var(--f-red-light); }
-  .pf-preview-remove svg { width: 14px; height: 14px; }
-
-  /* when file selected — restyle the drop zone */
-  .pf-file-wrap.has-file .pf-file-ui {
-    border-color: var(--f-green);
-    border-style: solid;
-    background: #f0fdf4;
+  .ps-menu-item:hover {
+    background: #f8fbff;
   }
 
-  .pf-file-wrap.has-file .pf-file-icon {
-    background: var(--f-green-light);
+  .ps-menu-item.active {
+    background: linear-gradient(180deg, #1d7cf2 0%, #1565C0 100%);
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(21,101,192,.18);
   }
 
-  .pf-file-wrap.has-file .pf-file-icon svg { color: var(--f-green); }
-  .pf-file-wrap.has-file .pf-file-cta { color: var(--f-green); }
-
-  /* ── Divider ── */
-  .pf-divider {
-    border: none;
-    border-top: 1px solid var(--f-border);
-    margin: 1.75rem 0;
+  .ps-menu-title {
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: .18rem;
   }
 
-  /* ── Submit ── */
-  .pf-submit-row {
+  .ps-menu-sub {
+    font-size: .77rem;
+    line-height: 1.35;
+    color: var(--pf-text-4);
+  }
+
+  .ps-menu-item.active .ps-menu-sub {
+    color: rgba(255,255,255,.88);
+  }
+
+  .ps-section-title {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: var(--pf-text);
+    margin: 0 0 .35rem;
+    letter-spacing: -.02em;
+  }
+
+  .ps-section-desc {
+    color: var(--pf-text-3);
+    font-size: .9rem;
+    margin: 0 0 1.3rem;
+  }
+
+  .ps-card {
+    border: 1px solid var(--pf-border);
+    background: var(--pf-bg-soft);
+    border-radius: 18px;
+    padding: 1rem 1.1rem;
+    margin-bottom: 1rem;
+  }
+
+  .ps-card:last-child {
+    margin-bottom: 0;
+  }
+
+  .ps-card-text {
+    font-size: .9rem;
+    line-height: 1.8;
+    color: var(--pf-text-2);
+  }
+
+  .ps-block {
+    margin-bottom: 1.2rem;
+  }
+
+  .ps-label {
+    display: block;
+    font-size: .84rem;
+    font-weight: 700;
+    color: var(--pf-text-2);
+    margin-bottom: .45rem;
+  }
+
+  .ps-input {
+    width: 100%;
+    border: 1px solid var(--pf-border);
+    border-radius: 12px;
+    padding: .8rem 1rem;
+    font-family: var(--pf-font);
+    font-size: .9rem;
+    color: var(--pf-text);
+    background: #fff;
+    outline: none;
+    transition: .2s;
+  }
+
+  .ps-input:focus {
+    border-color: var(--pf-blue);
+    box-shadow: 0 0 0 3px rgba(29,124,242,.12);
+    background: var(--pf-blue-soft);
+  }
+
+  .ps-file-box {
+    border: 1.5px dashed #c9def8;
+    border-radius: 18px;
+    background: #f8fbff;
+    padding: 1rem;
+  }
+
+  .ps-file-hint {
+    font-size: .78rem;
+    color: var(--pf-text-3);
+    margin-top: .4rem;
+  }
+
+  .ps-submit-wrap {
+    margin-top: 1.5rem;
     display: flex;
     align-items: center;
     gap: 1rem;
     flex-wrap: wrap;
+    padding-top: 1rem;
+    border-top: 1px solid var(--pf-border);
   }
 
-  .pf-submit-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.7rem 1.75rem;
-    border-radius: 99px;
-    background: var(--f-blue);
+  .ps-submit-btn {
+    border: 0;
+    border-radius: 999px;
+    background: var(--pf-blue);
     color: #fff;
-    font-family: var(--f-font);
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 0.01em;
-    border: none;
+    padding: .85rem 1.5rem;
+    font-size: .9rem;
+    font-weight: 800;
     cursor: pointer;
-    transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
-    box-shadow: 0 2px 10px rgba(21,101,192,0.25);
+    transition: .2s;
+    box-shadow: 0 8px 20px rgba(29,124,242,.18);
   }
 
-  .pf-submit-btn:hover {
-    background: var(--f-blue-mid);
-    box-shadow: 0 4px 18px rgba(21,101,192,0.35);
+  .ps-submit-btn:hover {
+    background: var(--pf-blue-dark);
     transform: translateY(-1px);
   }
 
-  .pf-submit-btn svg { width: 15px; height: 15px; }
+  .ps-submit-note {
+    color: var(--pf-text-4);
+    font-size: .8rem;
+  }
 
-  .pf-submit-note {
-    font-size: 0.75rem;
-    color: var(--f-text-4);
-    font-weight: 400;
+  @media (max-width: 1024px) {
+    .ps-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .ps-sidebar {
+      position: static;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .ps-title {
+      font-size: 1.8rem;
+    }
+
+    .ps-sidebar,
+    .ps-content {
+      padding: 1rem;
+    }
   }
 </style>
 
-<div class="pf-page">
+@php
+  $infoItems = collect($informasiPentingItems ?? [])->values();
+@endphp
 
-  {{-- Page Header --}}
-  <div class="pf-page-header">
-    <p class="pf-eyebrow">Kompetisi</p>
-    <h1 class="pf-page-title">Form Submission Peserta</h1>
-    <p class="pf-page-desc">Isi data tim dan upload berkas submission kamu di bawah ini.</p>
+<div class="ps-page" x-data="{ tab: 'informasi' }">
+
+  <div class="ps-header">
+    <div class="ps-eyebrow">Peserta Hackathon</div>
+    <h1 class="ps-title">CMS Peserta</h1>
+    <p class="ps-desc">Kelola informasi penting, anggota tim, upload proposal, dan upload karya dari panel peserta.</p>
   </div>
 
-  {{-- Success Alert --}}
   @if(session('success'))
-    <div class="pf-alert pf-alert-success">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+    <div class="ps-alert ps-alert-success">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
       </svg>
       <span>{{ session('success') }}</span>
     </div>
   @endif
 
-  {{-- Error Alert --}}
   @if($errors->any())
-    <div class="pf-alert pf-alert-error">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+    <div class="ps-alert ps-alert-error">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
       </svg>
       <div>
         <div>Terdapat kesalahan pada form:</div>
@@ -424,201 +346,116 @@
     </div>
   @endif
 
-  {{-- Form Card --}}
-  <form action="{{ route('peserta-submission.store') }}" method="POST" enctype="multipart/form-data" class="pf-card">
+  <form action="{{ route('peserta-submission.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
 
-    {{-- Section: Data Tim --}}
-    <div class="pf-section">
-      <div class="pf-section-label">Data Tim</div>
-      <div class="pf-fields">
+    <div class="ps-layout">
 
-        <div class="pf-field">
-          <label class="pf-label">
-            Nama Tim <span class="pf-required">*</span>
-          </label>
-          <input type="text" name="nama_tim" value="{{ old('nama_tim') }}"
-                 placeholder="Masukkan nama tim" class="pf-input" required>
+      {{-- Sidebar kiri --}}
+      <div class="ps-sidebar">
+        <div class="ps-menu-label">Menu Peserta</div>
+
+        <button type="button" class="ps-menu-item" :class="{ 'active': tab === 'informasi' }" @click="tab='informasi'">
+          <div class="ps-menu-title">Informasi</div>
+          <div class="ps-menu-sub">Informasi penting dari CMS admin</div>
+        </button>
+
+        <button type="button" class="ps-menu-item" :class="{ 'active': tab === 'anggota' }" @click="tab='anggota'">
+          <div class="ps-menu-title">Anggota Tim</div>
+          <div class="ps-menu-sub">Isi nama tim dan anggota tim</div>
+        </button>
+
+        <button type="button" class="ps-menu-item" :class="{ 'active': tab === 'proposal' }" @click="tab='proposal'">
+          <div class="ps-menu-title">Upload Proposal</div>
+          <div class="ps-menu-sub">Upload file proposal tim</div>
+        </button>
+
+        <button type="button" class="ps-menu-item" :class="{ 'active': tab === 'karya' }" @click="tab='karya'">
+          <div class="ps-menu-title">Upload Karya</div>
+          <div class="ps-menu-sub">Upload file karya tim</div>
+        </button>
+      </div>
+
+      {{-- Content kanan --}}
+      <div class="ps-content">
+
+        {{-- Informasi --}}
+        <div x-show="tab==='informasi'" x-cloak>
+          <h2 class="ps-section-title">Informasi Penting</h2>
+          <p class="ps-section-desc">Informasi ini otomatis mengikuti konten yang dikelola pada CMS admin.</p>
+
+          @forelse($infoItems as $item)
+            <div class="ps-card">
+              <div class="ps-card-text">{{ $item->content }}</div>
+            </div>
+          @empty
+            <div class="ps-card">
+              <div class="ps-card-text">Belum ada informasi penting dari admin.</div>
+            </div>
+          @endforelse
         </div>
 
-        <div class="pf-field">
-          <label class="pf-label">
-            Nama Anggota 1 <span class="pf-required">*</span>
-          </label>
-          <input type="text" name="anggota_1" value="{{ old('anggota_1') }}"
-                 placeholder="Nama lengkap anggota pertama" class="pf-input" required>
+        {{-- Anggota Tim --}}
+        <div x-show="tab==='anggota'" x-cloak>
+          <h2 class="ps-section-title">Anggota Tim</h2>
+          <p class="ps-section-desc">Lengkapi data tim dan nama anggota sebelum mengunggah berkas.</p>
+
+          <div class="ps-block">
+            <label class="ps-label">Nama Tim</label>
+            <input type="text" name="nama_tim" value="{{ old('nama_tim') }}" class="ps-input" placeholder="Masukkan nama tim" required>
+          </div>
+
+          <div class="ps-block">
+            <label class="ps-label">Nama Anggota 1</label>
+            <input type="text" name="anggota_1" value="{{ old('anggota_1') }}" class="ps-input" placeholder="Nama anggota pertama" required>
+          </div>
+
+          <div class="ps-block">
+            <label class="ps-label">Nama Anggota 2</label>
+            <input type="text" name="anggota_2" value="{{ old('anggota_2') }}" class="ps-input" placeholder="Nama anggota kedua">
+          </div>
+
+          <div class="ps-block">
+            <label class="ps-label">Nama Anggota 3</label>
+            <input type="text" name="anggota_3" value="{{ old('anggota_3') }}" class="ps-input" placeholder="Nama anggota ketiga">
+          </div>
         </div>
 
-        <div class="pf-field">
-          <label class="pf-label">
-            Nama Anggota 2 <span class="pf-optional">Opsional</span>
-          </label>
-          <input type="text" name="anggota_2" value="{{ old('anggota_2') }}"
-                 placeholder="Nama lengkap anggota kedua" class="pf-input">
+        {{-- Proposal --}}
+        <div x-show="tab==='proposal'" x-cloak>
+          <h2 class="ps-section-title">Upload Proposal</h2>
+          <p class="ps-section-desc">Unggah file proposal tim sesuai format yang ditentukan.</p>
+
+          <div class="ps-file-box">
+            <div class="ps-block" style="margin-bottom:0;">
+              <label class="ps-label">File Proposal</label>
+              <input type="file" name="proposal_file" class="ps-input">
+              <div class="ps-file-hint">Format: PDF, DOC, DOCX — Maksimal 5 MB</div>
+            </div>
+          </div>
         </div>
 
-        <div class="pf-field">
-          <label class="pf-label">
-            Nama Anggota 3 <span class="pf-optional">Opsional</span>
-          </label>
-          <input type="text" name="anggota_3" value="{{ old('anggota_3') }}"
-                 placeholder="Nama lengkap anggota ketiga" class="pf-input">
+        {{-- Karya --}}
+        <div x-show="tab==='karya'" x-cloak>
+          <h2 class="ps-section-title">Upload Karya</h2>
+          <p class="ps-section-desc">Unggah file karya tim yang akan dinilai admin/juri.</p>
+
+          <div class="ps-file-box">
+            <div class="ps-block" style="margin-bottom:0;">
+              <label class="ps-label">File Karya</label>
+              <input type="file" name="karya_file" class="ps-input">
+              <div class="ps-file-hint">Format: PDF, ZIP, RAR, DOC, DOCX — Maksimal 10 MB</div>
+            </div>
+          </div>
         </div>
 
+        <div class="ps-submit-wrap">
+          <button type="submit" class="ps-submit-btn">Kirim Submission</button>
+          <span class="ps-submit-note">Semua data tetap tersimpan ke submission peserta yang sama.</span>
+        </div>
       </div>
     </div>
-
-    <hr class="pf-divider">
-
-    {{-- Section: Upload Berkas --}}
-    <div class="pf-section">
-      <div class="pf-section-label">Upload Berkas</div>
-      <div class="pf-fields">
-
-        <div class="pf-field">
-          <label class="pf-label">Upload Proposal</label>
-          <div class="pf-file-wrap" id="wrap-proposal">
-            <input type="file" name="proposal_file" class="pf-file-input"
-                   id="input-proposal" onchange="pfPreview(this, 'wrap-proposal', 'preview-proposal')">
-            <div class="pf-file-ui">
-              <div class="pf-file-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                  <polyline points="14 2 14 8 20 8"/>
-                </svg>
-              </div>
-              <div class="pf-file-text">
-                <div class="pf-file-cta">Pilih file atau seret ke sini</div>
-                <div class="pf-file-hint">PDF, DOC, DOCX — Maks. 5 MB</div>
-              </div>
-            </div>
-          </div>
-          {{-- Preview --}}
-          <div class="pf-file-preview" id="preview-proposal">
-            <div class="pf-preview-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14 2 14 8 20 8"/>
-              </svg>
-            </div>
-            <div class="pf-preview-info">
-              <div class="pf-preview-name" id="preview-proposal-name">—</div>
-              <div class="pf-preview-meta" id="preview-proposal-meta">—</div>
-            </div>
-            <div class="pf-preview-check">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"/>
-              </svg>
-            </div>
-            <button type="button" class="pf-preview-remove"
-                    onclick="pfRemove('input-proposal', 'wrap-proposal', 'preview-proposal')" title="Hapus file">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="pf-field">
-          <label class="pf-label">Upload Karya</label>
-          <div class="pf-file-wrap" id="wrap-karya">
-            <input type="file" name="karya_file" class="pf-file-input"
-                   id="input-karya" onchange="pfPreview(this, 'wrap-karya', 'preview-karya')">
-            <div class="pf-file-ui">
-              <div class="pf-file-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polygon points="12 2 2 7 12 12 22 7 12 2"/>
-                  <polyline points="2 17 12 22 22 17"/>
-                  <polyline points="2 12 12 17 22 12"/>
-                </svg>
-              </div>
-              <div class="pf-file-text">
-                <div class="pf-file-cta">Pilih file atau seret ke sini</div>
-                <div class="pf-file-hint">PDF, ZIP, RAR, DOC, DOCX — Maks. 10 MB</div>
-              </div>
-            </div>
-          </div>
-          {{-- Preview --}}
-          <div class="pf-file-preview" id="preview-karya">
-            <div class="pf-preview-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="12 2 2 7 12 12 22 7 12 2"/>
-                <polyline points="2 17 12 22 22 17"/>
-                <polyline points="2 12 12 17 22 12"/>
-              </svg>
-            </div>
-            <div class="pf-preview-info">
-              <div class="pf-preview-name" id="preview-karya-name">—</div>
-              <div class="pf-preview-meta" id="preview-karya-meta">—</div>
-            </div>
-            <div class="pf-preview-check">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12"/>
-              </svg>
-            </div>
-            <button type="button" class="pf-preview-remove"
-                    onclick="pfRemove('input-karya', 'wrap-karya', 'preview-karya')" title="Hapus file">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-              </svg>
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <hr class="pf-divider">
-
-    {{-- Submit --}}
-    <div class="pf-submit-row">
-      <button type="submit" class="pf-submit-btn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="22" y1="2" x2="11" y2="13"/>
-          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-        </svg>
-        Kirim Submission
-      </button>
-      <span class="pf-submit-note">Pastikan semua data sudah benar sebelum mengirim.</span>
-    </div>
-
   </form>
 </div>
 
 @endsection
-
-<script>
-  function pfFormatSize(bytes) {
-    if (bytes < 1024) return bytes + ' B';
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
-  }
-
-  function pfPreview(input, wrapId, previewId) {
-    const wrap    = document.getElementById(wrapId);
-    const preview = document.getElementById(previewId);
-    const file    = input.files[0];
-
-    if (!file) {
-      pfRemove(input.id, wrapId, previewId);
-      return;
-    }
-
-    document.getElementById(previewId + '-name').textContent = file.name;
-    document.getElementById(previewId + '-meta').textContent =
-      pfFormatSize(file.size) + '  ·  ' + (file.name.split('.').pop().toUpperCase());
-
-    preview.classList.add('visible');
-    wrap.classList.add('has-file');
-  }
-
-  function pfRemove(inputId, wrapId, previewId) {
-    const input   = document.getElementById(inputId);
-    const wrap    = document.getElementById(wrapId);
-    const preview = document.getElementById(previewId);
-
-    input.value = '';
-    preview.classList.remove('visible');
-    wrap.classList.remove('has-file');
-  }
-</script>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\InformasiPenting;
 use App\Models\PesertaSubmission;
 use Illuminate\Http\Request;
 
@@ -9,7 +10,14 @@ class PesertaSubmissionController extends Controller
 {
     public function create()
     {
-        return view('pages.peserta-submission');
+        $informasiPentingItems = InformasiPenting::where('is_active', 1)
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
+
+        return view('pages.peserta-submission', compact(
+            'informasiPentingItems'
+        ));
     }
 
     public function store(Request $request)
