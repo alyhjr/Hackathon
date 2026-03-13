@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\SiteSettingController;
+use App\Http\Controllers\Auth\AdminSessionController; // ← pakai ini, bukan AdminAuthController
 use App\Models\Faq;
 use App\Models\LombaKetentuanItem;
 use App\Models\LombaTahapanStep;
@@ -143,13 +144,21 @@ Route::post('/registrasi/store', [RegistrasiController::class, 'store'])->name('
 
 /*
 |--------------------------------------------------------------------------
-| ADMIN LOGIN (terpisah dari user)
+| ADMIN LOGIN + 2FA (CAPTCHA & Google Authenticator)
 |--------------------------------------------------------------------------
 */
 Route::middleware('guest')->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/login', [\App\Http\Controllers\Auth\AdminSessionController::class, 'create'])
-        ->name('login');
-    Route::post('/login', [\App\Http\Controllers\Auth\AdminSessionController::class, 'store']);
+    // Step 1: Login (email + password + CAPTCHA)
+    Route::get('/login',  [AdminSessionController::class, 'create'])->name('login');
+    Route::post('/login', [AdminSessionController::class, 'store'])->name('login.post');
+
+    // Step 2a: Setup Google Authenticator (scan QR - hanya sekali)
+    Route::get('/2fa/setup',  [AdminSessionController::class, 'showSetup'])->name('2fa.setup');
+    Route::post('/2fa/setup', [AdminSessionController::class, 'confirmSetup'])->name('2fa.setup.post');
+
+    // Step 2b: Input kode OTP 6 digit
+    Route::get('/2fa/verify',  [AdminSessionController::class, 'showVerify'])->name('2fa.verify');
+    Route::post('/2fa/verify', [AdminSessionController::class, 'processVerify'])->name('2fa.verify.post');
 });
 
 /*
@@ -160,8 +169,7 @@ Route::middleware('guest')->prefix('admin')->name('admin.')->group(function () {
 Route::prefix('admin')->name('admin.')->group(function () {
 
     // Logout admin
-    Route::post('/logout', [\App\Http\Controllers\Auth\AdminSessionController::class, 'destroy'])
-        ->name('logout');
+    Route::post('/logout', [AdminSessionController::class, 'destroy'])->name('logout');
 
     // Pengaturan Akun Admin
     Route::put('/akun/email', [SiteSettingController::class, 'updateEmail'])
@@ -172,37 +180,30 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // CMS utama
     Route::get('/site-settings', [SiteSettingController::class, 'edit'])
         ->name('site-settings.edit');
-
     Route::put('/site-settings', [SiteSettingController::class, 'update'])
         ->name('site-settings.update');
 
     /* FAQ CRUD */
     Route::post('/site-settings/faqs', [SiteSettingController::class, 'faqStore'])
         ->name('site-settings.faqs.store');
-
     Route::put('/site-settings/faqs/{faq}', [SiteSettingController::class, 'faqUpdate'])
         ->name('site-settings.faqs.update');
-
     Route::delete('/site-settings/faqs/{faq}', [SiteSettingController::class, 'faqDestroy'])
         ->name('site-settings.faqs.destroy');
 
     // Timeline
     Route::post('/site-settings/timeline', [SiteSettingController::class, 'timelineStore'])
         ->name('site-settings.timeline.store');
-
     Route::put('/site-settings/timeline/{timeline}', [SiteSettingController::class, 'timelineUpdate'])
         ->name('site-settings.timeline.update');
-
     Route::delete('/site-settings/timeline/{timeline}', [SiteSettingController::class, 'timelineDestroy'])
         ->name('site-settings.timeline.destroy');
 
     // Informasi Penting
     Route::post('/site-settings/informasi-penting', [SiteSettingController::class, 'informasiPentingStore'])
         ->name('site-settings.informasi-penting.store');
-
     Route::put('/site-settings/informasi-penting/{informasiPenting}', [SiteSettingController::class, 'informasiPentingUpdate'])
         ->name('site-settings.informasi-penting.update');
-
     Route::delete('/site-settings/informasi-penting/{informasiPenting}', [SiteSettingController::class, 'informasiPentingDestroy'])
         ->name('site-settings.informasi-penting.destroy');
 
@@ -211,34 +212,24 @@ Route::prefix('admin')->name('admin.')->group(function () {
     | PENGUMUMAN CRUD
     |--------------------------------------------------------------------------
     */
-
-    // Pengumuman utama
     Route::post('/site-settings/pengumuman', [SiteSettingController::class, 'storePengumuman'])
         ->name('site-settings.pengumuman.store');
-
     Route::put('/site-settings/pengumuman/{pengumuman}', [SiteSettingController::class, 'updatePengumuman'])
         ->name('site-settings.pengumuman.update');
-
     Route::delete('/site-settings/pengumuman/{pengumuman}', [SiteSettingController::class, 'destroyPengumuman'])
         ->name('site-settings.pengumuman.destroy');
 
-    // Group / jenjang
     Route::post('/site-settings/pengumuman-groups', [SiteSettingController::class, 'storePengumumanGroup'])
         ->name('site-settings.pengumuman-groups.store');
-
     Route::put('/site-settings/pengumuman-groups/{group}', [SiteSettingController::class, 'updatePengumumanGroup'])
         ->name('site-settings.pengumuman-groups.update');
-
     Route::delete('/site-settings/pengumuman-groups/{group}', [SiteSettingController::class, 'destroyPengumumanGroup'])
         ->name('site-settings.pengumuman-groups.destroy');
 
-    // Entry / tim
     Route::post('/site-settings/pengumuman-entries', [SiteSettingController::class, 'storePengumumanEntry'])
         ->name('site-settings.pengumuman-entries.store');
-
     Route::put('/site-settings/pengumuman-entries/{entry}', [SiteSettingController::class, 'updatePengumumanEntry'])
         ->name('site-settings.pengumuman-entries.update');
-
     Route::delete('/site-settings/pengumuman-entries/{entry}', [SiteSettingController::class, 'destroyPengumumanEntry'])
         ->name('site-settings.pengumuman-entries.destroy');
 
@@ -247,24 +238,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
     | LOMBA CRUD
     |--------------------------------------------------------------------------
     */
-
-    // Ketentuan
     Route::post('/site-settings/lomba/ketentuan', [SiteSettingController::class, 'lombaKetentuanStore'])
         ->name('site-settings.lomba.ketentuan.store');
-
     Route::put('/site-settings/lomba/ketentuan/{item}', [SiteSettingController::class, 'lombaKetentuanUpdate'])
         ->name('site-settings.lomba.ketentuan.update');
-
     Route::delete('/site-settings/lomba/ketentuan/{item}', [SiteSettingController::class, 'lombaKetentuanDestroy'])
         ->name('site-settings.lomba.ketentuan.destroy');
 
-    // Tahapan
     Route::post('/site-settings/lomba/tahapan', [SiteSettingController::class, 'lombaTahapanStore'])
         ->name('site-settings.lomba.tahapan.store');
-
     Route::put('/site-settings/lomba/tahapan/{step}', [SiteSettingController::class, 'lombaTahapanUpdate'])
         ->name('site-settings.lomba.tahapan.update');
-
     Route::delete('/site-settings/lomba/tahapan/{step}', [SiteSettingController::class, 'lombaTahapanDestroy'])
         ->name('site-settings.lomba.tahapan.destroy');
 });
