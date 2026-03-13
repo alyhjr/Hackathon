@@ -1,4 +1,4 @@
-<nav class="sticky top-0 z-50 w-full border-b border-sky-200 bg-sky-100/85 backdrop-blur supports-[backdrop-filter]:bg-sky-100/75 nav-entrance">
+<nav class="sticky top-0 z-50 w-full border-b border-sky-100 bg-sky-50 shadow-sm nav-entrance">
   <div class="max-w-7xl mx-auto px-6">
     <div class="flex items-center h-20">
 
@@ -107,7 +107,7 @@
           <button
             type="button"
             onclick="document.getElementById('loginModal').classList.remove('hidden')"
-            class="shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-150 active:scale-95"
+            class="shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-150 active:scale-95"
             style="background:linear-gradient(135deg,#0369a1,#0ea5e9);"
             onmouseover="this.style.opacity='0.85'"
             onmouseout="this.style.opacity='1'"

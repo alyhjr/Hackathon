@@ -1,4 +1,4 @@
-<footer class="mt-16 border-t border-slate-300 bg-[#EAF6FF]">
+<footer class="mt-16 border-t border-sky-100 bg-sky-50">
   <div class="max-w-7xl mx-auto px-8 lg:px-16 py-12">
 
     <div class="grid md:grid-cols-[0.7fr_1.3fr] gap-20 items-start">

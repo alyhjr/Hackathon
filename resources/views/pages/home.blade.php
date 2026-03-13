@@ -423,35 +423,34 @@
 <!-- TIMELINE -->
 <section class="{{ $bleed ?? '' }} py-12 md:py-16 px-4">
 <style>
-  .tl-line {
-    background: linear-gradient(to bottom, transparent, #e8dfc8 15%, #e8dfc8 85%, transparent);
-    width: 1.5px;
-  }
-  .tl-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: #fff;
-    border: 2px solid #d4c9a8;
-    transition: transform 0.25s ease, background-color 0.25s ease;
-    flex-shrink: 0;
-  }
-  .tl-group:hover .tl-dot {
-    transform: scale(1.3);
-    background-color: #fdf8ee;
-  }
-  .tl-card {
-    background-color: #fdf8ee;
-    border: 1px solid #e8dfc8;
-    border-radius: 10px;
-    padding: 10px 16px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .tl-group:hover .tl-card {
-    transform: translateX(3px);
-    box-shadow: 0 4px 16px rgba(180,160,100,0.12);
-  }
-
+ .tl-line {
+  background: linear-gradient(to bottom, transparent, #1e293b 15%, #1e293b 85%, transparent);
+  width: 1.5px;
+}
+.tl-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 2px solid #1e293b;
+  transition: transform 0.25s ease, background-color 0.25s ease;
+  flex-shrink: 0;
+}
+.tl-group:hover .tl-dot {
+  transform: scale(1.3);
+  background-color: #f0f9ff;
+}
+.tl-card {
+  background-color: #f0f9ff;
+  border: 1px solid #7dd3fc;
+  border-radius: 10px;
+  padding: 10px 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.tl-group:hover .tl-card {
+  transform: translateX(3px);
+  box-shadow: 0 4px 16px rgba(125,211,252,0.2);
+}
   .tl-heading {
     opacity: 0;
     transform: translateY(24px);
