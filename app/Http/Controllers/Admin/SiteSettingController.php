@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+use App\Models\Peserta;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
@@ -16,6 +17,8 @@ use App\Models\Timeline;
 use App\Models\InformasiPenting;
 use App\Models\PesertaSubmission;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+
+
 
 
 class SiteSettingController extends Controller
@@ -44,11 +47,17 @@ class SiteSettingController extends Controller
             ->toArray();
 
 
+        // Peserta Registrasi
+        $pesertaRegistrasi = Peserta::orderBy('created_at', 'desc')->get();
+
+
         // CMS Peserta
         $pesertaSubmissions = PesertaSubmission::latest()
         ->get();
 
 
+        // status di kelola registrasi cms admin
+        
         // LOMBA - ketentuan grouped per tab
         $lombaKetentuan = LombaKetentuanItem::query()
             ->orderBy('tab')
@@ -115,6 +124,7 @@ class SiteSettingController extends Controller
             'timelineItems',
             'informasiPentingItems',
             'pesertaSubmissions',
+            'pesertaRegistrasi',
         ));
     }
 
@@ -244,6 +254,19 @@ public function faqDestroy(Faq $faq)
     return redirect()->route('admin.site-settings.edit', ['tab' => 'faq'])
         ->with('success', 'FAQ berhasil dihapus!');
 }
+
+
+// status kelola register di cms admin
+public function updateStatus(Request $request, $id)
+{
+    $peserta = Peserta::findOrFail($id);
+
+    $peserta->status = $request->status;
+    $peserta->save();
+
+    return back()->with('success', 'Status berhasil diperbarui!');
+}
+
 
 
     // =========================================

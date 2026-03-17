@@ -188,6 +188,7 @@
 
           @php
             $tabs = [
+               ['key'=>'kelola-registrasi', 'label'=>'Kelola Registrasi', 'desc'=>'Aksi lolos/tidak lolos peserta'],
               ['key'=>'peserta-submission',        'label'=>'Kelola Peserta',    'desc'=>'Nama Tim & Anggota, Upload Karya, dan Upload Proposal'],
               ['key'=>'hero',        'label'=>'Beranda – Hero',    'desc'=>'Judul, subtitle, tombol, gambar'],
               ['key'=>'homeimg',     'label'=>'Beranda – Gambar',  'desc'=>'3 gambar konten beranda'],
@@ -308,6 +309,80 @@
         </div>
       </div>
 
+
+{{-- ===========================
+    TAB: KELOLA REGISTRASI
+============================ --}}
+<div x-show="tab==='kelola-registrasi'" x-cloak class="tab-content">
+  <div class="card">
+    <div class="card-title">Kelola Registrasi Peserta</div>
+    <div class="card-sub">Tentukan status lolos atau tidak lolos untuk setiap peserta yang mendaftar.</div>
+
+    <hr class="section-divider">
+
+    @if(session('success'))
+      <div class="flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-green-800 text-sm font-semibold mb-4">
+        <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+        {{ session('success') }}
+      </div>
+    @endif
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm" style="border-collapse:collapse;min-width:600px;">
+        <thead>
+          <tr style="background:#f8fafc;border-bottom:1.5px solid #e2e8f0;">
+            <th class="text-left px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Nama</th>
+            <th class="text-left px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Sekolah</th>
+            <th class="text-left px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Email</th>
+            <th class="text-left px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Tgl Daftar</th>
+            <th class="text-left px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Status</th>
+            <th class="text-left px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          @forelse($pesertaRegistrasi ?? collect() as $p)
+            <tr style="border-bottom:1px solid #f1f5f9;" class="hover:bg-slate-50 transition">
+              <td class="px-4 py-3 font-semibold text-slate-800">{{ $p->nama }}</td>
+              <td class="px-4 py-3 text-slate-600">{{ $p->sekolah }}</td>
+              <td class="px-4 py-3 text-slate-600">{{ $p->email }}</td>
+              <td class="px-4 py-3 text-slate-500 text-xs">{{ $p->created_at?->format('d M Y') }}</td>
+              <td class="px-4 py-3">
+                @if($p->status === 'pending')
+                  <span class="badge" style="background:#fef9c3;color:#854d0e;">Pending</span>
+                @elseif($p->status === 'lolos')
+                  <span class="badge badge-active">Lolos</span>
+                @else
+                  <span class="badge" style="background:#fee2e2;color:#991b1b;">Tidak Lolos</span>
+                @endif
+              </td>
+              <td class="px-4 py-3">
+                <form method="POST" action="{{ route('admin.peserta-registrasi.status', $p->id) }}" class="flex gap-2">
+                  @csrf
+                  @method('POST')
+                  <select name="status" class="field-input" style="width:auto;padding:0.35rem 0.75rem;font-size:0.78rem;">
+                    <option value="pending" {{ $p->status === 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="lolos" {{ $p->status === 'lolos' ? 'selected' : '' }}>Lolos</option>
+                    <option value="tidak_lolos" {{ $p->status === 'tidak_lolos' ? 'selected' : '' }}>Tidak Lolos</option>
+                  </select>
+                  <button type="submit" class="btn-primary" style="padding:0.35rem 0.9rem;font-size:0.78rem;">
+                    Simpan
+                  </button>
+                </form>
+              </td>
+            </tr>
+          @empty
+            <tr>
+              <td colspan="6" class="px-4 py-12 text-center">
+                <div class="text-slate-400 text-sm">Belum ada peserta yang mendaftar.</div>
+              </td>
+            </tr>
+          @endforelse
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
 
 {{-- ===========================
     TAB: PESERTA SUBMISSION

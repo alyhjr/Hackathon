@@ -11,6 +11,9 @@ use App\Models\Pengumuman;
 use App\Models\PengumumanGroup;
 use App\Http\Controllers\RegistrasiController;
 use App\Http\Controllers\PesertaSubmissionController;
+use App\Http\Controllers\PesertaAuthController;
+use App\Http\Controllers\Admin\PesertaRegistrasiController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -274,6 +277,27 @@ Route::prefix('admin')->name('admin.')->group(function () {
 require __DIR__.'/auth.php';
 
 
-/* CMS USER/PESERTA */
+/* CMS PESERTA */
 Route::get('/peserta-submission', [PesertaSubmissionController::class, 'create'])->name('peserta-submission.create');
 Route::post('/peserta-submission', [PesertaSubmissionController::class, 'store'])->name('peserta-submission.store');
+
+
+/* Registrasi */
+Route::get('/registrasi', [RegistrasiController::class, 'index'])->name('registrasi');
+Route::post('/registrasi/cek', [RegistrasiController::class, 'cek'])->name('registrasi.cek');
+Route::post('/registrasi/submit', [RegistrasiController::class, 'submit'])->name('registrasi.submit');
+
+
+/* Login Peserta */
+Route::get('/peserta/login', function () {
+    return view('pages.peserta-login');
+})->name('peserta.login');
+
+Route::post('/peserta/login', [PesertaAuthController::class, 'login'])->name('peserta.login.post');
+Route::post('/peserta/logout', [PesertaAuthController::class, 'logout'])->name('peserta.logout');
+
+/* CMS Admin halaman Registrasi Peserta */
+
+Route::post('/admin/peserta-registrasi/{id}/status', 
+    [SiteSettingController::class, 'updateStatus']
+)->name('admin.peserta-registrasi.status');
