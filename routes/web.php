@@ -10,6 +10,7 @@ use App\Models\LombaTahapanStep;
 use App\Models\Pengumuman;
 use App\Models\PengumumanGroup;
 use App\Http\Controllers\RegistrasiController;
+use App\Http\Controllers\PesertaSubmissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -183,6 +184,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('/site-settings', [SiteSettingController::class, 'update'])
         ->name('site-settings.update');
 
+
+    // PESERTA SUBMISSION/KELOLA PESERTA
+    Route::get('/peserta-submissions', [SiteSettingController::class, 'pesertaSubmissionIndex'])
+    ->name('site-settings.peserta-submissions');
+
+    Route::delete('/site-settings/peserta-submission/{pesertaSubmission}', [SiteSettingController::class, 'pesertaSubmissionDestroy'])
+        ->name('site-settings.peserta-submission.destroy');
+
+    Route::get('/site-settings/peserta-submission/export', [SiteSettingController::class, 'pesertaSubmissionExport'])
+        ->name('site-settings.peserta-submission.export');
+
+        
     /* FAQ CRUD */
     Route::post('/site-settings/faqs', [SiteSettingController::class, 'faqStore'])
         ->name('site-settings.faqs.store');
@@ -259,3 +272,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 |--------------------------------------------------------------------------
 */
 require __DIR__.'/auth.php';
+
+
+/* CMS USER/PESERTA */
+Route::get('/peserta-submission', [PesertaSubmissionController::class, 'create'])->name('peserta-submission.create');
+Route::post('/peserta-submission', [PesertaSubmissionController::class, 'store'])->name('peserta-submission.store');
