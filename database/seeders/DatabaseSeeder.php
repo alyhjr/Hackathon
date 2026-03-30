@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
             LombaSeeder::class,
             PengumumanSeeder::class,
             TimelineSeeder::class,
+            PesertaSeeder::class,
         ]);
     }
 }

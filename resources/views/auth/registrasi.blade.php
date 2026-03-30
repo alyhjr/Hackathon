@@ -254,7 +254,7 @@
       const nuptk    = document.getElementById('inp-nuptk').value.trim();
       const tglLahir = document.getElementById('inp-tgl').value;
 
-      const res = await fetch('{{ route("registrasi.store") }}', {
+      const res = await fetch('{{ route("registrasi.sumbit") }}', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
         body: JSON.stringify({
