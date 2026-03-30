@@ -1,142 +1,115 @@
-@extends('layouts.app')
+@extends('layouts.peserta')
 
 @section('content')
-<div class="min-h-screen flex items-center justify-center px-4 py-16 bg-sky-50">
-  <div class="w-full max-w-md">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{margin:0;}
+  .wrap{font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;background:#fff;display:flex;align-items:center;justify-content:center;padding:2rem;}
+  .card{background:#fff;border-radius:24px;width:100%;max-width:800px;display:flex;overflow:hidden;box-shadow:0 20px 60px rgba(21,88,168,0.13);border:1px solid #E8F0FE;}
+  .blob-side{width:280px;flex-shrink:0;position:relative;overflow:hidden;min-height:100%;}
+  .blob-side svg{position:absolute;top:0;left:0;width:100%;height:100%;}
+  .form-side{flex:1;padding:3rem 2.5rem;display:flex;flex-direction:column;justify-content:center;}
+  .f-title{font-size:22px;font-weight:700;color:#0F172A;margin-bottom:4px;}
+  .f-sub{font-size:13px;color:#94A3B8;margin-bottom:1.75rem;}
+  .field{margin-bottom:1rem;position:relative;}
+  .field label{display:block;font-size:11px;font-weight:700;color:#94A3B8;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:6px;}
+  .field input{width:100%;height:46px;border:none;border-radius:12px;background:#F1F5F9;padding:0 16px;font-size:14px;font-family:inherit;color:#0F172A;outline:none;transition:background 0.15s;}
+  .field input:focus{background:#E8F0FE;}
+  .field input::placeholder{color:#B0BEC5;}
+  .field-err{font-size:11px;color:#DC2626;margin-top:4px;}
+  .btn{width:100%;height:46px;border:none;border-radius:12px;background:linear-gradient(90deg,#1558A8,#1E90D6);color:#fff;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:1.5rem;letter-spacing:0.02em;transition:opacity 0.15s;}
+  .btn:hover{opacity:0.9;}
+  .btn-outline{width:100%;height:46px;border:1.5px solid #E8F0FE;border-radius:12px;background:#fff;color:#1558A8;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:0.75rem;transition:background 0.15s;}
+  .btn-outline:hover{background:#F0F7FF;}
+  .foot{text-align:center;font-size:12px;color:#94A3B8;margin-top:1.25rem;}
+  .foot a{color:#1558A8;font-weight:600;text-decoration:none;}
+  .alert-ok{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:10px 14px;margin-bottom:1.25rem;font-size:12px;color:#15803D;line-height:1.5;}
+  .alert-err{background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:10px 14px;margin-bottom:1.25rem;font-size:12px;color:#DC2626;line-height:1.5;}
+  .data-box{background:#F8FAFF;border-radius:12px;padding:14px 16px;margin-bottom:1rem;}
+  .data-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #EEF2F7;font-size:13px;}
+  .data-row:last-child{border-bottom:none;}
+  .data-row span:first-child{color:#94A3B8;}
+  .data-row span:last-child{color:#0F172A;font-weight:600;text-align:right;max-width:60%;}
+  .info-box{background:#EFF6FF;border:1px solid #DBEAFE;border-radius:10px;padding:10px 14px;font-size:12px;color:#1D4ED8;margin-bottom:1rem;line-height:1.6;}
+</style>
 
-    <div class="text-center mb-8">
-      <img src="{{ asset('image/header/kemendikdasmen.png') }}" alt="Kemendikdasmen" class="h-12 w-auto object-contain mx-auto mb-5" />
-      <h1 class="text-2xl font-extrabold text-slate-900">Registrasi Peserta</h1>
-      <p class="text-sm text-slate-500 mt-1">Masukkan NUPTK dan tanggal lahir untuk verifikasi data</p>
+<div class="wrap">
+  <div class="card">
+    <div class="blob-side">
+      <svg viewBox="0 0 280 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#1E90D6"/>
+            <stop offset="100%" style="stop-color:#0A2D6E"/>
+          </linearGradient>
+          <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#1558A8"/>
+            <stop offset="100%" style="stop-color:#1E90D6"/>
+          </linearGradient>
+        </defs>
+        <rect width="280" height="600" fill="url(#g1)"/>
+        <path d="M280 0 Q180 80 200 200 Q220 320 160 400 Q100 480 180 600 L280 600 Z" fill="url(#g2)" opacity="0.5"/>
+        <circle cx="200" cy="100" r="60" fill="rgba(255,255,255,0.08)"/>
+        <circle cx="230" cy="140" r="35" fill="rgba(255,255,255,0.06)"/>
+        <circle cx="160" cy="480" r="50" fill="rgba(255,255,255,0.07)"/>
+        <circle cx="200" cy="520" r="28" fill="rgba(255,255,255,0.05)"/>
+        <path d="M0 300 Q80 260 120 300 Q160 340 280 300 L280 600 L0 600 Z" fill="rgba(255,255,255,0.04)"/>
+      </svg>
     </div>
 
-    {{-- ALERT GAGAL --}}
-    @if(session('gagal'))
-      <div class="mb-5 flex items-start gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-100">
-        <svg class="w-4 h-4 text-red-500 mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/>
-        </svg>
-        <p class="text-sm text-red-600 font-medium">{{ session('gagal') }}</p>
-      </div>
-    @endif
+    <div class="form-side">
+      <div class="f-title">Registrasi Peserta</div>
+      <div class="f-sub">Verifikasi NUPTK dan tanggal lahir Anda</div>
 
-    {{-- FORM CEK NUPTK --}}
-    @if(!session('berhasil'))
-    <div class="bg-white rounded-2xl border border-sky-100 shadow-sm p-8">
-      <form method="POST" action="{{ route('registrasi.cek') }}">
-        @csrf
+      @if(session('gagal'))
+        <div class="alert-err">{{ session('gagal') }}</div>
+      @endif
 
-        <div class="mb-5">
-          <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">NUPTK</label>
-          <input
-            type="text"
-            name="nuptk"
-            maxlength="16"
-            placeholder="Masukkan 16 digit NUPTK"
-            value="{{ old('nuptk') }}"
-            class="w-full h-11 rounded-xl border-2 border-slate-100 bg-slate-50 px-4 text-sm text-slate-900 outline-none
-                   focus:border-sky-400 focus:bg-white transition-all duration-150
-                   {{ $errors->has('nuptk') ? 'border-red-300 bg-red-50' : '' }}"
-          />
-          @error('nuptk')
-            <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
-          @enderror
-        </div>
-
-        <div class="mb-6">
-          <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Tanggal Lahir</label>
-          <input
-            type="date"
-            name="tanggal_lahir"
-            value="{{ old('tanggal_lahir') }}"
-            class="w-full h-11 rounded-xl border-2 border-slate-100 bg-slate-50 px-4 text-sm text-slate-900 outline-none
-                   focus:border-sky-400 focus:bg-white transition-all duration-150
-                   {{ $errors->has('tanggal_lahir') ? 'border-red-300 bg-red-50' : '' }}"
-          />
-          @error('tanggal_lahir')
-            <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
-          @enderror
-        </div>
-
-        <button type="submit"
-          class="w-full h-12 rounded-xl text-sm font-bold text-white transition-all duration-150 active:scale-[0.98]"
-          style="background:linear-gradient(135deg,#0369a1,#0ea5e9); box-shadow:0 4px 16px rgba(3,105,161,0.3);"
-          onmouseover="this.style.transform='translateY(-1px)'"
-          onmouseout="this.style.transform='translateY(0)'">
-          Verifikasi Data
-        </button>
-
-      </form>
-    </div>
-    @endif
-
-    {{-- DATA MUNCUL SETELAH VERIFIKASI BERHASIL --}}
-    @if(session('berhasil') && session('peserta'))
-      @php $p = session('peserta') @endphp
-
-      <div class="bg-white rounded-2xl border border-sky-100 shadow-sm p-8">
-
-        {{-- Header sukses --}}
-        <div class="flex items-center gap-2 mb-6 pb-4 border-b border-slate-100">
-          <div class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center">
-            <svg class="w-4 h-4 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-            </svg>
+      @if(!session('berhasil'))
+        <form method="POST" action="{{ route('registrasi.cek') }}">
+          @csrf
+          <div class="field">
+            <label>NUPTK</label>
+            <input type="text" name="nuptk" value="{{ old('nuptk') }}" placeholder="16 digit NUPTK" maxlength="16" required>
+            @error('nuptk')<p class="field-err">{{ $message }}</p>@enderror
           </div>
-          <p class="text-sm font-bold text-green-600">Data ditemukan! Konfirmasi data Anda</p>
-        </div>
+          <div class="field">
+            <label>Tanggal Lahir</label>
+            <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" required>
+            @error('tanggal_lahir')<p class="field-err">{{ $message }}</p>@enderror
+          </div>
+          <button type="submit" class="btn">Verifikasi Data</button>
+        </form>
+      @endif
 
-        {{-- Data peserta --}}
-        <div class="space-y-3 mb-6">
-          @foreach([
-            'Nama Lengkap' => $p->nama,
-            'Sekolah'      => $p->sekolah,
-            'Email'        => $p->email,
-            'Kota'         => $p->kota,
-            'Provinsi'     => $p->provinsi,
-          ] as $label => $value)
-            <div class="flex justify-between items-center text-sm py-2 border-b border-slate-50">
-              <span class="text-slate-400 font-medium">{{ $label }}</span>
-              <span class="text-slate-900 font-semibold text-right max-w-[60%]">{{ $value ?? '-' }}</span>
-            </div>
-          @endforeach
+      @if(session('berhasil') && session('peserta'))
+        @php $p = session('peserta') @endphp
+        <div class="alert-ok">Data ditemukan! Silakan konfirmasi data di bawah.</div>
+        <div class="data-box">
+          <div class="data-row"><span>Nama</span><span>{{ $p->nama }}</span></div>
+          <div class="data-row"><span>Sekolah</span><span>{{ $p->sekolah }}</span></div>
+          <div class="data-row"><span>Email</span><span>{{ $p->email }}</span></div>
+          <div class="data-row"><span>Kota</span><span>{{ $p->kota ?? '-' }}</span></div>
+          <div class="data-row"><span>Provinsi</span><span>{{ $p->provinsi ?? '-' }}</span></div>
         </div>
-
-        {{-- Info password --}}
-        <div class="mb-6 px-4 py-3 rounded-xl bg-sky-50 border border-sky-100">
-          <p class="text-xs text-sky-700 font-medium">
-            💡 Password login Anda adalah tanggal lahir dengan format <strong>ddmmyyyy</strong>.
-            Contoh: lahir 15 Mei 1990 → password: <strong>15051990</strong>
-          </p>
+        <div class="info-box">
+          Password login: tanggal lahir format <strong>ddmmyyyy</strong><br>
+          Contoh: lahir 15 Mei 1990 → <strong>15051990</strong>
         </div>
-
-        {{-- Tombol konfirmasi --}}
         <form method="POST" action="{{ route('registrasi.submit') }}">
           @csrf
-          <button type="submit"
-            class="w-full h-12 rounded-xl text-sm font-bold text-white transition-all duration-150 active:scale-[0.98]"
-            style="background:linear-gradient(135deg,#0369a1,#0ea5e9); box-shadow:0 4px 16px rgba(3,105,161,0.3);"
-            onmouseover="this.style.transform='translateY(-1px)'"
-            onmouseout="this.style.transform='translateY(0)'">
-            Konfirmasi & Daftar Sekarang
-          </button>
+          <button type="submit" class="btn">Konfirmasi & Daftar</button>
         </form>
+        <a href="{{ route('registrasi') }}">
+          <button type="button" class="btn-outline">← Ulangi Verifikasi</button>
+        </a>
+      @endif
 
-        {{-- Link kembali --}}
-        <button
-          onclick="window.location='{{ route('registrasi') }}'"
-          class="w-full mt-3 h-10 rounded-xl text-sm font-semibold text-slate-500 hover:text-slate-700 transition">
-          ← Ulangi Verifikasi
-        </button>
-
+      <div class="foot">
+        Sudah punya akun? <a href="{{ route('login') }}">Login di sini</a>
       </div>
-    @endif
-
-    <p class="text-center text-xs text-slate-400 mt-6">
-      Sudah punya akun?
-      <a href="{{ route('login') }}" class="text-sky-600 font-semibold hover:text-sky-700 transition">Masuk di sini</a>
-    </p>
-
+    </div>
   </div>
 </div>
 @endsection
