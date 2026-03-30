@@ -127,7 +127,7 @@
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>
               </svg>
-              {{ Auth::user()->name }}
+              {{ Auth::user()->nama }}
               <svg class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 011.08 1.04l-4.25 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
               </svg>
@@ -209,7 +209,7 @@
         @endguest
 
         @auth
-          <div class="px-2 py-2 text-sm font-semibold text-slate-700">{{ Auth::user()->name }}</div>
+          <div class="px-2 py-2 text-sm font-semibold text-slate-700">{{ Auth::user()->nama }}</div>
           <form method="POST" action="{{ route('logout') }}" class="px-2">
             @csrf
             <button type="submit" class="text-sm text-red-600 font-semibold">Logout</button>
@@ -290,9 +290,11 @@
         </div>
       @endif
 
-      <form method="POST" action="{{ route('login') }}">
+      {{-- FORM LOGIN --}}
+      <form method="POST" action="{{ route('login') }}" id="loginForm">
         @csrf
 
+        {{-- Email --}}
         <div class="mb-4">
           <label for="modal_email" class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Email</label>
           <input
@@ -304,15 +306,9 @@
           />
         </div>
 
+        {{-- Password --}}
         <div class="mb-5">
-          <div class="flex items-center justify-between mb-2">
-            <label for="modal_password" class="block text-xs font-bold text-slate-500 uppercase tracking-widest">Kata Sandi</label>
-            @if(Route::has('password.request'))
-              <a href="{{ route('password.request') }}" class="text-xs font-semibold text-sky-500 hover:text-sky-600 transition">
-                Lupa kata sandi?
-              </a>
-            @endif
-          </div>
+          <label for="modal_password" class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Kata Sandi</label>
           <div class="relative">
             <input
               id="modal_password" type="password" name="password"
@@ -333,17 +329,59 @@
           </div>
         </div>
 
-        <div class="flex items-center gap-2 mb-6">
+        {{-- Remember Me --}}
+        <div class="flex items-center gap-2 mb-4">
           <input type="checkbox" id="modal_remember" name="remember"
             class="w-4 h-4 rounded border-slate-200 accent-sky-500 cursor-pointer" />
           <label for="modal_remember" class="text-sm text-slate-500 cursor-pointer select-none">Ingat saya</label>
         </div>
 
+        {{-- ===== CAPTCHA "I'm not a robot" ===== --}}
+        <div id="captchaBox"
+          onclick="doCaptcha()"
+          class="flex items-center gap-3 mb-5 px-4 py-3 rounded-xl border-2 border-slate-100 bg-slate-50 cursor-pointer select-none transition-all duration-200"
+          style="min-height:52px;">
+
+          {{-- Spinner (saat verifying) --}}
+          <div id="captchaSpinner" style="display:none;">
+            <svg class="animate-spin" style="width:20px;height:20px;color:#0ea5e9;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+            </svg>
+          </div>
+
+          {{-- Checkbox --}}
+          <div id="captchaCheckbox"
+            style="width:22px;height:22px;border:2px solid #cbd5e1;border-radius:3px;background:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .25s;">
+            <svg id="captchaCheck" style="display:none;width:13px;height:10px;" viewBox="0 0 13 10" fill="none">
+              <path d="M1.5 5L5 8.5L11.5 1.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+
+          {{-- Label --}}
+          <span id="captchaLabel" class="flex-1 text-sm font-medium text-slate-700">Saya bukan robot</span>
+
+          {{-- reCAPTCHA branding --}}
+          <div class="flex flex-col items-center gap-0.5 flex-shrink-0">
+            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#4285F4,#34A853,#FBBC05,#EA4335);display:flex;align-items:center;justify-content:center;">
+              <svg style="width:16px;height:16px;" viewBox="0 0 64 64" fill="none">
+                <path d="M32 8C18.7 8 8 18.7 8 32s10.7 24 24 24 24-10.7 24-24S45.3 8 32 8z" fill="white" opacity=".9"/>
+                <path d="M32 16c-8.8 0-16 7.2-16 16s7.2 16 16 16 16-7.2 16-16-7.2-16-16-16zm0 6c5.5 0 10 4.5 10 10s-4.5 10-10 10-10-4.5-10-10 4.5-10 10-10z" fill="#4285F4"/>
+              </svg>
+            </div>
+            <span style="font-size:8px;color:#94a3b8;line-height:1.2;text-align:center;">reCAPTCHA<br>Privasi · Syarat</span>
+          </div>
+        </div>
+        {{-- ===== END CAPTCHA ===== --}}
+
+        {{-- Tombol Masuk --}}
         <button type="submit"
-          class="w-full h-12 rounded-xl text-sm font-bold text-white transition-all duration-150 active:scale-[0.98]"
+          id="btnMasuk"
+          disabled
+          class="w-full h-12 rounded-xl text-sm font-bold text-white transition-all duration-150 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           style="background:linear-gradient(135deg,#0369a1,#0ea5e9); box-shadow:0 4px 16px rgba(3,105,161,0.3);"
-          onmouseover="this.style.boxShadow='0 6px 24px rgba(3,105,161,0.4)'; this.style.transform='translateY(-1px)'"
-          onmouseout="this.style.boxShadow='0 4px 16px rgba(3,105,161,0.3)'; this.style.transform='translateY(0)'">
+          onmouseover="if(!this.disabled){this.style.boxShadow='0 6px 24px rgba(3,105,161,0.4)'; this.style.transform='translateY(-1px)'}"
+          onmouseout="if(!this.disabled){this.style.boxShadow='0 4px 16px rgba(3,105,161,0.3)'; this.style.transform='translateY(0)'}">
           Masuk
         </button>
 
@@ -428,6 +466,24 @@
     from { opacity: 0; transform: scale(0.94) translateY(12px); }
     to   { opacity: 1; transform: scale(1) translateY(0); }
   }
+
+  /* ── Captcha hover ── */
+  #captchaBox:hover {
+    border-color: #7dd3fc !important;
+    background-color: #f0f9ff !important;
+  }
+  #captchaBox.captcha-verified {
+    border-color: #86efac !important;
+    background-color: #f0fdf4 !important;
+    cursor: default;
+  }
+
+  /* ── Spinner spin ── */
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  .animate-spin { animation: spin 0.7s linear infinite; }
 </style>
 
 {{-- ============================================================ --}}
@@ -489,6 +545,40 @@ function toggleModalPwd() {
     open.style.display = 'block';
     closed.style.display = 'none';
   }
+}
+
+/* ===== CAPTCHA ===== */
+var captchaDone = false;
+
+function doCaptcha() {
+  if (captchaDone) return;
+
+  var box      = document.getElementById('captchaBox');
+  var spinner  = document.getElementById('captchaSpinner');
+  var checkbox = document.getElementById('captchaCheckbox');
+  var check    = document.getElementById('captchaCheck');
+  var label    = document.getElementById('captchaLabel');
+  var btn      = document.getElementById('btnMasuk');
+
+  // Tampilkan spinner, sembunyikan checkbox
+  checkbox.style.display = 'none';
+  spinner.style.display  = 'block';
+  label.textContent      = 'Memverifikasi...';
+  box.style.cursor       = 'default';
+
+  setTimeout(function () {
+    // Selesai verifikasi
+    spinner.style.display      = 'none';
+    checkbox.style.display     = 'flex';
+    checkbox.style.background  = '#22c55e';
+    checkbox.style.borderColor = '#22c55e';
+    check.style.display        = 'block';
+    label.textContent          = 'Verifikasi berhasil';
+    box.classList.add('captcha-verified');
+
+    captchaDone  = true;
+    btn.disabled = false;
+  }, 1400);
 }
 
 document.addEventListener('keydown', function (e) {
