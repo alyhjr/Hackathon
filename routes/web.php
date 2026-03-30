@@ -274,6 +274,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
 | AUTH ROUTES (login user, logout, register, dll)
 |--------------------------------------------------------------------------
 */
+
+
+// Override login route untuk admin
+Route::get('/login', [AdminSessionController::class, 'create'])->name('login');
+Route::post('/login', [AdminSessionController::class, 'store']);
+
 require __DIR__.'/auth.php';
 
 
@@ -281,11 +287,10 @@ require __DIR__.'/auth.php';
 Route::get('/peserta-submission', [PesertaSubmissionController::class, 'create'])->name('peserta-submission.create');
 Route::post('/peserta-submission', [PesertaSubmissionController::class, 'store'])->name('peserta-submission.store');
 
-
-/* Registrasi */
+/* Regisasi */
 Route::get('/registrasi', [RegistrasiController::class, 'index'])->name('registrasi');
 Route::post('/registrasi/cek', [RegistrasiController::class, 'cek'])->name('registrasi.cek');
-Route::post('/registrasi/submit', [RegistrasiController::class, 'submit'])->name('registrasi.submit');
+Route::post('/registrasi/submit', [RegistrasiController::class, 'submit'])->name('registrasi.submit'); // ← pastikan ini ada
 
 
 /* Login Peserta */

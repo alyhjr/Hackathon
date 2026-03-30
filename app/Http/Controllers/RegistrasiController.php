@@ -9,7 +9,7 @@ class RegistrasiController extends Controller
 {
     public function index()
     {
-       return view('pages.registrasi');
+        return view('pages.registrasi');
     }
 
     public function cek(Request $request)
@@ -27,6 +27,10 @@ class RegistrasiController extends Controller
             return back()->with('gagal', 'NUPTK atau tanggal lahir tidak ditemukan dalam sistem.');
         }
 
+        if ($peserta->password !== null) {
+            return back()->with('gagal', 'NUPTK ini sudah terdaftar. Silakan login.');
+        }
+
         session(['peserta_id' => $peserta->id]);
 
         return back()->with('berhasil', true)->with('peserta', $peserta);
@@ -37,16 +41,21 @@ class RegistrasiController extends Controller
         $pesertaId = session('peserta_id');
 
         if (!$pesertaId) {
-            return redirect()->route('registrasi')->with('gagal', 'Sesi habis, silakan ulangi.');
+            return redirect()->route('registrasi')->with('gagal', 'Sesi habis, silakan ulangi verifikasi.');
         }
 
         $peserta = Peserta::findOrFail($pesertaId);
 
+        // Password otomatis = tanggal lahir format ddmmyyyy
         $password = \Carbon\Carbon::parse($peserta->tanggal_lahir)->format('dmY');
-        $peserta->update(['password' => bcrypt($password)]);
+
+        $peserta->update([
+            'password' => bcrypt($password),
+            'status'   => 'pending',
+        ]);
 
         session()->forget('peserta_id');
 
-        return redirect()->route('peserta.login')->with('status', 'Registrasi berhasil! Silakan login menggunakan email dan password tanggal lahir Anda (format: ddmmyyyy).');
+        return redirect()->route('login')->with('status', 'Registrasi berhasil! Silakan login menggunakan email dan password tanggal lahir Anda (format: ddmmyyyy).');
     }
 }
