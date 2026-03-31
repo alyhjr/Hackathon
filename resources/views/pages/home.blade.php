@@ -440,8 +440,11 @@
   transform: scale(1.3);
   background-color: #f0f9ff;
 }
+.tl-card * {
+  color: #ffffff !important;
+}
 .tl-card {
-  background-color: #f0f9ff;
+  background-color: #003049;
   border: 1px solid #7dd3fc;
   border-radius: 10px;
   padding: 10px 16px;
@@ -475,7 +478,7 @@
 </style>
 
   <div class="tl-heading text-center mb-10">
-    <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-900">
+    <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-9100">
       Timeline Kegiatan
     </h2>
     <p class="mt-3 text-xs text-slate-900 font-semibold">

@@ -10,7 +10,7 @@
   .blob-side{width:280px;flex-shrink:0;position:relative;overflow:hidden;min-height:420px;}
   .blob-side svg{position:absolute;top:0;left:0;width:100%;height:100%;}
   .form-side{flex:1;padding:3rem 2.5rem;display:flex;flex-direction:column;justify-content:center;}
-  .f-title{font-size:22px;font-weight:700;color:#0F172A;margin-bottom:4px;}
+  .f-title{font-size:30px;font:bold;font-weight:700;color:#0F172A;margin-bottom:4px;}
   .f-sub{font-size:13px;color:#94A3B8;margin-bottom:1.75rem;}
   .field{margin-bottom:1rem;position:relative;}
   .field label{display:block;font-size:11px;font-weight:700;color:#94A3B8;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:6px;}
