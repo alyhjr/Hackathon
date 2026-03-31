@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('content')
 
@@ -41,6 +41,7 @@
 
   .ps-header {
     margin-bottom: 1.8rem;
+    color: black;
   }
 
   .ps-eyebrow {
@@ -251,6 +252,28 @@
     margin-top: .4rem;
   }
 
+  /* FIX SCROLL FORM */
+.ps-content {
+  max-height: 75vh;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding-right: 6px;
+}
+
+/* biar scroll ga loncat pas klik input */
+.ps-content:focus-within {
+  scroll-behavior: smooth;
+}
+
+/* custom scrollbar biar lebih premium */
+.ps-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ps-content::-webkit-scrollbar-thumb {
+  background: #cbd5f5;
+  border-radius: 10px;
+}
   .ps-submit-wrap {
     margin-top: 1.5rem;
     display: flex;
@@ -357,7 +380,7 @@
 
         <button type="button" class="ps-menu-item" :class="{ 'active': tab === 'informasi' }" @click="tab='informasi'">
           <div class="ps-menu-title">Informasi</div>
-          <div class="ps-menu-sub">Informasi penting dari CMS admin</div>
+          <div class="ps-menu-sub">Informasi penting dari Panitia</div>
         </button>
 
         <button type="button" class="ps-menu-item" :class="{ 'active': tab === 'anggota' }" @click="tab='anggota'">
@@ -382,7 +405,6 @@
         {{-- Informasi --}}
         <div x-show="tab==='informasi'" x-cloak>
           <h2 class="ps-section-title">Informasi Penting</h2>
-          <p class="ps-section-desc">Informasi ini otomatis mengikuti konten yang dikelola pada CMS admin.</p>
 
           @forelse($infoItems as $item)
             <div class="ps-card">
@@ -449,10 +471,10 @@
           </div>
         </div>
 
-        <div class="ps-submit-wrap">
-          <button type="submit" class="ps-submit-btn">Kirim Submission</button>
-          <span class="ps-submit-note">Semua data tetap tersimpan ke submission peserta yang sama.</span>
-        </div>
+        <div class="ps-submit-wrap" x-show="tab !== 'informasi'" x-cloak>
+  <button type="submit" class="ps-submit-btn">Kirim Submission</button>
+  <span class="ps-submit-note">Semua data tetap tersimpan ke submission peserta yang sama.</span>
+</div>
       </div>
     </div>
   </form>

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title','CMS - Site Settings')
 
@@ -143,35 +143,126 @@
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
 
-  {{-- ===== PAGE HEADER ===== --}}
-  <div class="flex items-start justify-between gap-4 flex-col sm:flex-row mb-2">
-    <div>
-      <div class="text-xs font-bold tracking-widest text-slate-400 uppercase mb-1">Admin Panel</div>
-      <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">CMS Informasi Website</h1>
-      <p class="mt-1 text-sm text-slate-500">Kelola konten Beranda, FAQ, Timeline, Lomba, Pengumuman, dan navigasi.</p>
+{{-- ===== PAGE HEADER (PREMIUM + ACCOUNT PANEL) ===== --}}
+<div class="mb-5" x-data="{ openProfile: false }">
+
+  <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 
+              bg-white border border-slate-200 rounded-2xl px-6 py-5 shadow-sm">
+
+    {{-- LEFT --}}
+    <div class="flex items-center gap-4">
+
+      
+
+      {{-- TEXT --}}
+      <div>
+        <div class="text-[10px] font-semibold tracking-widest uppercase text-slate-800 mb-1">
+          Admin Panel
+        </div>
+
+        <h1 class="text-xl font-bold text-slate-900">
+          CMS Informasi Website
+        </h1>
+
+        <p class="text-sm text-slate-500">
+          Kelola konten website & data peserta
+        </p>
+      </div>
+
     </div>
 
-    {{-- Flash messages --}}
-    <div class="w-full sm:w-auto min-w-[260px]">
-      @if(session('success'))
-        <div class="flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-green-800 text-sm font-semibold">
-          <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-          {{ session('success') }}
-        </div>
-      @endif
+    {{-- RIGHT (ACCOUNT - ULTRA CLEAN) --}}
+<div class="relative" @click.away="openProfile=false">
 
-      @if($errors->any())
-        <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-800 text-sm">
-          <div class="font-bold mb-1">Ada error:</div>
-          <ul class="list-disc ml-5 space-y-0.5">
-            @foreach($errors->all() as $err)
-              <li>{{ $err }}</li>
-            @endforeach
-          </ul>
-        </div>
-      @endif
+  {{-- BUTTON --}}
+  <button @click="openProfile = !openProfile"
+    class="flex items-center justify-center w-10 h-10 rounded-full
+           hover:bg-slate-100/70 transition-all duration-200">
+
+    {{-- AVATAR --}}
+    <div class="w-9 h-9 rounded-full 
+                bg-gradient-to-br from-slate-400 to-slate-600 
+                flex items-center justify-center 
+                text-white text-sm font-medium">
+      A
     </div>
+
+  </button>
+
+
+  {{-- DROPDOWN --}}
+  <div x-show="openProfile"
+       x-transition:enter="transition ease-out duration-200"
+       x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+       x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+       x-transition:leave="transition ease-in duration-150"
+       x-transition:leave-start="opacity-100"
+       x-transition:leave-end="opacity-0 translate-y-1"
+
+    class="absolute right-0 mt-3 w-52 
+           bg-white/90 backdrop-blur-xl
+           border border-slate-200/50
+           rounded-xl shadow-lg
+           overflow-hidden z-50">
+
+    <div class="p-2">
+
+      <a href="#"
+        class="block px-3 py-2 rounded-lg text-sm text-slate-600
+               hover:bg-slate-100/70 transition">
+        Edit Profil
+      </a>
+
+      <a href="#"
+        class="block px-3 py-2 rounded-lg text-sm text-slate-600
+               hover:bg-slate-100/70 transition">
+        Ganti Password
+      </a>
+
+      <a href="#"
+        class="block px-3 py-2 rounded-lg text-sm text-slate-600
+               hover:bg-slate-100/70 transition">
+        Ganti Email
+      </a>
+
+    </div>
+
+    <form method="POST" action="{{ route('logout') }}">
+    @csrf
+    <button type="submit"
+        class="w-full text-left px-3 py-2 rounded-lg text-sm text-red-500 hover:bg-red-50 transition">
+        Logout
+    </button>
+</form>
+
   </div>
+
+</div>
+
+  </div>
+
+  {{-- SUCCESS --}}
+  @if(session('success'))
+    <div class="mt-3 flex items-center gap-2 rounded-xl border border-emerald-200 
+                bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+      {{ session('success') }}
+    </div>
+  @endif
+
+  {{-- ERROR --}}
+  @if($errors->any())
+    <div class="mt-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+      <div class="font-semibold mb-1">Ada error:</div>
+      <ul class="list-disc pl-5 space-y-0.5">
+        @foreach($errors->all() as $err)
+          <li>{{ $err }}</li>
+        @endforeach
+      </ul>
+    </div>
+  @endif
+
+</div>
+
 
   {{-- ===== MAIN LAYOUT ===== --}}
   <div class="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-6"
@@ -179,51 +270,124 @@
        x-init="$watch('tab', v => localStorage.setItem('cms_tab', v))">
 
     {{-- ===== SIDEBAR ===== --}}
-    <aside class="lg:col-span-3">
-      <div class="sticky top-6">
-        <div class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-          <div class="px-4 py-3 border-b border-slate-100 bg-slate-50">
-            <span class="text-[10px] font-black tracking-widest text-slate-400 uppercase">Menu CMS</span>
+<aside class="lg:col-span-3">
+  <div class="sticky top-6">
+    <div class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+
+     
+
+      @php
+        $menu = [
+          [
+            'title' => 'Peserta',
+            'items' => [
+              [
+                'key'=>'kelola-registrasi',
+                'label'=>'Kelola Registrasi',
+                'desc'=>'Aksi lolos/tidak lolos peserta'
+              ],
+              [
+                'key'=>'peserta-submission',
+                'label'=>'Kelola Peserta',
+                'desc'=>'Nama Tim, Anggota & Submission'
+              ],
+            ]
+          ],
+          [
+            'title' => 'Konten Website',
+            'items' => [
+              [
+                'key'=>'hero',
+                'label'=>'Beranda – Hero',
+                'desc'=>'Judul, subtitle, tombol'
+              ],
+              [
+                'key'=>'homeimg',
+                'label'=>'Beranda – Gambar',
+                'desc'=>'3 gambar beranda'
+              ],
+              [
+                'key'=>'informasi-penting',
+                'label'=>'Informasi Penting',
+                'desc'=>'Highlight info utama'
+              ],
+              [
+                'key'=>'lomba',
+                'label'=>'Lomba',
+                'desc'=>'Ketentuan & tahapan'
+              ],
+              [
+                'key'=>'pengumuman',
+                'label'=>'Pengumuman',
+                'desc'=>'Hasil & info lomba'
+              ],
+              [
+                'key'=>'timeline',
+                'label'=>'Timeline',
+                'desc'=>'Tahapan kegiatan'
+              ],
+              [
+                'key'=>'faq',
+                'label'=>'FAQ',
+                'desc'=>'Pertanyaan umum'
+              ],
+              [
+                'key'=>'youtube',
+                'label'=>'Beranda – YouTube',
+                'desc'=>'Embed video'
+              ],
+            ]
+          ]
+        ];
+      @endphp
+
+      {{-- NAV --}}
+      <nav class="p-2 space-y-3">
+
+        @foreach($menu as $section)
+
+          {{-- SECTION TITLE --}}
+          <div class="px-3 pt-2">
+            <div class="text-[10px] font-black tracking-widest text-slate-400 uppercase">
+              {{ $section['title'] }}
+            </div>
           </div>
 
-          @php
-            $tabs = [
-               ['key'=>'kelola-registrasi', 'label'=>'Kelola Registrasi', 'desc'=>'Aksi lolos/tidak lolos peserta'],
-              ['key'=>'peserta-submission',        'label'=>'Kelola Peserta',    'desc'=>'Nama Tim & Anggota, Upload Karya, dan Upload Proposal'],
-              ['key'=>'hero',        'label'=>'Beranda – Hero',    'desc'=>'Judul, subtitle, tombol, gambar'],
-              ['key'=>'homeimg',     'label'=>'Beranda – Gambar',  'desc'=>'3 gambar konten beranda'],
-              ['key'=>'informasi-penting',       'label'=>'Informasi Penting',             'desc'=>'Informasi Penting di Beranda'],
-              ['key'=>'lomba',       'label'=>'Lomba',             'desc'=>'Ketentuan & tahapan'],
-              ['key'=>'pengumuman',  'label'=>'Pengumuman',        'desc'=>'3 Besar & Lolos Proposal'],
-              ['key'=>'timeline',    'label'=>'Timeline',          'desc'=>'Tahapan timeline beranda'],
-              ['key'=>'faq',         'label'=>'FAQ',               'desc'=>'Pertanyaan & jawaban'],
-              ['key'=>'youtube',     'label'=>'Beranda – YouTube', 'desc'=>'2 link video embed'],
-            ];
-          @endphp
-
-          <nav class="p-2 space-y-0.5">
-            @foreach($tabs as $t)
+          {{-- MENU ITEMS --}}
+          <div class="space-y-0.5">
+            @foreach($section['items'] as $t)
               <button type="button"
                 class="w-full text-left rounded-lg px-3 py-2.5 transition-all group"
                 :class="tab === '{{ $t['key'] }}'
                   ? 'bg-[#0072BC] text-white shadow-sm'
                   : 'text-slate-700 hover:bg-slate-50'"
                 @click="tab='{{ $t['key'] }}'">
-                <div class="flex items-center gap-2.5">
-                  <div>
-                    <div class="text-sm font-bold leading-tight">{{ $t['label'] }}</div>
-                    <div class="text-[11px] mt-0.5 leading-tight"
-                         :class="tab === '{{ $t['key'] }}' ? 'text-white/70' : 'text-slate-400'">
-                      {{ $t['desc'] }}
-                    </div>
+
+                <div>
+                  <div class="text-sm font-bold leading-tight">
+                    {{ $t['label'] }}
+                  </div>
+
+                  <div class="text-[11px] mt-0.5 leading-tight"
+                    :class="tab === '{{ $t['key'] }}'
+                      ? 'text-white/70'
+                      : 'text-slate-400'">
+                    {{ $t['desc'] }}
                   </div>
                 </div>
+
               </button>
             @endforeach
-          </nav>
-        </div>
-      </div>
-    </aside>
+          </div>
+
+        @endforeach
+
+      </nav>
+
+    </div>
+  </div>
+</aside>
+
 
     {{-- ===== CONTENT AREA ===== --}}
     <section class="lg:col-span-9 space-y-5">

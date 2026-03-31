@@ -725,7 +725,7 @@
               Berbagi informasi dan pedoman resmi untuk mendukung partisipasi Anda.
             </p>
             <p class="mt-2 text-sm font-bold text-slate-900 leading-relaxed">
-              Akses pedoman resmi dan informasi penting lainnya di sini, ya!
+              Akses pedoman resmi dan informasi lainnya di sini, ya!
             </p>
             <a href="https://drive.google.com/file/d/1LuQ8j2MEuPMePAEccTWSw-7OQaS5GAyS/view"
                target="_blank" rel="noopener noreferrer"

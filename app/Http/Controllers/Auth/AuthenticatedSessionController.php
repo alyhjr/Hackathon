@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
+
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -34,14 +35,14 @@ class AuthenticatedSessionController extends Controller
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): RedirectResponse
-    {
-        Auth::guard('web')->logout();
 
-        $request->session()->invalidate();
+public function destroy(Request $request)
+{
+    Auth::guard('web')->logout();
 
-        $request->session()->regenerateToken();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
 
-        return redirect('/');
-    }
+    return redirect('/'); // ⬅️ INI PENTING
+}
 }

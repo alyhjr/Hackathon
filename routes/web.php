@@ -306,3 +306,7 @@ Route::post('/peserta/logout', [PesertaAuthController::class, 'logout'])->name('
 Route::post('/admin/peserta-registrasi/{id}/status', 
     [SiteSettingController::class, 'updateStatus']
 )->name('admin.peserta-registrasi.status');
+
+
+/* logout di CMS Admin ke Halaman Home */
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
