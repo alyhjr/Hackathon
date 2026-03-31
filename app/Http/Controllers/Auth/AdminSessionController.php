@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 use PragmaRX\Google2FA\Google2FA;
@@ -23,7 +24,7 @@ class AdminSessionController extends Controller
     }
 
     // =============================================
-    // STEP 1: Proses login (email + password + robot check)
+    // STEP 1: Proses login (email + password + reCAPTCHA)
     // =============================================
     public function store(Request $request): RedirectResponse
     {
@@ -32,11 +33,24 @@ class AdminSessionController extends Controller
             'password' => 'required',
         ]);
 
-        // Cek robot checkbox
-        if ($request->robot_checked !== '1') {
+        // Verifikasi reCAPTCHA
+        $captchaToken = $request->input('g-recaptcha-response');
+        if (!$captchaToken) {
             return back()
                 ->withInput(['email' => $request->email])
-                ->with('error', 'Centang verifikasi "Saya bukan robot" terlebih dahulu.');
+                ->with('captcha_error', 'Centang verifikasi "Saya bukan robot" terlebih dahulu.');
+        }
+
+        $captchaVerify = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+            'secret'   => config('services.recaptcha.secret'),
+            'response' => $captchaToken,
+            'remoteip' => $request->ip(),
+        ]);
+
+        if (!$captchaVerify->json('success')) {
+            return back()
+                ->withInput(['email' => $request->email])
+                ->with('captcha_error', 'Verifikasi reCAPTCHA gagal. Coba lagi.');
         }
 
         // Cek email & password
@@ -121,7 +135,7 @@ class AdminSessionController extends Controller
         Session::forget(['2fa_user_id', '2fa_email']);
 
         return redirect()->intended(route('admin.site-settings.edit'))
-                         ->with('success', '✅ Google Authenticator berhasil diaktifkan!');
+                         ->with('success', 'Google Authenticator berhasil diaktifkan!');
     }
 
     // =============================================
@@ -136,7 +150,7 @@ class AdminSessionController extends Controller
         $email  = Session::get('2fa_email', '');
         $masked = $this->maskEmail($email);
 
-        return view('admin.verify_2fa', ['masked_email' => $masked]);
+        return view('admin.verify2fa', ['masked_email' => $masked]);
     }
 
     public function processVerify(Request $request)
@@ -162,7 +176,7 @@ class AdminSessionController extends Controller
         Session::forget(['2fa_user_id', '2fa_email']);
 
         return redirect()->intended(route('admin.site-settings.edit'))
-                         ->with('success', '✅ Selamat datang, ' . $user->name . '!');
+                         ->with('success', 'Selamat datang, ' . $user->name . '!');
     }
 
     // =============================================

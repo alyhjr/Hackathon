@@ -386,8 +386,8 @@
         <button type="submit"
           id="btnMasuk"
           disabled
-          class="w-full h-12 rounded-xl text-sm font-bold text-white transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:transform-none"
-          style="background: linear-gradient(135deg, #64B5F6, #2196F3); box-shadow: 0 4px 16px rgba(33,150,243,0.3);"
+          class="w-full h-12 rounded-xl text-sm font-bold text-white transition-all duration-150 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+          style="background: linear-gradient(135deg,#1565C0,#1e88e5); box-shadow:0 4px 16px rgba(21,101,192,0.35);"
           onmouseover="if(!this.disabled){this.style.boxShadow='0 6px 24px rgba(21,101,192,0.45)'; this.style.transform='translateY(-1px)'}"
           onmouseout="if(!this.disabled){this.style.boxShadow='0 4px 16px rgba(21,101,192,0.35)'; this.style.transform='translateY(0)'}">
           Masuk
@@ -584,8 +584,6 @@ function doCaptcha() {
 
     captchaDone  = true;
     btn.disabled = false;
-    btn.style.background  = 'linear-gradient(135deg, #1565C0, #1e88e5)';
-    btn.style.boxShadow   = '0 4px 16px rgba(21,101,192,0.35)';
   }, 1400);
 }
 
