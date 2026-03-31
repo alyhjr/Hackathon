@@ -251,25 +251,33 @@
 >
   <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md"></div>
 
-  <div class="relative w-full max-w-sm bg-white rounded-3xl shadow-[0_32px_80px_rgba(0,0,0,0.18)] overflow-hidden"
-       style="animation: modalPop 0.25s cubic-bezier(0.34,1.56,0.64,1) both;">
+  <div class="relative w-full max-w-3xl bg-white rounded-3xl shadow-[0_32px_80px_rgba(0,0,0,0.18)] overflow-hidden flex"
+       style="min-height:420px; animation: modalPop 0.25s cubic-bezier(0.34,1.56,0.64,1) both;">
 
-    <button type="button" onclick="closeLoginModal()"
-      class="absolute top-5 right-5 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 transition"
-      aria-label="Tutup">
-      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-        <path d="M18 6 6 18M6 6l12 12"/>
-      </svg>
-    </button>
+    {{-- LEFT PANEL --}}
+    <div class="hidden md:flex w-2/5 flex-col justify-center items-center relative overflow-hidden"
+         style="background: linear-gradient(160deg, #1a6bb5 0%, #2196F3 55%, #64B5F6 100%);">
+      <div style="position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,0.10);top:-80px;left:-80px;"></div>
+      <div style="position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.10);top:80px;left:40px;"></div>
+      <div style="position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,0.10);bottom:-90px;left:10px;"></div>
+      <div style="position:absolute;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,0.08);bottom:80px;right:-40px;"></div>
+      <div style="position:absolute;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.07);top:30px;right:20px;"></div>
+    </div>
 
-    <div class="px-8 pt-8 pb-9">
+    {{-- RIGHT PANEL --}}
+    <div class="flex-1 px-10 py-10 flex flex-col justify-center">
+
+      <button type="button" onclick="closeLoginModal()"
+        class="absolute top-5 right-5 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 transition"
+        aria-label="Tutup">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M18 6 6 18M6 6l12 12"/>
+        </svg>
+      </button>
 
       <div class="mb-7">
-        <img src="{{ asset('image/header/kemendikdasmen.png') }}"
-             alt="Kemendikdasmen"
-             class="h-8 w-auto object-contain mb-5" />
-        <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Selamat datang</h2>
-        <p class="text-sm text-slate-400 mt-1 font-medium">Masuk ke Hackathon Rumah Pendidikan 2026</p>
+        <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Login Peserta</h2>
+        <p class="text-sm text-slate-400 mt-1 font-medium">Masuk ke akun peserta Hackathon Rumah Pendidikan</p>
       </div>
 
       @if($errors->any())
@@ -378,10 +386,10 @@
         <button type="submit"
           id="btnMasuk"
           disabled
-          class="w-full h-12 rounded-xl text-sm font-bold text-white transition-all duration-150 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-          style="background:linear-gradient(135deg,#0369a1,#0ea5e9); box-shadow:0 4px 16px rgba(3,105,161,0.3);"
-          onmouseover="if(!this.disabled){this.style.boxShadow='0 6px 24px rgba(3,105,161,0.4)'; this.style.transform='translateY(-1px)'}"
-          onmouseout="if(!this.disabled){this.style.boxShadow='0 4px 16px rgba(3,105,161,0.3)'; this.style.transform='translateY(0)'}">
+          class="w-full h-12 rounded-xl text-sm font-bold text-white transition-all duration-200 active:scale-[0.98] disabled:cursor-not-allowed disabled:transform-none"
+          style="background: linear-gradient(135deg, #64B5F6, #2196F3); box-shadow: 0 4px 16px rgba(33,150,243,0.3);"
+          onmouseover="if(!this.disabled){this.style.boxShadow='0 6px 24px rgba(21,101,192,0.45)'; this.style.transform='translateY(-1px)'}"
+          onmouseout="if(!this.disabled){this.style.boxShadow='0 4px 16px rgba(21,101,192,0.35)'; this.style.transform='translateY(0)'}">
           Masuk
         </button>
 
@@ -560,14 +568,12 @@ function doCaptcha() {
   var label    = document.getElementById('captchaLabel');
   var btn      = document.getElementById('btnMasuk');
 
-  // Tampilkan spinner, sembunyikan checkbox
   checkbox.style.display = 'none';
   spinner.style.display  = 'block';
   label.textContent      = 'Memverifikasi...';
   box.style.cursor       = 'default';
 
   setTimeout(function () {
-    // Selesai verifikasi
     spinner.style.display      = 'none';
     checkbox.style.display     = 'flex';
     checkbox.style.background  = '#22c55e';
@@ -578,6 +584,8 @@ function doCaptcha() {
 
     captchaDone  = true;
     btn.disabled = false;
+    btn.style.background  = 'linear-gradient(135deg, #1565C0, #1e88e5)';
+    btn.style.boxShadow   = '0 4px 16px rgba(21,101,192,0.35)';
   }, 1400);
 }
 
