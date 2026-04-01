@@ -138,7 +138,7 @@
                         group-focus-within:opacity-100 group-focus-within:visible group-focus-within:translate-y-0
                         transition-all duration-200">
               <div class="w-48 rounded-xl bg-white border border-slate-200 shadow-md overflow-hidden">
-                <a href="{{ route('dashboard') }}" class="dropdown-item flex items-center gap-2 px-4 py-3 text-sm text-slate-700 hover:bg-sky-50 hover:text-sky-700 transition-colors duration-150">
+               <a href="{{ route('peserta-submission.create') }}" class="dropdown-item flex items-center gap-2 px-4 py-3 text-sm text-slate-700 hover:bg-sky-50 hover:text-sky-700 transition-colors duration-150">
                   <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
                   Dashboard
                 </a>
@@ -299,7 +299,7 @@
       @endif
 
       {{-- FORM LOGIN --}}
-      <form method="POST" action="{{ route('login') }}" id="loginForm">
+      <form method="POST" action="{{ route('peserta.login.post') }}" id="loginForm">
         @csrf
 
         {{-- Email --}}

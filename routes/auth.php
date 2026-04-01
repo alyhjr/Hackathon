@@ -16,7 +16,7 @@ Route::middleware('guest')->group(function () {
     Route::get('login', function () {
         return view('pages.peserta-login');
     })->name('login');
-    Route::post('login', [PesertaAuthController::class, 'login']);
+    Route::post('login', [PesertaAuthController::class, 'login'])->name('login.post');
 
     // Forgot & Reset Password
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
