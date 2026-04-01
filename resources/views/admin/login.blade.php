@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Login — Kemendikdasmen</title>
+<title>Admin Login</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script src="https://www.google.com/recaptcha/api.js?hl=id"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#020817;--border:rgba(255,255,255,.08);--blue:#1d6fff;}
@@ -65,7 +65,11 @@ input::placeholder{color:#bbb}
     <div class="alert">{{ session('error') }}</div>
     @endif
 
-    <form method="POST" action="{{ route('admin.login') }}">
+    @if(session('captcha_error'))
+    <div class="alert">{{ session('captcha_error') }}</div>
+    @endif
+
+    <form method="POST" action="{{ route('admin.login.post') }}">
     @csrf
 
     <div class="field">
@@ -88,14 +92,12 @@ input::placeholder{color:#bbb}
       <a href="#" class="forgot">Lupa password?</a>
     </div>
 
-    {{-- reCAPTCHA v2 --}}
     <div class="captcha-wrap">
       <div class="g-recaptcha"
-           data-sitekey="{{ config('services.recaptcha.key') }}">
+           data-sitekey="{{ config('services.recaptcha.key') }}"
+           data-theme="light"
+           data-size="normal">
       </div>
-      @if(session('captcha_error'))
-      <div class="err">{{ session('captcha_error') }}</div>
-      @endif
     </div>
 
     <button type="submit" class="btn">Masuk</button>

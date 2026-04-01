@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\AdminSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
@@ -18,16 +17,6 @@ Route::middleware('guest')->group(function () {
         return view('pages.peserta-login');
     })->name('login');
     Route::post('login', [PesertaAuthController::class, 'login']);
-
-    // 2FA Admin
-    Route::get('admin/2fa/setup', [AdminSessionController::class, 'showSetup'])
-        ->name('admin.2fa.setup');
-    Route::post('admin/2fa/setup', [AdminSessionController::class, 'confirmSetup'])
-        ->name('admin.2fa.confirm');
-    Route::get('admin/2fa/verify', [AdminSessionController::class, 'showVerify'])
-        ->name('admin.2fa.verify');
-    Route::post('admin/2fa/verify', [AdminSessionController::class, 'processVerify'])
-        ->name('admin.2fa.process');
 
     // Forgot & Reset Password
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
@@ -55,6 +44,6 @@ Route::middleware('auth')->group(function () {
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
     Route::put('password', [PasswordController::class, 'update'])
         ->name('password.update');
-    Route::post('logout', [AdminSessionController::class, 'destroy'])
+    Route::post('logout', [PesertaAuthController::class, 'logout'])
         ->name('logout');
 });
