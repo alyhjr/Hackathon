@@ -207,12 +207,7 @@
 
     <div class="p-2">
 
-      <a href="#"
-        class="block px-3 py-2 rounded-lg text-sm text-slate-600
-               hover:bg-slate-100/70 transition">
-        Edit Profil
-      </a>
-
+    
       <a href="#"
         class="block px-3 py-2 rounded-lg text-sm text-slate-600
                hover:bg-slate-100/70 transition">

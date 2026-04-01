@@ -181,3 +181,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
 |--------------------------------------------------------------------------
 */
 require __DIR__.'/auth.php';
+
+/*
+|--------------------------------------------------------------------------
+| admin
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\AdminProfileController;
+
+Route::middleware('auth')->group(function () {
+    Route::post('/admin/ganti-password', [AdminProfileController::class, 'gantiPassword'])->name('admin.ganti-password');
+    Route::post('/admin/ganti-email', [AdminProfileController::class, 'gantiEmail'])->name('admin.ganti-email');
+});
