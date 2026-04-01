@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title','CMS - Site Settings')
+@section('title','CMS Admin')
 
 @section('content')
 <style>

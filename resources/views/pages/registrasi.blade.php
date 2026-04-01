@@ -2,18 +2,18 @@
 
 @section('content')
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
   *{box-sizing:border-box;margin:0;padding:0;}
   body{margin:0;}
-  .wrap{font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;background:#fff;display:flex;align-items:center;justify-content:center;padding:2rem;}
+  .wrap{font-family:'Poppins',sans-serif;min-height:100vh;background:#fff;display:flex;align-items:center;justify-content:center;padding:2rem;}
   .card{background:#fff;border-radius:24px;width:100%;max-width:800px;display:flex;overflow:hidden;box-shadow:0 20px 60px rgba(21,88,168,0.13);border:1px solid #E8F0FE;}
   .blob-side{width:280px;flex-shrink:0;position:relative;overflow:hidden;min-height:100%;}
   .blob-side svg{position:absolute;top:0;left:0;width:100%;height:100%;}
   .form-side{flex:1;padding:3rem 2.5rem;display:flex;flex-direction:column;justify-content:center;}
   .f-title{font-size:30px;font:bold;font-weight:700;color:#0F172A;margin-bottom:4px;}
-  .f-sub{font-size:13px;color:#94A3B8;margin-bottom:1.75rem;}
+  .f-sub{font-size:13px;color:black;margin-bottom:1.75rem;font:bold;}
   .field{margin-bottom:1rem;position:relative;}
-  .field label{display:block;font-size:11px;font-weight:700;color:#94A3B8;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:6px;}
+  .field label{display:block;font-size:11px;font-weight:700;color:black;letter-spacing:0.07em;text-transform:uppercase;margin-bottom:6px;}
   .field input{width:100%;height:46px;border:none;border-radius:12px;background:#F1F5F9;padding:0 16px;font-size:14px;font-family:inherit;color:#0F172A;outline:none;transition:background 0.15s;}
   .field input:focus{background:#E8F0FE;}
   .field input::placeholder{color:#B0BEC5;}
@@ -22,7 +22,7 @@
   .btn:hover{opacity:0.9;}
   .btn-outline{width:100%;height:46px;border:1.5px solid #E8F0FE;border-radius:12px;background:#fff;color:#1558A8;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:0.75rem;transition:background 0.15s;}
   .btn-outline:hover{background:#F0F7FF;}
-  .foot{text-align:center;font-size:12px;color:#94A3B8;margin-top:1.25rem;}
+  .foot{text-align:center;font-size:12px;color:black;margin-top:1.25rem;}
   .foot a{color:#1558A8;font-weight:600;text-decoration:none;}
   .alert-ok{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:10px 14px;margin-bottom:1.25rem;font-size:12px;color:#15803D;line-height:1.5;}
   .alert-err{background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:10px 14px;margin-bottom:1.25rem;font-size:12px;color:#DC2626;line-height:1.5;}

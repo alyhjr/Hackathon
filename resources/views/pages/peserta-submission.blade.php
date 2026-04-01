@@ -1,4 +1,6 @@
-@extends('layouts.admin')
+@extends('layouts.peserta')
+
+@section('title', 'CMS Peserta')
 
 @section('content')
 
@@ -64,7 +66,8 @@
   .ps-desc {
     margin: 0;
     font-size: .92rem;
-    color: var(--pf-text-3);
+    color: black;
+    font: bold;
   }
 
   .ps-alert {
@@ -131,7 +134,7 @@
     font-weight: 800;
     letter-spacing: .12em;
     text-transform: uppercase;
-    color: var(--pf-text-4);
+    color: black;
     margin: .2rem 0 1rem;
     padding: 0 .3rem;
   }
@@ -205,7 +208,8 @@
   .ps-card-text {
     font-size: .9rem;
     line-height: 1.8;
-    color: var(--pf-text-2);
+    color: black;
+    font: bold;
   }
 
   .ps-block {
