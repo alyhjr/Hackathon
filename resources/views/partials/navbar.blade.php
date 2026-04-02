@@ -276,9 +276,9 @@
       </button>
 
       <div class="mb-7">
-        <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Login Peserta</h2>
-        <p class="text-sm text-slate-400 mt-1 font-medium">Masuk ke akun peserta Hackathon Rumah Pendidikan</p>
-      </div>
+  <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight" style="font-family:'Plus Jakarta Sans',sans-serif;">Login Peserta</h2>
+  <p class="text-sm mt-1 font-medium" style="font-family:'Plus Jakarta Sans',sans-serif;color:#000;">Masuk ke akun peserta Hackathon Rumah Pendidikan</p>
+</div>
 
       @if($errors->any())
         <div class="mb-5 flex items-start gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-100">
@@ -303,27 +303,27 @@
         @csrf
 
         {{-- Email --}}
-        <div class="mb-4">
-          <label for="modal_email" class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Email</label>
-          <input
-            id="modal_email" type="email" name="email"
-            value="{{ old('email') }}" required autofocus
-            placeholder="nama@email.com"
-            class="w-full h-11 rounded-xl border-2 bg-slate-50 px-4 text-sm text-slate-900 placeholder-slate-300 outline-none transition-all duration-150
-                   {{ $errors->has('email') ? 'border-red-300 bg-red-50' : 'border-slate-100 focus:border-sky-400 focus:bg-white focus:shadow-[0_0_0_4px_rgba(56,189,248,0.1)]' }}"
-          />
-        </div>
+<div class="mb-4">
+  <label for="modal_email" class="block text-xs font-bold uppercase tracking-widest mb-2" style="font-family:'Plus Jakarta Sans',sans-serif;color:#000;font-size:11px;">Email</label>
+  <input
+    id="modal_email" type="email" name="email"
+    value="{{ old('email') }}" required autofocus
+    placeholder="nama@email.com"
+    class="w-full h-11 rounded-xl border-2 bg-slate-50 px-4 text-sm text-slate-900 placeholder-slate-300 outline-none transition-all duration-150
+           {{ $errors->has('email') ? 'border-red-300 bg-red-50' : 'border-slate-100 focus:border-sky-400 focus:bg-white focus:shadow-[0_0_0_4px_rgba(56,189,248,0.1)]' }}"
+  />
+</div>
 
-        {{-- Password --}}
-        <div class="mb-5">
-          <label for="modal_password" class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Kata Sandi</label>
-          <div class="relative">
-            <input
-              id="modal_password" type="password" name="password"
-              required placeholder="••••••••"
-              class="w-full h-11 rounded-xl border-2 bg-slate-50 px-4 pr-11 text-sm text-slate-900 placeholder-slate-300 outline-none transition-all duration-150
-                     {{ $errors->has('password') ? 'border-red-300 bg-red-50' : 'border-slate-100 focus:border-sky-400 focus:bg-white focus:shadow-[0_0_0_4px_rgba(56,189,248,0.1)]' }}"
-            />
+       {{-- Password --}}
+<div class="mb-5">
+  <label for="modal_password" class="block font-bold uppercase tracking-widest mb-2" style="font-family:'Plus Jakarta Sans',sans-serif;color:#000;font-size:11px;letter-spacing:0.07em;">PASSWORD</label>
+  <div class="relative">
+    <input
+      id="modal_password" type="password" name="password"
+      required placeholder="••••••••"
+      class="w-full h-11 rounded-xl border-2 bg-slate-50 px-4 pr-11 text-sm text-slate-900 placeholder-slate-300 outline-none transition-all duration-150
+             {{ $errors->has('password') ? 'border-red-300 bg-red-50' : 'border-slate-100 focus:border-sky-400 focus:bg-white focus:shadow-[0_0_0_4px_rgba(56,189,248,0.1)]' }}"
+    />
             <button type="button" onclick="toggleModalPwd()"
               class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500 transition">
               <svg id="modalEyeOpen" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -341,43 +341,15 @@
         <div class="flex items-center gap-2 mb-4">
           <input type="checkbox" id="modal_remember" name="remember"
             class="w-4 h-4 rounded border-slate-200 accent-sky-500 cursor-pointer" />
-          <label for="modal_remember" class="text-sm text-slate-500 cursor-pointer select-none">Ingat saya</label>
+          <label for="modal_remember" class="text-sm text-slate-900 cursor-pointer select-none">Ingat saya</label>
         </div>
 
-        {{-- ===== CAPTCHA "I'm not a robot" ===== --}}
-        <div id="captchaBox"
-          onclick="doCaptcha()"
-          class="flex items-center gap-3 mb-5 px-4 py-3 rounded-xl border-2 border-slate-100 bg-slate-50 cursor-pointer select-none transition-all duration-200"
-          style="min-height:52px;">
-
-          {{-- Spinner (saat verifying) --}}
-          <div id="captchaSpinner" style="display:none;">
-            <svg class="animate-spin" style="width:20px;height:20px;color:#0ea5e9;" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
-            </svg>
-          </div>
-
-          {{-- Checkbox --}}
-          <div id="captchaCheckbox"
-            style="width:22px;height:22px;border:2px solid #cbd5e1;border-radius:3px;background:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .25s;">
-            <svg id="captchaCheck" style="display:none;width:13px;height:10px;" viewBox="0 0 13 10" fill="none">
-              <path d="M1.5 5L5 8.5L11.5 1.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-
-          {{-- Label --}}
-          <span id="captchaLabel" class="flex-1 text-sm font-medium text-slate-700">Saya bukan robot</span>
-
-          {{-- reCAPTCHA branding --}}
-          <div class="flex flex-col items-center gap-0.5 flex-shrink-0">
-            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#4285F4,#34A853,#FBBC05,#EA4335);display:flex;align-items:center;justify-content:center;">
-              <svg style="width:16px;height:16px;" viewBox="0 0 64 64" fill="none">
-                <path d="M32 8C18.7 8 8 18.7 8 32s10.7 24 24 24 24-10.7 24-24S45.3 8 32 8z" fill="white" opacity=".9"/>
-                <path d="M32 16c-8.8 0-16 7.2-16 16s7.2 16 16 16 16-7.2 16-16-7.2-16-16-16zm0 6c5.5 0 10 4.5 10 10s-4.5 10-10 10-10-4.5-10-10 4.5-10 10-10z" fill="#4285F4"/>
-              </svg>
-            </div>
-            <span style="font-size:8px;color:#94a3b8;line-height:1.2;text-align:center;">reCAPTCHA<br>Privasi · Syarat</span>
+        {{-- ===== CAPTCHA GOOGLE reCAPTCHA v2 ===== --}}
+        <div class="mb-5">
+          <div class="g-recaptcha"
+            data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"
+            data-callback="onCaptchaSuccess"
+            data-expired-callback="onCaptchaExpired">
           </div>
         </div>
         {{-- ===== END CAPTCHA ===== --}}
@@ -474,29 +446,12 @@
     from { opacity: 0; transform: scale(0.94) translateY(12px); }
     to   { opacity: 1; transform: scale(1) translateY(0); }
   }
-
-  /* ── Captcha hover ── */
-  #captchaBox:hover {
-    border-color: #7dd3fc !important;
-    background-color: #f0f9ff !important;
-  }
-  #captchaBox.captcha-verified {
-    border-color: #86efac !important;
-    background-color: #f0fdf4 !important;
-    cursor: default;
-  }
-
-  /* ── Spinner spin ── */
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-  }
-  .animate-spin { animation: spin 0.7s linear infinite; }
 </style>
 
 {{-- ============================================================ --}}
 {{-- SCRIPTS                                                       --}}
 {{-- ============================================================ --}}
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
 (function () {
   var pages = [
@@ -556,35 +511,11 @@ function toggleModalPwd() {
 }
 
 /* ===== CAPTCHA ===== */
-var captchaDone = false;
-
-function doCaptcha() {
-  if (captchaDone) return;
-
-  var box      = document.getElementById('captchaBox');
-  var spinner  = document.getElementById('captchaSpinner');
-  var checkbox = document.getElementById('captchaCheckbox');
-  var check    = document.getElementById('captchaCheck');
-  var label    = document.getElementById('captchaLabel');
-  var btn      = document.getElementById('btnMasuk');
-
-  checkbox.style.display = 'none';
-  spinner.style.display  = 'block';
-  label.textContent      = 'Memverifikasi...';
-  box.style.cursor       = 'default';
-
-  setTimeout(function () {
-    spinner.style.display      = 'none';
-    checkbox.style.display     = 'flex';
-    checkbox.style.background  = '#22c55e';
-    checkbox.style.borderColor = '#22c55e';
-    check.style.display        = 'block';
-    label.textContent          = 'Verifikasi berhasil';
-    box.classList.add('captcha-verified');
-
-    captchaDone  = true;
-    btn.disabled = false;
-  }, 1400);
+function onCaptchaSuccess() {
+  document.getElementById('btnMasuk').disabled = false;
+}
+function onCaptchaExpired() {
+  document.getElementById('btnMasuk').disabled = true;
 }
 
 document.addEventListener('keydown', function (e) {
