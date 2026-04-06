@@ -2529,164 +2529,199 @@
         </div>
       </div>
 
-      {{-- ---- KATEGORI ---- --}}
-      <div x-show="kTab === 'kategori'" x-cloak class="lomba-fade space-y-4">
-        <div class="add-form-box">
-          <div class="font-bold text-sm text-slate-900 mb-3">+ Tambah Kategori</div>
+     {{-- ---- KATEGORI ---- --}}
+<div x-show="kTab === 'kategori'" x-cloak class="lomba-fade space-y-4">
+  
+  <div class="add-form-box">
+    <div class="font-bold text-sm text-slate-900 mb-3">+ Tambah Kategori</div>
 
-          <form action="{{ route('admin.site-settings.lomba.ketentuan.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+    <form action="{{ route('admin.site-settings.lomba.ketentuan.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+      @csrf
+      <input type="hidden" name="tab" value="kategori">
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        {{-- TITLE --}}
+        <div>
+          <label class="field-label">Title</label>
+          <input
+            name="title"
+            value="{{ old('tab') === 'kategori' ? old('title') : '' }}"
+            class="field-input"
+            placeholder="Contoh: PAUD / Sederajat"
+          >
+        </div>
+
+        {{-- GAMBAR + PREVIEW --}}
+        <div x-data="{ preview: null }">
+          <label class="field-label">Gambar (opsional)</label>
+
+          <label class="flex flex-col items-center justify-center gap-2 w-full border border-dashed border-slate-200 rounded-lg px-3 py-3 cursor-pointer hover:border-[#0072BC] hover:bg-blue-50/20 transition text-sm text-slate-500 bg-white">
+
+            <template x-if="!preview">
+              <div class="text-xs">Klik untuk upload</div>
+            </template>
+
+            <template x-if="preview">
+              <img :src="preview" class="h-20 object-contain rounded">
+            </template>
+
+            <input type="file" name="image" class="hidden" accept="image/*"
+              @change="
+                const file = $event.target.files[0];
+                if (file) preview = URL.createObjectURL(file)
+              ">
+          </label>
+        </div>
+
+      </div>
+
+      {{-- SORT + STATUS --}}
+      <div class="flex items-center gap-4">
+
+        <div class="w-32">
+          <label class="field-label">Urutan</label>
+          <select name="sort_order" class="field-input" required>
+            @for ($i = 1; $i <= $kategoriMaxSortOption; $i++)
+              @php $isUsed = $kategoriUsedSortOrders->contains($i); @endphp
+              <option
+                value="{{ $i }}"
+                {{ $isUsed ? 'disabled' : '' }}
+                {{ (string) (old('tab') === 'kategori' ? old('sort_order', $kategoriFirstAvailableSortOrder) : $kategoriFirstAvailableSortOrder) === (string) $i && ! $isUsed ? 'selected' : '' }}
+              >
+                {{ $i }}{{ $isUsed ? ' (used)' : '' }}
+              </option>
+            @endfor
+          </select>
+        </div>
+
+        <label class="inline-flex items-center gap-2 mt-5 cursor-pointer">
+          <input
+            type="checkbox"
+            name="is_active"
+            value="1"
+            {{ old('tab') === 'kategori' ? (old('is_active', 1) ? 'checked' : '') : 'checked' }}
+            class="w-4 h-4 accent-[#0072BC]"
+          >
+          <span class="text-sm font-medium text-slate-700">Aktif</span>
+        </label>
+
+        <div class="mt-5 ml-auto">
+          <button type="submit" class="btn-primary">
+            Tambah
+          </button>
+        </div>
+
+      </div>
+    </form>
+  </div>
+
+  {{-- LIST --}}
+  <div class="text-xs text-slate-400 mb-2">
+    <span class="font-bold text-slate-700">{{ $kategoriItems->count() }}</span> item
+  </div>
+
+  <div class="space-y-2.5">
+    @forelse($kategoriItems as $item)
+      @php $currentSortOrder = (int) $item->sort_order; @endphp
+
+      <div class="item-row">
+
+        <div class="item-row-head">
+          <span class="text-xs font-black text-slate-400">#{{ $item->id }}</span>
+          <span class="text-sm font-semibold text-slate-700">{{ $item->title }}</span>
+
+          <span class="badge ml-auto {{ $item->is_active ? 'badge-active' : 'badge-inactive' }}">
+            {{ $item->is_active ? 'Aktif' : 'Nonaktif' }}
+          </span>
+
+          <span class="text-xs text-slate-400">Urut: {{ $item->sort_order }}</span>
+        </div>
+
+        <div class="item-row-body">
+
+          <form action="{{ route('admin.site-settings.lomba.ketentuan.update', $item->id) }}" method="POST" enctype="multipart/form-data" class="space-y-3">
             @csrf
+            @method('PUT')
             <input type="hidden" name="tab" value="kategori">
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+              {{-- TITLE --}}
+              <div class="md:col-span-2">
                 <label class="field-label">Title</label>
-                <input
-                  name="title"
-                  value="{{ old('tab') === 'kategori' ? old('title') : '' }}"
-                  class="field-input"
-                  placeholder="Contoh: PAUD / Sederajat"
-                >
+                <input name="title" value="{{ $item->title }}" class="field-input">
               </div>
 
+              {{-- SORT --}}
               <div>
-                <label class="field-label">Gambar (opsional)</label>
-                <label class="flex items-center gap-2 w-full border border-dashed border-slate-200 rounded-lg px-3 py-2.5 cursor-pointer hover:border-[#0072BC] hover:bg-blue-50/20 transition-colors text-sm text-slate-500 bg-white">
-                  <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
-                  </svg>
-                  Pilih gambar
-                  <input type="file" name="image" class="hidden" accept="image/*">
-                </label>
-              </div>
-            </div>
-
-            <div>
-              <label class="field-label">Deskripsi / Konten</label>
-              <textarea name="content" required class="field-input min-h-[80px]" placeholder="Deskripsi singkat kategori...">{{ old('tab') === 'kategori' ? old('content') : '' }}</textarea>
-            </div>
-
-            <div class="flex items-center gap-4">
-              <div class="w-32">
                 <label class="field-label">Urutan</label>
                 <select name="sort_order" class="field-input" required>
                   @for ($i = 1; $i <= $kategoriMaxSortOption; $i++)
-                    @php $isUsed = $kategoriUsedSortOrders->contains($i); @endphp
+                    @php $isUsedByOtherItem = $kategoriUsedSortOrders->contains($i) && $i !== $currentSortOrder; @endphp
                     <option
                       value="{{ $i }}"
-                      {{ $isUsed ? 'disabled' : '' }}
-                      {{ (string) (old('tab') === 'kategori' ? old('sort_order', $kategoriFirstAvailableSortOrder) : $kategoriFirstAvailableSortOrder) === (string) $i && ! $isUsed ? 'selected' : '' }}
+                      {{ $isUsedByOtherItem ? 'disabled' : '' }}
+                      {{ (string) $currentSortOrder === (string) $i ? 'selected' : '' }}
                     >
-                      {{ $i }}{{ $isUsed ? ' (used)' : '' }}
+                      {{ $i }}{{ $isUsedByOtherItem ? ' (used)' : '' }}
                     </option>
                   @endfor
                 </select>
               </div>
 
-              <label class="inline-flex items-center gap-2 mt-5 cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="is_active"
-                  value="1"
-                  {{ old('tab') === 'kategori' ? (old('is_active', 1) ? 'checked' : '') : 'checked' }}
-                  class="w-4 h-4 accent-[#0072BC]"
-                >
+            </div>
+
+            {{-- PREVIEW EDIT --}}
+            <div x-data="{ preview: '{{ $item->image ? asset('storage/'.$item->image) : '' }}' }">
+              <label class="field-label">Gambar</label>
+
+              <label class="flex flex-col items-center justify-center gap-2 w-full border border-dashed border-slate-200 rounded-lg px-3 py-3 cursor-pointer">
+
+                <template x-if="preview">
+                  <img :src="preview" class="h-20 object-contain rounded">
+                </template>
+
+                <template x-if="!preview">
+                  <div class="text-xs text-slate-400">Belum ada gambar</div>
+                </template>
+
+                <input type="file" name="image" class="hidden" accept="image/*"
+                  @change="
+                    const file = $event.target.files[0];
+                    if (file) preview = URL.createObjectURL(file)
+                  ">
+              </label>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <label class="inline-flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" name="is_active" value="1" {{ $item->is_active ? 'checked' : '' }} class="w-4 h-4 accent-[#0072BC]">
                 <span class="text-sm font-medium text-slate-700">Aktif</span>
               </label>
 
-              <div class="mt-5 ml-auto">
-                <button type="submit" class="btn-primary">
-                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
-                  </svg>
-                  Tambah
-                </button>
-              </div>
+              <button type="submit" class="btn-primary ml-auto" style="padding:0.4rem 1rem;font-size:0.78rem;">
+                Simpan
+              </button>
             </div>
           </form>
-        </div>
 
-        <div class="text-xs text-slate-400 mb-2"><span class="font-bold text-slate-700">{{ $kategoriItems->count() }}</span> item</div>
+          <form action="{{ route('admin.site-settings.lomba.ketentuan.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus?')" class="mt-2.5">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn-danger">Hapus</button>
+          </form>
 
-        <div class="space-y-2.5">
-          @forelse($kategoriItems as $item)
-            @php $currentSortOrder = (int) $item->sort_order; @endphp
-
-            <div class="item-row">
-              <div class="item-row-head">
-                <span class="text-xs font-black text-slate-400">#{{ $item->id }}</span>
-                @if($item->title)
-                  <span class="text-sm font-semibold text-slate-700">{{ $item->title }}</span>
-                @endif
-                <span class="badge ml-auto {{ $item->is_active ? 'badge-active' : 'badge-inactive' }}">
-                  {{ $item->is_active ? 'Aktif' : 'Nonaktif' }}
-                </span>
-                <span class="text-xs text-slate-400">Urut: {{ $item->sort_order }}</span>
-              </div>
-
-              <div class="item-row-body">
-                <form action="{{ route('admin.site-settings.lomba.ketentuan.update', $item->id) }}" method="POST" enctype="multipart/form-data" class="space-y-3">
-                  @csrf
-                  @method('PUT')
-                  <input type="hidden" name="tab" value="kategori">
-
-                  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div class="md:col-span-2">
-                      <label class="field-label">Title</label>
-                      <input name="title" value="{{ $item->title }}" class="field-input">
-                    </div>
-
-                    <div>
-                      <label class="field-label">Urutan</label>
-                      <select name="sort_order" class="field-input" required>
-                        @for ($i = 1; $i <= $kategoriMaxSortOption; $i++)
-                          @php $isUsedByOtherItem = $kategoriUsedSortOrders->contains($i) && $i !== $currentSortOrder; @endphp
-                          <option
-                            value="{{ $i }}"
-                            {{ $isUsedByOtherItem ? 'disabled' : '' }}
-                            {{ (string) $currentSortOrder === (string) $i ? 'selected' : '' }}
-                          >
-                            {{ $i }}{{ $isUsedByOtherItem ? ' (used)' : '' }}
-                          </option>
-                        @endfor
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label class="field-label">Konten</label>
-                    <textarea name="content" required class="field-input min-h-[60px]">{{ $item->content }}</textarea>
-                  </div>
-
-                  <div class="flex items-center gap-3">
-                    <label class="inline-flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" name="is_active" value="1" {{ $item->is_active ? 'checked' : '' }} class="w-4 h-4 accent-[#0072BC]">
-                      <span class="text-sm font-medium text-slate-700">Aktif</span>
-                    </label>
-
-                    <button type="submit" class="btn-primary ml-auto" style="padding:0.4rem 1rem;font-size:0.78rem;">
-                      Simpan
-                    </button>
-                  </div>
-                </form>
-
-                <form action="{{ route('admin.site-settings.lomba.ketentuan.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus?')" class="mt-2.5">
-                  @csrf
-                  @method('DELETE')
-                  <button type="submit" class="btn-danger">Hapus</button>
-                </form>
-              </div>
-            </div>
-          @empty
-            <div class="empty-state">
-              <svg class="w-9 h-9 text-slate-200 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-              </svg>
-              <div class="text-sm font-medium text-slate-500">Belum ada kategori</div>
-            </div>
-          @endforelse
         </div>
       </div>
+
+    @empty
+      <div class="empty-state">
+        <div class="text-sm font-medium text-slate-500">Belum ada kategori</div>
+      </div>
+    @endforelse
+  </div>
+</div>
 
       {{-- ---- PERSYARATAN ---- --}}
       <div x-show="kTab === 'persyaratan'" x-cloak class="lomba-fade space-y-4">

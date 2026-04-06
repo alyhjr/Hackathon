@@ -158,18 +158,20 @@
     box-shadow: 0 4px 14px rgba(14,116,144,0.08);
   }
 
-  .kb-cat-img{
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+ .kb-cat-img{
+  width: 100%;
+  height: 70px; /* samakan tinggi semua */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
 
-  .kb-cat-img img{
-    max-height: 60px;
-    max-width: 100%;
-    object-fit: contain;
-  }
+.kb-cat-img img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* ini kunci */
+}
 
   .kb-cat-label{
     font-size: 11px;
