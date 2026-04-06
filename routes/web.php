@@ -193,3 +193,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/ganti-password', [AdminProfileController::class, 'gantiPassword'])->name('admin.ganti-password');
     Route::post('/admin/ganti-email', [AdminProfileController::class, 'gantiEmail'])->name('admin.ganti-email');
 });
+
+
+
+Route::middleware('auth')->group(function () {
+    Route::patch('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::patch('/profile/email', [ProfileController::class, 'updateEmail'])->name('profile.email');
+});
