@@ -177,6 +177,33 @@ class AdminSessionController extends Controller
 
         return redirect()->intended(route('admin.site-settings.edit'))
                          ->with('success', 'Selamat datang, ' . $user->name . '!');
+
+    }
+    // =============================================
+    // Forgot Password
+    // =============================================
+    public function showForgot()
+    {
+        return view('admin.forgot-password');
+    }
+
+    public function processForgot(Request $request)
+    {
+        $request->validate([
+            'email'                 => 'required|email',
+            'password'              => 'required|min:6|confirmed',
+            'password_confirmation' => 'required',
+        ]);
+
+        $user = User::where('email', $request->email)->where('is_admin', true)->first();
+
+        if (!$user) {
+            return back()->with('error', 'Email admin tidak ditemukan.');
+        }
+
+        $user->update(['password' => bcrypt($request->password)]);
+
+        return redirect()->route('admin.login')->with('status', 'Password berhasil direset! Silakan login.');
     }
 
     // =============================================

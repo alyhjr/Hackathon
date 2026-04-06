@@ -79,7 +79,7 @@ input::placeholder{color:#bbb}
     </div>
 
     <div class="field">
-      <label>KATA SANDI</label>
+      <label>PASSWORD</label>
       <div class="pw-wrap">
         <input type="password" name="password" id="pw" placeholder="••••••••" required>
         <button type="button" class="toggle-pw" onclick="togglePw()">👁</button>
@@ -89,7 +89,7 @@ input::placeholder{color:#bbb}
     <div class="check-row">
       <input type="checkbox" name="remember" id="remember">
       <span>Ingat saya</span>
-      <a href="#" class="forgot">Lupa password?</a>
+      <a href="#" class="forgot" onclick="openForgot(event)">Lupa password?</a>
     </div>
 
     <div class="captcha-wrap">
@@ -107,11 +107,58 @@ input::placeholder{color:#bbb}
   </div>
 </div>
 
+{{-- Modal Lupa Password --}}
+<div id="forgotModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:20px;width:100%;max-width:440px;padding:36px;position:relative;">
+    <button onclick="closeForgot()" style="position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:50%;border:none;background:rgba(0,0,0,.06);color:#999;font-size:16px;cursor:pointer;">×</button>
+    <div style="font-size:22px;font-weight:700;color:#111;margin-bottom:4px;">Lupa Password?</div>
+    <div style="font-size:13px;color:#888;margin-bottom:24px;">Masukkan email dan password baru Anda.</div>
+    <div id="forgotError" style="display:none;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px 12px;font-size:12px;color:#dc2626;margin-bottom:14px;"></div>
+    <div id="forgotSuccess" style="display:none;background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:10px 12px;font-size:13px;color:#16a34a;margin-bottom:14px;"></div>
+    <form method="POST" action="{{ route('admin.forgot.post') }}">
+      @csrf
+      <div style="margin-bottom:14px;">
+        <label>EMAIL ADMIN</label>
+        <input type="email" name="email" placeholder="" required>
+      </div>
+      <div style="margin-bottom:14px;position:relative;">
+        <label>PASSWORD BARU</label>
+        <input type="password" name="password" id="fp1" placeholder="••••••••" required style="padding-right:42px;">
+        <button type="button" onclick="toggleFp('fp1')" style="position:absolute;right:12px;bottom:11px;background:none;border:none;cursor:pointer;color:#bbb;font-size:16px;">👁</button>
+      </div>
+      <div style="margin-bottom:20px;position:relative;">
+        <label>KONFIRMASI PASSWORD BARU</label>
+        <input type="password" name="password_confirmation" id="fp2" placeholder="••••••••" required style="padding-right:42px;">
+        <button type="button" onclick="toggleFp('fp2')" style="position:absolute;right:12px;bottom:11px;background:none;border:none;cursor:pointer;color:#bbb;font-size:16px;">👁</button>
+      </div>
+      <button type="submit" class="btn">Reset Password</button>
+    </form>
+  </div>
+</div>
+
 <script>
 function togglePw(){
   const pw=document.getElementById('pw');
   pw.type=pw.type==='password'?'text':'password';
 }
+function toggleFp(id){
+  const el=document.getElementById(id);
+  el.type=el.type==='password'?'text':'password';
+}
+function openForgot(e){
+  e.preventDefault();
+  document.getElementById('forgotModal').style.display='flex';
+}
+function closeForgot(){
+  document.getElementById('forgotModal').style.display='none';
+}
+@if(session('status'))
+document.addEventListener('DOMContentLoaded',function(){
+  document.getElementById('forgotSuccess').style.display='block';
+  document.getElementById('forgotSuccess').innerText='{{ session('status') }}';
+  document.getElementById('forgotModal').style.display='flex';
+});
+@endif
 </script>
 </body>
 </html>

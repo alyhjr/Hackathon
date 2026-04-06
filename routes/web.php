@@ -85,7 +85,7 @@ Route::get('/faq', function () {
 |--------------------------------------------------------------------------
 */
 Route::get('/registrasi', [RegistrasiController::class, 'index'])->name('registrasi');
-Route::post('/registrasi/cek', [RegistrasiController::class, 'cekNuptk'])->name('registrasi.cek');
+Route::post('/registrasi/cek', [RegistrasiController::class, 'cek'])->name('registrasi.cek');
 Route::post('/registrasi/store', [RegistrasiController::class, 'store'])->name('registrasi.store');
 Route::post('/registrasi/submit', [RegistrasiController::class, 'submit'])->name('registrasi.submit');
 
@@ -118,7 +118,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // 2FA Verify (input kode OTP)
     Route::get('/2fa/verify',  [AdminSessionController::class, 'showVerify'])->name('2fa.verify');
     Route::post('/2fa/verify', [AdminSessionController::class, 'processVerify'])->name('2fa.verify.post');
-
+    
+    // Forgot Password  ← TAMBAHKAN DI SINI
+    Route::get('/forgot-password', [AdminSessionController::class, 'showForgot'])->name('forgot');
+    Route::post('/forgot-password', [AdminSessionController::class, 'processForgot'])->name('forgot.post');
     // Logout
     Route::post('/logout', [AdminSessionController::class, 'destroy'])->name('logout');
 });
