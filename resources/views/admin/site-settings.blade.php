@@ -181,7 +181,7 @@
 
     {{-- AVATAR --}}
     <div class="w-9 h-9 rounded-full 
-                bg-gradient-to-br from-slate-400 to-slate-600 
+                bg-gradient-to-br from-slate-400 to-slate-900 
                 flex items-center justify-center 
                 text-white text-sm font-medium">
       A
