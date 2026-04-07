@@ -4,51 +4,62 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Setup Google Authenticator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      background: linear-gradient(135deg, #0d1b2a, #1a2a4a, #0d2137);
-      min-height: 100vh;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Segoe UI', sans-serif;
-      padding: 20px;
-    }
-    .card {
-      background: rgba(15,25,50,0.9);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 36px;
-      width: 460px;
-      max-width: 100%;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-    }
-    .top { text-align:center; margin-bottom:24px; }
+  body {
+  background: #ffffff;
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Inter', sans-serif;
+  padding: 40px 20px;
+  overflow-y: auto;
+}
+  .card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  padding: 20px 40px 40px;
+  width: 860px;
+  max-width: 100%;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  gap: 0 32px;
+}
+.top { grid-column: 1 / -1; }
+.steps { grid-column: 1; }
+.qr-box { grid-column: 2; }
+form { grid-column: 1 / -1; }
+.warning { grid-column: 1 / -1; }
+  .top { text-align:center; margin-bottom:28px; margin-top:0; }
     .icon { font-size:40px; margin-bottom:12px; display:block; }
-    h1 { color:#fff; font-size:20px; font-weight:700; margin-bottom:6px; }
-    p { color:rgba(255,255,255,0.45); font-size:13px; }
+    h1 { color:#111; font-size:22px; font-weight:800; margin-bottom:6px; }
+    p { color:#888; font-size:13px; }
     .steps {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius:10px;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius:12px;
       padding:16px;
       margin-bottom:20px;
     }
     .step { display:flex; gap:12px; align-items:flex-start; margin-bottom:10px; }
     .step:last-child { margin-bottom:0; }
     .num {
-      background: rgba(77,166,255,0.15);
-      color:#4da6ff;
+      background: rgba(29,78,143,0.1);
+      color:#1d4e8f;
       border-radius:50%;
       width:24px; height:24px;
       display:flex; align-items:center; justify-content:center;
       font-size:12px; font-weight:700; flex-shrink:0;
     }
-    .step p { color:rgba(255,255,255,0.6); font-size:13px; line-height:1.5; margin:0; }
-    .step p strong { color:rgba(255,255,255,0.9); }
+    .step p { color:#555; font-size:13px; line-height:1.5; margin:0; }
+    .step p strong { color:#111; }
     .qr-box {
       text-align:center;
-      background: rgba(255,255,255,0.03);
-      border:1px solid rgba(255,255,255,0.08);
+      background: #f8fafc;
+      border:1px solid #e5e7eb;
       border-radius:12px;
       padding:20px;
       margin-bottom:20px;
@@ -61,79 +72,86 @@
       display:block;
       margin: 0 auto 14px;
     }
-    .qr-box .label { color:rgba(255,255,255,0.4); font-size:12px; margin-bottom:8px; }
+    .qr-box .label { color:#888; font-size:12px; margin-bottom:8px; }
     .secret-key {
       display:inline-block;
       font-family:'Courier New',monospace;
       font-size:15px; font-weight:700;
-      color:#4da6ff;
-      background:rgba(77,166,255,0.1);
-      border:1px solid rgba(77,166,255,0.25);
+      color:#1d4e8f;
+      background:rgba(29,78,143,0.08);
+      border:1px solid rgba(29,78,143,0.2);
       padding:8px 16px;
       border-radius:8px;
       letter-spacing:2px;
       cursor:pointer;
       word-break:break-all;
     }
-    .secret-key:hover { background:rgba(77,166,255,0.2); }
-    .copy-hint { font-size:11px; color:rgba(255,255,255,0.2); margin-top:6px; }
-    #copied { display:none; color:#5dd87a; font-size:12px; margin-top:4px; }
+    .secret-key:hover { background:rgba(29,78,143,0.15); }
+    .copy-hint { font-size:11px; color:#bbb; margin-top:6px; }
+    #copied { display:none; color:#16a34a; font-size:12px; margin-top:4px; }
     .alert {
-      background:rgba(220,53,69,0.15);
-      border:1px solid rgba(220,53,69,0.3);
-      color:#ff7b88;
+      background:#fef2f2;
+      border:1px solid #fecaca;
+      color:#dc2626;
       padding:12px 14px;
       border-radius:8px;
       font-size:13px;
       margin-bottom:16px;
     }
-    label {
-      display:block;
-      font-size:11px; font-weight:600;
-      color:rgba(255,255,255,0.4);
-      letter-spacing:1px; text-transform:uppercase;
-      margin-bottom:8px;
-    }
+   label {
+  display:block;
+  font-size:11.5px; font-weight:700;
+  color:#111;
+  letter-spacing:0; text-transform:uppercase;
+  margin-bottom:10px;
+  text-align:center;
+}
     .otp-row { display:flex; justify-content:center; gap:10px; margin-bottom:20px; }
     .otp-box {
       width:52px; height:58px;
-      background:rgba(255,255,255,0.05);
-      border:2px solid rgba(255,255,255,0.12);
+      background:#f9fafb;
+      border:1.5px solid #e5e7eb;
       border-radius:10px;
-      color:#fff; font-size:22px; font-weight:700;
+      color:#111; font-size:22px; font-weight:700;
       text-align:center;
       font-family:'Courier New',monospace;
       outline:none; transition:all 0.2s;
     }
     .otp-box:focus {
-      border-color:#4da6ff;
-      background:rgba(77,166,255,0.1);
-      box-shadow:0 0 0 3px rgba(77,166,255,0.2);
+      border-color:#1d4e8f;
+      background:#fff;
+      box-shadow:0 0 0 3px rgba(29,78,143,0.1);
     }
-    .otp-box.filled { border-color:rgba(77,166,255,0.5); }
-    .btn {
-      width:100%;
-      background:linear-gradient(90deg,#1a7fe8,#0d5dbf);
-      color:#fff; border:none;
-      padding:14px; border-radius:10px;
-      font-size:15px; font-weight:700;
-      cursor:pointer; transition:all 0.2s;
-    }
-    .btn:hover { filter:brightness(1.1); transform:translateY(-1px); }
+    .otp-box.filled { border-color:#1d4e8f; }
+   .btn {
+  width: auto;
+  min-width: 320px;
+  max-width: 320px;
+  display: block;
+  margin: 0 auto;
+  background:#1d4e8f;
+  color:#fff; border:none;
+  padding:14px; border-radius:12px;
+  font-size:15px; font-weight:700;
+  cursor:pointer; transition:all 0.2s;
+  letter-spacing:0.3px;
+}
     .warning {
-      background:rgba(255,165,0,0.08);
-      border:1px solid rgba(255,165,0,0.2);
-      border-radius:8px;
-      padding:12px; font-size:12px;
-      color:rgba(255,165,0,0.8);
-      margin-top:14px; line-height:1.6;
-    }
+  background:#fffbeb;
+  border:1px solid #fde68a;
+  border-radius:10px;
+  padding:14px; font-size:12px;
+  color:#92400e;
+  margin-top:16px; line-height:1.7;
+  max-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+}
   </style>
 </head>
 <body>
 <div class="card">
   <div class="top">
-    <span class="icon">📱</span>
     <h1>Setup Google Authenticator</h1>
     <p>Lakukan sekali saja, login berikutnya cukup input kode 6 digit</p>
   </div>
@@ -158,7 +176,7 @@
     <div class="label">Tidak bisa scan? Masukkan kode ini secara manual:</div>
     <div class="secret-key" onclick="copySecret(this)" title="Klik untuk copy">{{ $secret }}</div>
     <div class="copy-hint">klik untuk menyalin</div>
-    <div id="copied">✅ Kode berhasil disalin!</div>
+    <div id="copied"> Kode berhasil disalin!</div>
   </div>
 
   @if(session('error'))
@@ -178,7 +196,7 @@
     </div>
     <input type="hidden" name="otp_code" id="otpFull">
     <button type="submit" class="btn" onclick="submitCode()">
-      ✅ Aktifkan Google Authenticator
+       Aktifkan Google Authenticator
     </button>
   </form>
 
