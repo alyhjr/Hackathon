@@ -1,6 +1,9 @@
-<nav class="sticky top-0 z-50 w-full border-b border-sky-100 bg-sky-50 shadow-sm nav-entrance">
-  <div class="max-w-7xl mx-auto px-6">
-    <div class="flex items-center h-20">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+
+<nav id="main-nav" class="sticky top-0 z-50 w-full nav-entrance" style="padding: 10px 24px; background: transparent;">
+  <div id="nav-pill" class="max-w-7xl mx-auto px-5 transition-all duration-300" style="border-radius: 9999px;">
+    <div class="flex items-center h-14">
 
       {{-- LEFT --}}
       <div class="flex flex-1 items-center">
@@ -8,24 +11,24 @@
           <img
             src="{{ asset('image/header/kemendikdasmen.png') }}"
             alt="Kemendikdasmen"
-            class="h-12 w-auto object-contain block"
+            class="h-10 w-auto object-contain block nav-logo-kemendik"
           />
         </a>
       </div>
 
       {{-- CENTER --}}
       <div class="hidden md:flex flex-1 justify-center">
-        <ul class="flex items-center gap-8 text-[15px] font-semibold text-slate-900">
+        <ul class="flex items-center gap-8 text-[14px] font-semibold">
 
           <li class="nav-item" style="--ni:0">
-            <a href="{{ route('home') }}" class="nav-link hover:text-sky-700 transition">
+            <a href="{{ route('home') }}" class="nav-link transition">
               Beranda
             </a>
           </li>
 
           <li class="relative group nav-item" style="--ni:1">
             <button type="button"
-              class="nav-link inline-flex items-center gap-2 hover:text-sky-700 transition focus:outline-none">
+              class="nav-link inline-flex items-center gap-2 transition focus:outline-none">
               Lomba
               <svg class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 011.08 1.04l-4.25 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
@@ -49,7 +52,7 @@
 
           <li class="relative group nav-item" style="--ni:2">
             <button type="button"
-              class="nav-link inline-flex items-center gap-2 hover:text-sky-700 transition focus:outline-none">
+              class="nav-link inline-flex items-center gap-2 transition focus:outline-none">
               Pengumuman
               <svg class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 011.08 1.04l-4.25 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
@@ -72,7 +75,7 @@
           </li>
 
           <li class="nav-item" style="--ni:3">
-            <a href="{{ route('faq') }}" class="nav-link hover:text-sky-700 transition">FAQ</a>
+            <a href="{{ route('faq') }}" class="nav-link transition">FAQ</a>
           </li>
 
         </ul>
@@ -88,12 +91,12 @@
             type="text"
             name="q"
             placeholder="Cari..."
-            class="w-40 h-9 rounded-full border border-slate-200 bg-white/80 px-4 pr-9 text-xs
-                   focus:outline-none focus:ring-2 focus:ring-sky-300
+            class="nav-search-input w-40 h-9 rounded-full px-4 pr-9 text-xs
+                   focus:outline-none focus:ring-2
                    transition-all duration-300"
           />
           <button type="submit"
-            class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-sky-600 transition-colors duration-150"
+            class="nav-search-btn absolute right-3 top-1/2 -translate-y-1/2 transition-colors duration-150"
             aria-label="Cari">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="7"></circle>
@@ -107,23 +110,21 @@
           <button
             type="button"
             onclick="document.getElementById('loginModal').classList.remove('hidden')"
-            class="shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-150 active:scale-95"
-            style="background:linear-gradient(135deg,#0369a1,#0ea5e9);"
+            class="nav-user-btn shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-150 active:scale-95"
             onmouseover="this.style.opacity='0.85'"
             onmouseout="this.style.opacity='1'"
             title="Masuk"
           >
-            <svg viewBox="0 0 24 24" fill="white" style="width:18px;height:18px;">
+            <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;">
               <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
             </svg>
           </button>
         @endguest
 
         @auth
-          {{-- Dropdown user saat sudah login --}}
           <div class="relative group">
-            <button type="button" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 hover:text-sky-700 transition focus:outline-none">
-              <svg class="w-5 h-5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <button type="button" class="nav-link inline-flex items-center gap-2 text-sm font-semibold transition focus:outline-none">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>
               </svg>
@@ -138,7 +139,7 @@
                         group-focus-within:opacity-100 group-focus-within:visible group-focus-within:translate-y-0
                         transition-all duration-200">
               <div class="w-48 rounded-xl bg-white border border-slate-200 shadow-md overflow-hidden">
-               <a href="{{ route('peserta-submission.create') }}" class="dropdown-item flex items-center gap-2 px-4 py-3 text-sm text-slate-700 hover:bg-sky-50 hover:text-sky-700 transition-colors duration-150">
+                <a href="{{ route('peserta-submission.create') }}" class="dropdown-item flex items-center gap-2 px-4 py-3 text-sm text-slate-700 hover:bg-sky-50 hover:text-sky-700 transition-colors duration-150">
                   <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
                   Dashboard
                 </a>
@@ -156,7 +157,7 @@
 
         {{-- Rumah Pendidikan --}}
         <a href="#" class="shrink-0 flex items-center nav-logo">
-          <img src="{{ asset('image/header/rumah-pendidikan.png') }}" alt="Rumah Pendidikan" class="h-8 w-auto object-contain block" />
+          <img src="{{ asset('image/header/rumah-pendidikan.png') }}" alt="Rumah Pendidikan" class="h-8 w-auto object-contain block nav-logo-rumah" />
         </a>
 
       </div>
@@ -164,11 +165,11 @@
       {{-- Mobile Menu Button --}}
       <button
         type="button"
-        class="md:hidden inline-flex items-center justify-center p-2 rounded-lg hover:bg-sky-200 transition"
+        class="nav-mobile-btn md:hidden inline-flex items-center justify-center p-2 rounded-lg transition"
         onclick="document.getElementById('mobileNav').classList.toggle('hidden')"
         aria-label="Buka Menu"
       >
-        <svg class="w-6 h-6 text-slate-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
@@ -176,47 +177,45 @@
     </div>
 
     {{-- MOBILE NAV --}}
-    <div id="mobileNav" class="md:hidden hidden pb-4">
-      <div class="space-y-2">
-        <a href="{{ route('home') }}" class="block px-2 py-2 font-semibold text-slate-900 hover:text-sky-700 transition">Beranda</a>
+    <div id="mobileNav" class="md:hidden hidden pb-4 px-2">
+      <div class="space-y-2 pt-2">
+        <a href="{{ route('home') }}" class="nav-link block py-2 font-semibold transition">Beranda</a>
 
-        <div class="px-2 pt-2">
-          <div class="font-semibold text-slate-900">Lomba</div>
-          <div class="mt-1 pl-3 space-y-1 text-sm text-slate-700">
-            <a href="{{ route('lomba.ketentuan') }}" class="block py-1 hover:text-sky-700 transition">Ketentuan Lomba</a>
-            <a href="{{ route('lomba.tahapan') }}" class="block py-1 hover:text-sky-700 transition">Tahapan Kegiatan Lomba</a>
+        <div class="pt-1">
+          <div class="nav-link font-semibold">Lomba</div>
+          <div class="mt-1 pl-3 space-y-1 text-sm">
+            <a href="{{ route('lomba.ketentuan') }}" class="nav-link-sub block py-1 transition">Ketentuan Lomba</a>
+            <a href="{{ route('lomba.tahapan') }}" class="nav-link-sub block py-1 transition">Tahapan Kegiatan Lomba</a>
           </div>
         </div>
 
-        <div class="px-2 pt-2">
-          <div class="font-semibold text-slate-900">Pengumuman</div>
-          <div class="mt-1 pl-3 space-y-1 text-sm text-slate-700">
-            <a href="{{ route('pengumuman.3besar') }}" class="block py-1 hover:text-sky-700 transition">Pengumuman 3 Besar</a>
-            <a href="{{ route('pengumuman.lolos') }}" class="block py-1 hover:text-sky-700 transition">Lolos Seleksi Proposal</a>
+        <div class="pt-1">
+          <div class="nav-link font-semibold">Pengumuman</div>
+          <div class="mt-1 pl-3 space-y-1 text-sm">
+            <a href="{{ route('pengumuman.3besar') }}" class="nav-link-sub block py-1 transition">Pengumuman 3 Besar</a>
+            <a href="{{ route('pengumuman.lolos') }}" class="nav-link-sub block py-1 transition">Lolos Seleksi Proposal</a>
           </div>
         </div>
 
-        <a href="{{ route('faq') }}" class="block px-2 py-2 font-semibold text-slate-900 hover:text-sky-700 transition">FAQ</a>
+        <a href="{{ route('faq') }}" class="nav-link block py-2 font-semibold transition">FAQ</a>
 
         @guest
           <button
             type="button"
             onclick="document.getElementById('loginModal').classList.remove('hidden')"
-            class="block w-full text-left px-2 py-2 font-semibold text-slate-900"
-          >
-            Masuk
-          </button>
+            class="nav-link block py-2 font-semibold"
+          >Masuk</button>
         @endguest
 
         @auth
-          <div class="px-2 py-2 text-sm font-semibold text-slate-700">{{ Auth::user()->nama }}</div>
-          <form method="POST" action="{{ route('logout') }}" class="px-2">
+          <div class="nav-link py-2 text-sm font-semibold">{{ Auth::user()->nama }}</div>
+          <form method="POST" action="{{ route('logout') }}" class="">
             @csrf
-            <button type="submit" class="text-sm text-red-600 font-semibold">Logout</button>
+            <button type="submit" class="text-sm text-red-500 font-semibold">Logout</button>
           </form>
         @endauth
 
-        <div class="px-2 pt-2">
+        <div class="pt-2">
           <form id="mobileSearchForm" action="#" method="GET" class="relative" autocomplete="off">
             <input
               id="mobileSearchInput"
@@ -233,7 +232,7 @@
             </button>
           </form>
           <div class="mt-3">
-            <img src="{{ asset('image/header/rumah-pendidikan.png') }}" alt="Rumah Pendidikan" class="h-8 w-auto object-contain block" />
+            <img src="{{ asset('image/header/rumah-pendidikan.png') }}" alt="Rumah Pendidikan" class="h-8 w-auto object-contain block nav-logo-rumah" />
           </div>
         </div>
       </div>
@@ -241,6 +240,7 @@
 
   </div>
 </nav>
+
 
 {{-- ============================================================ --}}
 {{-- MODAL LOGIN                                                   --}}
@@ -276,9 +276,9 @@
       </button>
 
       <div class="mb-7">
-  <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight" style="font-family:'Plus Jakarta Sans',sans-serif;">Login Peserta</h2>
-  <p class="text-sm mt-1 font-medium" style="font-family:'Plus Jakarta Sans',sans-serif;color:#000;">Masuk ke akun peserta Hackathon Rumah Pendidikan</p>
-</div>
+        <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight" style="font-family:'Plus Jakarta Sans',sans-serif;">Login Peserta</h2>
+        <p class="text-sm mt-1 font-medium" style="font-family:'Plus Jakarta Sans',sans-serif;color:#000;">Masuk ke akun peserta Hackathon Rumah Pendidikan</p>
+      </div>
 
       @if($errors->any())
         <div class="mb-5 flex items-start gap-3 px-4 py-3 rounded-xl bg-red-50 border border-red-100">
@@ -298,32 +298,29 @@
         </div>
       @endif
 
-      {{-- FORM LOGIN --}}
       <form method="POST" action="{{ route('peserta.login.post') }}" id="loginForm">
         @csrf
 
-        {{-- Email --}}
-<div class="mb-4">
-  <label for="modal_email" class="block text-xs font-bold uppercase tracking-widest mb-2" style="font-family:'Plus Jakarta Sans',sans-serif;color:#000;font-size:11px;">Email</label>
-  <input
-    id="modal_email" type="email" name="email"
-    value="{{ old('email') }}" required autofocus
-    placeholder="nama@email.com"
-    class="w-full h-11 rounded-xl border-2 bg-slate-50 px-4 text-sm text-slate-900 placeholder-slate-300 outline-none transition-all duration-150
-           {{ $errors->has('email') ? 'border-red-300 bg-red-50' : 'border-slate-100 focus:border-sky-400 focus:bg-white focus:shadow-[0_0_0_4px_rgba(56,189,248,0.1)]' }}"
-  />
-</div>
+        <div class="mb-4">
+          <label for="modal_email" class="block text-xs font-bold uppercase tracking-widest mb-2" style="font-family:'Plus Jakarta Sans',sans-serif;color:#000;font-size:11px;">Email</label>
+          <input
+            id="modal_email" type="email" name="email"
+            value="{{ old('email') }}" required autofocus
+            placeholder="nama@email.com"
+            class="w-full h-11 rounded-xl border-2 bg-slate-50 px-4 text-sm text-slate-900 placeholder-slate-300 outline-none transition-all duration-150
+                   {{ $errors->has('email') ? 'border-red-300 bg-red-50' : 'border-slate-100 focus:border-sky-400 focus:bg-white focus:shadow-[0_0_0_4px_rgba(56,189,248,0.1)]' }}"
+          />
+        </div>
 
-       {{-- Password --}}
-<div class="mb-5">
-  <label for="modal_password" class="block font-bold uppercase tracking-widest mb-2" style="font-family:'Plus Jakarta Sans',sans-serif;color:#000;font-size:11px;letter-spacing:0.07em;">PASSWORD</label>
-  <div class="relative">
-    <input
-      id="modal_password" type="password" name="password"
-      required placeholder="••••••••"
-      class="w-full h-11 rounded-xl border-2 bg-slate-50 px-4 pr-11 text-sm text-slate-900 placeholder-slate-300 outline-none transition-all duration-150
-             {{ $errors->has('password') ? 'border-red-300 bg-red-50' : 'border-slate-100 focus:border-sky-400 focus:bg-white focus:shadow-[0_0_0_4px_rgba(56,189,248,0.1)]' }}"
-    />
+        <div class="mb-5">
+          <label for="modal_password" class="block font-bold uppercase tracking-widest mb-2" style="font-family:'Plus Jakarta Sans',sans-serif;color:#000;font-size:11px;letter-spacing:0.07em;">PASSWORD</label>
+          <div class="relative">
+            <input
+              id="modal_password" type="password" name="password"
+              required placeholder="••••••••"
+              class="w-full h-11 rounded-xl border-2 bg-slate-50 px-4 pr-11 text-sm text-slate-900 placeholder-slate-300 outline-none transition-all duration-150
+                     {{ $errors->has('password') ? 'border-red-300 bg-red-50' : 'border-slate-100 focus:border-sky-400 focus:bg-white focus:shadow-[0_0_0_4px_rgba(56,189,248,0.1)]' }}"
+            />
             <button type="button" onclick="toggleModalPwd()"
               class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500 transition">
               <svg id="modalEyeOpen" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -337,14 +334,12 @@
           </div>
         </div>
 
-        {{-- Remember Me --}}
         <div class="flex items-center gap-2 mb-4">
           <input type="checkbox" id="modal_remember" name="remember"
             class="w-4 h-4 rounded border-slate-200 accent-sky-500 cursor-pointer" />
           <label for="modal_remember" class="text-sm text-slate-900 cursor-pointer select-none">Ingat saya</label>
         </div>
 
-        {{-- ===== CAPTCHA GOOGLE reCAPTCHA v2 ===== --}}
         <div class="mb-5">
           <div class="g-recaptcha"
             data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"
@@ -352,9 +347,7 @@
             data-expired-callback="onCaptchaExpired">
           </div>
         </div>
-        {{-- ===== END CAPTCHA ===== --}}
 
-        {{-- Tombol Masuk --}}
         <button type="submit"
           id="btnMasuk"
           disabled
@@ -369,6 +362,7 @@
     </div>
   </div>
 </div>
+
 
 {{-- ============================================================ --}}
 {{-- STYLES                                                        --}}
@@ -401,7 +395,7 @@
     animation: navItemIn 0.5s cubic-bezier(0.22,1,0.36,1) calc(0.15s + var(--ni, 0) * 0.07s) both;
   }
 
-  /* ── Nav link underline on hover ── */
+  /* ── Nav link underline hover ── */
   .nav-link {
     position: relative;
     padding-bottom: 2px;
@@ -409,17 +403,14 @@
   .nav-link::after {
     content: '';
     position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: #0072BC;
+    bottom: -2px; left: 0;
+    width: 0; height: 2px;
     border-radius: 99px;
     transition: width 0.25s cubic-bezier(0.22,1,0.36,1);
   }
   .nav-link:hover::after { width: 100%; }
 
-  /* ── Dropdown item left border accent ── */
+  /* ── Dropdown item accent ── */
   .dropdown-item {
     position: relative;
     padding-left: 1rem !important;
@@ -427,26 +418,90 @@
   .dropdown-item::before {
     content: '';
     position: absolute;
-    left: 0;
-    top: 50%;
+    left: 0; top: 50%;
     transform: translateY(-50%) scaleY(0);
-    width: 3px;
-    height: 60%;
+    width: 3px; height: 60%;
     background: #0072BC;
     border-radius: 99px;
     transition: transform 0.2s ease;
   }
   .dropdown-item:hover::before { transform: translateY(-50%) scaleY(1); }
 
-  /* ── Search expand on focus ── */
-  .nav-search input:focus { width: 13rem; }
-
   /* ── Modal ── */
   @keyframes modalPop {
     from { opacity: 0; transform: scale(0.94) translateY(12px); }
     to   { opacity: 1; transform: scale(1) translateY(0); }
   }
+
+  /* ── Logo transition ── */
+  .nav-logo-kemendik,
+  .nav-logo-rumah {
+    transition: filter 0.3s ease;
+  }
+
+  /* ══════════════════════════════════════
+     PILL STATES
+  ══════════════════════════════════════ */
+
+  /* WHITE STATE */
+  #nav-pill.pill-white {
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+  }
+  #nav-pill.pill-white .nav-link        { color: #334155; font-family: 'Sora', system-ui, sans-serif; }
+  #nav-pill.pill-white .nav-link:hover  { color: #0f172a; }
+  #nav-pill.pill-white .nav-link::after { background: #0072BC; }
+  #nav-pill.pill-white .nav-search-input {
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: #334155;
+  }
+  #nav-pill.pill-white .nav-search-input::placeholder { color: #94a3b8; }
+  #nav-pill.pill-white .nav-search-btn  { color: #94a3b8; }
+  #nav-pill.pill-white .nav-search-btn:hover { color: #0369a1; }
+  #nav-pill.pill-white .nav-user-btn    { background: linear-gradient(135deg,#0369a1,#0ea5e9); color: white; }
+  #nav-pill.pill-white .nav-mobile-btn  { color: #1e293b; }
+  #nav-pill.pill-white .nav-mobile-btn:hover { background: #f1f5f9; }
+  /* Logo normal di white */
+  #nav-pill.pill-white .nav-logo-rumah    { filter: none; }
+  #nav-pill.pill-white .nav-logo-kemendik { filter: none; }
+
+  /* NAVY STATE */
+  #nav-pill.pill-navy {
+    background: rgba(3, 8, 26, 0.85);
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  #nav-pill.pill-navy .nav-link        { color: rgba(255,255,255,0.80); font-family: 'Sora', system-ui, sans-serif; }
+  #nav-pill.pill-navy .nav-link:hover  { color: #ffffff; }
+  #nav-pill.pill-navy .nav-link::after { background: #60a5fa; }
+  #nav-pill.pill-navy .nav-search-input {
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.85);
+  }
+  #nav-pill.pill-navy .nav-search-input::placeholder { color: rgba(255,255,255,0.28); }
+  #nav-pill.pill-navy .nav-search-btn  { color: rgba(255,255,255,0.45); }
+  #nav-pill.pill-navy .nav-search-btn:hover { color: rgba(255,255,255,0.9); }
+  #nav-pill.pill-navy .nav-user-btn    { background: rgba(255,255,255,0.12); color: white; }
+  #nav-pill.pill-navy .nav-mobile-btn  { color: #ffffff; }
+  #nav-pill.pill-navy .nav-mobile-btn:hover { background: rgba(255,255,255,0.08); }
+  /* Logo jadi putih di navy */
+ #nav-pill.pill-navy .nav-logo-rumah    { filter: none; }
+ #nav-pill.pill-navy .nav-logo-kemendik { filter: none; }
+  /* Mobile nav sub link warna */
+  #nav-pill.pill-white .nav-link-sub { color: #64748b; }
+  #nav-pill.pill-white .nav-link-sub:hover { color: #0369a1; }
+  #nav-pill.pill-navy  .nav-link-sub { color: rgba(255,255,255,0.55); }
+  #nav-pill.pill-navy  .nav-link-sub:hover { color: #fff; }
+
+  /* Search expand on focus */
+  .nav-search input:focus { width: 13rem; }
 </style>
+
 
 {{-- ============================================================ --}}
 {{-- SCRIPTS                                                       --}}
@@ -454,13 +509,34 @@
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
 (function () {
+
+  const pill     = document.getElementById('nav-pill');
+  const isHome   = {{ request()->routeIs('home') ? 'true' : 'false' }};
+  const SCROLL_Y = 60;
+
+  function applyState() {
+    const scrolled = window.scrollY > SCROLL_Y;
+
+    if (isHome && !scrolled) {
+      pill.classList.remove('pill-navy');
+      pill.classList.add('pill-white');
+    } else {
+      pill.classList.remove('pill-white');
+      pill.classList.add('pill-navy');
+    }
+  }
+
+  applyState();
+  window.addEventListener('scroll', applyState, { passive: true });
+
+  /* ── Search ── */
   var pages = [
-    { title: 'Beranda',                 url: '{{ route("home") }}',                tags: ['beranda', 'home', 'utama', 'depan'] },
-    { title: 'FAQ',                     url: '{{ route("faq") }}',                 tags: ['faq', 'pertanyaan', 'tanya', 'jawab', 'frequently', 'asked'] },
-    { title: 'Ketentuan Lomba',         url: '{{ route("lomba.ketentuan") }}',     tags: ['ketentuan', 'lomba', 'syarat', 'aturan', 'persyaratan', 'peraturan'] },
-    { title: 'Tahapan Kegiatan Lomba',  url: '{{ route("lomba.tahapan") }}',       tags: ['tahapan', 'kegiatan', 'lomba', 'jadwal', 'alur', 'proses', 'pendaftaran', 'pelatihan', 'proposal', 'inkubasi', 'penjurian', 'hadiah'] },
-    { title: 'Pengumuman 3 Besar',      url: '{{ route("pengumuman.3besar") }}',   tags: ['pengumuman', '3 besar', 'tiga besar', 'pemenang', 'juara', 'winner'] },
-    { title: 'Lolos Seleksi Proposal',  url: '{{ route("pengumuman.lolos") }}',    tags: ['lolos', 'seleksi', 'proposal', 'pengumuman', 'finalis'] },
+    { title: 'Beranda',                url: '{{ route("home") }}',               tags: ['beranda','home','utama','depan'] },
+    { title: 'FAQ',                    url: '{{ route("faq") }}',                tags: ['faq','pertanyaan','tanya','jawab','frequently','asked'] },
+    { title: 'Ketentuan Lomba',        url: '{{ route("lomba.ketentuan") }}',    tags: ['ketentuan','lomba','syarat','aturan','persyaratan'] },
+    { title: 'Tahapan Kegiatan Lomba', url: '{{ route("lomba.tahapan") }}',      tags: ['tahapan','kegiatan','lomba','jadwal','alur','proses','pendaftaran'] },
+    { title: 'Pengumuman 3 Besar',     url: '{{ route("pengumuman.3besar") }}',  tags: ['pengumuman','3 besar','tiga besar','pemenang','juara'] },
+    { title: 'Lolos Seleksi Proposal', url: '{{ route("pengumuman.lolos") }}',   tags: ['lolos','seleksi','proposal','pengumuman','finalis'] },
   ];
 
   function doSearch(query) {
@@ -480,8 +556,8 @@
     if (matched) window.location.href = matched.url;
   }
 
-  ['navSearchForm', 'mobileSearchForm'].forEach(function (formId) {
-    var form = document.getElementById(formId);
+  ['navSearchForm','mobileSearchForm'].forEach(function (id) {
+    var form = document.getElementById(id);
     if (!form) return;
     form.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -489,6 +565,7 @@
       if (input) doSearch(input.value);
     });
   });
+
 })();
 
 function closeLoginModal() {
@@ -501,22 +578,17 @@ function toggleModalPwd() {
   var closed = document.getElementById('modalEyeClosed');
   if (input.type === 'password') {
     input.type = 'text';
-    open.style.display = 'none';
+    open.style.display   = 'none';
     closed.style.display = 'block';
   } else {
     input.type = 'password';
-    open.style.display = 'block';
+    open.style.display   = 'block';
     closed.style.display = 'none';
   }
 }
 
-/* ===== CAPTCHA ===== */
-function onCaptchaSuccess() {
-  document.getElementById('btnMasuk').disabled = false;
-}
-function onCaptchaExpired() {
-  document.getElementById('btnMasuk').disabled = true;
-}
+function onCaptchaSuccess()  { document.getElementById('btnMasuk').disabled = false; }
+function onCaptchaExpired()  { document.getElementById('btnMasuk').disabled = true;  }
 
 document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape') closeLoginModal();

@@ -11,168 +11,338 @@
   $inner = 'mx-auto w-full max-w-6xl px-4 md:px-6';
 @endphp
 
-<!-- HERO VERSI 1: PARALLAX + SHIMMER -->
+{{-- ============================================================
+     HERO SECTION — NAVY SPOTLIGHT FINAL
+     - Top center spotlight beam
+     - Canvas stars dengan sine twinkle (top 45%)
+     - Animasi: floating particles + beam breathe
+     - Button: oval, compact, shimmer glow
+     - Font: Sora (Google Fonts) — clean & premium
+     ============================================================ --}}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
 <section
-  class="{{ $bleed }} relative overflow-hidden"
   id="hero-section"
-  style="
-    background-image: url('{{ asset('image/header/sekolah.jpg') }}');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    will-change: background-position;
-  "
+  class="{{ $bleed }} relative overflow-hidden"
+  style="background:#03081a; min-height:85vh;"
 >
-  <div class="absolute inset-0 bg-black/55"></div>
 
-  {{-- SHIMMER LINE --}}
-  <div class="hero-shimmer"></div>
+  {{-- ── STAR CANVAS ── --}}
+  <canvas id="hero-canvas"
+    style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;">
+  </canvas>
 
-  <div class="relative min-h-[380px] md:min-h-[540px] lg:min-h-[580px]">
+  {{-- ── FLOATING PARTICLES CANVAS ── --}}
+  <canvas id="hero-particles"
+    style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;">
+  </canvas>
 
-    {{-- MOBILE: center layout --}}
-    <div class="flex md:hidden absolute inset-0 items-center justify-center px-6">
-      <div class="text-white text-center max-w-sm">
+  {{-- ── BEAM: TOP CENTER SPOTLIGHT ── --}}
+  <div id="hero-beam" style="
+    position:absolute;inset:0;z-index:2;pointer-events:none;
+    background:
+      radial-gradient(ellipse 55% 90% at 50% -5%,
+        rgba(29,78,216,0.82) 0%,
+        rgba(29,78,216,0.20) 40%,
+        transparent 68%),
+      radial-gradient(ellipse 32% 42% at 50% 0%,
+        rgba(147,197,253,0.20) 0%,
+        transparent 58%);
+  "></div>
 
-        <h1 class="text-3xl font-extrabold tracking-wide drop-shadow leading-tight hero-anim" style="animation-delay:0ms">
-          {!! e($setting->hero_title ? explode("\n", $setting->hero_title)[0] : "HACKATHON RUMAH") !!}
-          <span class="block mt-1">
-            {!! e($setting->hero_title ? (explode("\n", $setting->hero_title)[1] ?? '') : "PENDIDIKAN 2026") !!}
-          </span>
-        </h1>
+  {{-- ── VIGNETTE SIDES ── --}}
+  <div style="
+    position:absolute;inset:0;z-index:2;pointer-events:none;
+    background:
+      linear-gradient(to right, rgba(3,8,26,0.55) 0%, transparent 22%, transparent 78%, rgba(3,8,26,0.55) 100%);
+  "></div>
 
-        <div class="mt-3">
-          <p class="text-base font-extrabold leading-snug drop-shadow hero-anim" style="animation-delay:200ms">
-            {{ $setting->hero_subtitle ?? 'Wujudkan Indonesia Cerdas' }}
-          </p>
-          <p class="mt-1 text-xs font-semibold leading-snug opacity-90 drop-shadow hero-anim" style="animation-delay:300ms">
-            "{{ $setting->hero_tagline ?? 'Gim Edukasi untuk Pembelajaran Seru' }}"
-          </p>
-        </div>
+  {{-- ── VIGNETTE BOTTOM ── --}}
+  <div style="
+    position:absolute;bottom:0;left:0;right:0;height:30%;z-index:2;pointer-events:none;
+    background:linear-gradient(to top, rgba(3,8,26,0.88) 0%, transparent 100%);
+  "></div>
 
-        <div class="hero-anim flex justify-center" style="animation-delay:420ms">
-          <a href="{{ $setting->primary_button_url ?? route('registrasi') }}"
-             class="inline-flex items-center justify-center mt-5 px-6 py-2.5
-                    text-white text-sm font-bold rounded-full
-                    transition-all duration-300 hero-btn btn-premium"
-             style="background-color:#0072BC;">
-            {{ $setting->primary_button_text ?? 'Registrasi' }}
-          </a>
-        </div>
+  {{-- ── CONTENT ── --}}
+  <div style="
+    position:relative;z-index:10;
+    display:flex;flex-direction:column;align-items:center;
+    justify-content:center;text-align:center;
+    padding:7rem 1.5rem 6rem;
+    min-height:85vh;
+    font-family:'Sora',system-ui,sans-serif;
+  ">
 
-      </div>
+    {{-- EVENT LABEL --}}
+    <div class="h-anim" style="--d:0ms; margin-bottom:1.1rem;">
+      <span style="
+        display:inline-flex;align-items:center;gap:8px;
+        color:#60a5fa;font-size:clamp(12px,1.6vw,15px);font-weight:700;
+        letter-spacing:0.22em;text-transform:uppercase;
+        font-family:'Sora',system-ui,sans-serif;
+      ">
+        <span style="
+          display:inline-block;width:7px;height:7px;border-radius:50%;
+          background:#60a5fa;animation:dotPulse 2.2s ease-in-out infinite;
+        "></span>
+        {{ $setting->hero_event_label
+            ?? ($setting->hero_title
+                ? strtoupper(str_replace("\n",' ',$setting->hero_title))
+                : 'HACKATHON RUMAH PENDIDIKAN 2026') }}
+      </span>
     </div>
 
-    {{-- DESKTOP: left layout --}}
-    <div class="hidden md:flex absolute inset-0 items-center">
-      <div class="text-white max-w-2xl ml-16 lg:ml-24">
+    {{-- HEADLINE --}}
+    @php
+      $line1 = 'Wujudkan';
+      $line2 = 'Indonesia Cerdas';
+      if (!empty($setting->hero_subtitle)) {
+        $parts = explode(' ', $setting->hero_subtitle, 2);
+        $line1 = $parts[0] ?? 'Wujudkan';
+        $line2 = $parts[1] ?? 'Indonesia Cerdas';
+      }
+    @endphp
 
-        <h1 class="text-5xl lg:text-6xl font-extrabold tracking-wide drop-shadow mt-6">
-          <span class="block leading-tight hero-anim" style="animation-delay:0ms">
-            {!! e($setting->hero_title ? explode("\n", $setting->hero_title)[0] : "HACKATHON RUMAH") !!}
-          </span>
-          <span class="block leading-tight mt-1 hero-anim" style="animation-delay:120ms">
-            {!! e($setting->hero_title ? (explode("\n", $setting->hero_title)[1] ?? '') : "PENDIDIKAN 2026") !!}
-          </span>
-        </h1>
+    <h1 class="h-anim" style="
+      --d:160ms;
+      font-family:'Sora',system-ui,sans-serif;
+      font-weight:900;line-height:1.06;
+      font-size:clamp(2.8rem,8.5vw,5.8rem);
+      letter-spacing:-0.03em;
+      max-width:860px;margin:0;
+    ">
+      <span style="display:block;color:#ffffff;">{{ $line1 }}</span>
+      <span class="hero-grad-text" style="display:block;">{{ $line2 }}</span>
+    </h1>
 
-        <div class="mt-1">
-          <p class="text-xl lg:text-2xl font-extrabold leading-snug drop-shadow hero-anim" style="animation-delay:260ms">
-            {{ $setting->hero_subtitle ?? 'Wujudkan Indonesia Cerdas' }}
-          </p>
-          <p class="mt-1 text-base lg:text-lg font-semibold leading-snug opacity-90 drop-shadow hero-anim" style="animation-delay:360ms">
-            "{{ $setting->hero_tagline ?? 'Gim Edukasi untuk Pembelajaran Seru' }}"
-          </p>
-        </div>
+    {{-- TAGLINE --}}
+    <p class="h-anim" style="
+      --d:300ms;
+      font-family:'Sora',system-ui,sans-serif;
+      font-weight:500;
+      color:rgba(255,255,255,0.38);
+      font-size:clamp(0.78rem,1.5vw,0.92rem);
+      max-width:380px;line-height:1.7;
+      letter-spacing:0.05em;
+      margin:0.65rem 0 0;
+    ">{{ $setting->hero_tagline ?? 'Gim Edukasi untuk Pembelajaran Seru' }}</p>
 
-        <div class="hero-anim" style="animation-delay:480ms">
-          <a href="{{ $setting->primary_button_url ?? route('registrasi') }}"
-             class="inline-flex items-center justify-center mt-5 px-5 py-2
-                    text-white text-sm font-bold rounded-full
-                    transition-all duration-300 hero-btn btn-premium"
-             style="background-color:#0072BC;">
-            {{ $setting->primary_button_text ?? 'Registrasi' }}
-          </a>
-        </div>
+    {{-- DIVIDER --}}
+    <div class="h-anim" style="--d:400ms; margin:1.0rem 0 0;">
+      <div style="
+        width:36px;height:1px;margin:0 auto;
+        background:linear-gradient(90deg,transparent,rgba(99,179,237,0.5),transparent);
+      "></div>
+    </div>
 
-      </div>
+    {{-- CTA BUTTON --}}
+    <div class="h-anim" style="--d:520ms; margin-top:1.0rem;">
+      <a href="{{ $setting->primary_button_url ?? route('registrasi') }}" id="hero-cta">
+        <span class="hero-cta-label">
+          {{ $setting->primary_button_text ?? 'Daftar Sekarang' }}
+        </span>
+      </a>
     </div>
 
   </div>
 
+  {{-- ═══════════════ STYLES ═══════════════ --}}
   <style>
-    @keyframes heroFadeUp {
-      from { opacity: 0; transform: translateY(28px); }
-      to   { opacity: 1; transform: translateY(0); }
+    /* ── Entry animation ── */
+    @keyframes hFadeUp {
+      from { opacity:0; transform:translateY(26px); }
+      to   { opacity:1; transform:translateY(0); }
     }
-    @keyframes heroPulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(0,114,188,0.5); }
-      50%       { box-shadow: 0 0 0 8px rgba(0,114,188,0); }
+    .h-anim {
+      opacity:0;
+      animation:hFadeUp 0.85s cubic-bezier(0.16,1,0.3,1) var(--d,0ms) forwards;
     }
-    @keyframes heroShimmer {
-      0%   { transform: translateX(-100%) skewX(-12deg); opacity: 0; }
-      10%  { opacity: 1; }
-      90%  { opacity: 1; }
-      100% { transform: translateX(200vw) skewX(-12deg); opacity: 0; }
+
+    /* ── Headline gradient shimmer ── */
+    @keyframes gradFlow {
+      0%,100% { background-position:0% 50%; }
+      50%      { background-position:100% 50%; }
     }
-    .hero-anim {
-      opacity: 0;
-      animation: heroFadeUp 0.65s cubic-bezier(0.22,1,0.36,1) forwards;
+    .hero-grad-text {
+      background:linear-gradient(110deg,
+        #5baee8 0%, #93c5fd 30%, #c2ecff 52%, #7ec8f4 72%, #4a9edc 100%);
+      background-size:240% 240%;
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+      animation:gradFlow 8s ease infinite;
     }
-    .hero-btn {
-      animation: heroPulse 2.4s ease-in-out 1.2s infinite;
+
+    /* ── Beam breathe ── */
+    @keyframes beamBreathe {
+      0%,100% { opacity:1; }
+      50%      { opacity:0.75; }
     }
-    .hero-shimmer {
-      position: absolute;
-      top: 0; left: 0;
-      width: 80px;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent);
-      animation: heroShimmer 1.8s cubic-bezier(0.4,0,0.2,1) 0.3s 1 forwards;
-      pointer-events: none;
-      z-index: 10;
+    #hero-beam {
+      animation:beamBreathe 7s ease-in-out infinite;
     }
-    .btn-premium {
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0,114,188,0.3);
+
+    /* ── Badge dot pulse ── */
+    @keyframes dotPulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50%      { opacity:0.35; transform:scale(0.7); }
     }
-    .btn-premium::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
-      transform: translateX(-100%);
-      transition: transform 0.5s ease;
+
+    /* ── Button ── */
+    @keyframes btnGlow {
+      0%,100% { box-shadow:0 0 0px 0px rgba(147,197,253,0.0), 0 4px 18px rgba(0,0,0,0.25); }
+      50%      { box-shadow:0 0 18px 6px rgba(147,197,253,0.18), 0 4px 18px rgba(0,0,0,0.25); }
     }
-    .btn-premium:hover::after { transform: translateX(100%); }
-    .btn-premium:hover {
-      background-color: #005fa3 !important;
-      box-shadow: 0 6px 20px rgba(0,114,188,0.45);
-      transform: translateY(-1px);
+    @keyframes btnShine {
+      0%       { transform:translateX(-200%) skewX(-22deg); opacity:0; }
+      5%        { opacity:1; }
+      40%,100% { transform:translateX(320%)  skewX(-22deg); opacity:0; }
+    }
+    #hero-cta {
+      position:relative;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 30px;
+      border-radius:9999px;
+      background:rgba(255,255,255,0.90);
+      text-decoration:none;
+      overflow:hidden;
+      transition:transform 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+      animation:btnGlow 3.5s ease-in-out 2s infinite;
+    }
+    #hero-cta:hover {
+      background:rgba(255,255,255,1);
+      transform:translateY(-2px);
+      box-shadow:0 8px 28px rgba(29,78,216,0.35);
+    }
+    #hero-cta:active { transform:translateY(0); }
+    #hero-cta::before {
+      content:'';
+      position:absolute;top:0;left:0;
+      width:30%;height:100%;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent);
+      animation:btnShine 4.5s ease-in-out 2.5s infinite;
+      pointer-events:none;
+    }
+    .hero-cta-label {
+      position:relative;z-index:1;
+      color:#03081a;
+      font-family:'Sora',system-ui,sans-serif;
+      font-size:0.82rem;
+      font-weight:700;
+      letter-spacing:0.06em;
+      white-space:nowrap;
     }
   </style>
 </section>
 
+{{-- ═══════════════ SCRIPTS ═══════════════ --}}
 <script>
-  (function () {
-    const hero = document.getElementById('hero-section');
-    if (!hero) return;
-    // Disable parallax on mobile (tidak efektif & bisa lambat)
-    if (window.innerWidth < 768) return;
-    let ticking = false;
-    window.addEventListener('scroll', function () {
-      if (!ticking) {
-        requestAnimationFrame(function () {
-          const scrollY = window.scrollY;
-          const offset = scrollY * 0.25;
-          hero.style.backgroundPosition = `center calc(50% + ${offset}px)`;
-          ticking = false;
+(function () {
+
+  /* ── 1. TWINKLING STARS ── */
+  const starCanvas = document.getElementById('hero-canvas');
+  if (starCanvas) {
+    const ctx = starCanvas.getContext('2d');
+    let W, H, stars = [];
+
+    function resizeStar() {
+      W = starCanvas.width  = starCanvas.offsetWidth;
+      H = starCanvas.height = starCanvas.offsetHeight;
+    }
+    function rand(a, b) { return Math.random() * (b - a) + a; }
+    function initStars() {
+      stars = [];
+      const n = Math.min(Math.floor(W * 0.14), 180);
+      for (let i = 0; i < n; i++) {
+        const base = rand(0.08, 0.70);
+        stars.push({
+          x      : rand(0, W),
+          y      : rand(0, H * 0.48),
+          r      : rand(0.10, 1.2),
+          base   : base,
+          a      : base,
+          period : rand(4500, 13000),
+          offset : rand(0, Math.PI * 2),
         });
-        ticking = true;
       }
-    });
-  })();
+    }
+    function drawStars(ts) {
+      ctx.clearRect(0, 0, W, H);
+      for (const s of stars) {
+        const sin = Math.sin(((ts / s.period) + s.offset) * Math.PI * 2);
+        s.a = s.base * (0.10 + 0.90 * ((sin + 1) / 2));
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(210,232,255,${s.a.toFixed(3)})`;
+        ctx.fill();
+      }
+      requestAnimationFrame(drawStars);
+    }
+    resizeStar(); initStars();
+    requestAnimationFrame(drawStars);
+    new ResizeObserver(() => { resizeStar(); initStars(); }).observe(starCanvas.parentElement);
+  }
+
+  /* ── 2. FLOATING PARTICLES ── */
+  const pCanvas = document.getElementById('hero-particles');
+  if (pCanvas) {
+    const ctx2 = pCanvas.getContext('2d');
+    let PW, PH, particles = [];
+
+    function resizeP() {
+      PW = pCanvas.width  = pCanvas.offsetWidth;
+      PH = pCanvas.height = pCanvas.offsetHeight;
+    }
+    function rand2(a, b) { return Math.random() * (b - a) + a; }
+    function initParticles() {
+      particles = [];
+      /* Hanya 18 partikel — subtle, tidak ganggu */
+      for (let i = 0; i < 18; i++) {
+        particles.push({
+          x    : rand2(PW * 0.15, PW * 0.85),
+          y    : rand2(PH * 0.15, PH * 0.80),
+          r    : rand2(0.6, 1.8),
+          vx   : rand2(-0.08, 0.08),
+          vy   : rand2(-0.18, -0.06),   /* naik perlahan */
+          a    : rand2(0.06, 0.22),
+          life : rand2(0, 1),           /* fase awal acak */
+        });
+      }
+    }
+    function drawParticles() {
+      ctx2.clearRect(0, 0, PW, PH);
+      for (const p of particles) {
+        p.life += 0.003;
+        if (p.life > 1) {
+          /* reset ke bawah area beam */
+          p.x    = rand2(PW * 0.2, PW * 0.8);
+          p.y    = rand2(PH * 0.55, PH * 0.80);
+          p.life = 0;
+          p.vx   = rand2(-0.08, 0.08);
+          p.vy   = rand2(-0.18, -0.06);
+        }
+        /* fade in & out sepanjang life */
+        const fade = Math.sin(p.life * Math.PI);
+        p.x += p.vx;
+        p.y += p.vy;
+        ctx2.beginPath();
+        ctx2.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx2.fillStyle = `rgba(147,197,253,${(p.a * fade).toFixed(3)})`;
+        ctx2.fill();
+      }
+      requestAnimationFrame(drawParticles);
+    }
+    resizeP(); initParticles();
+    requestAnimationFrame(drawParticles);
+    new ResizeObserver(() => { resizeP(); initParticles(); }).observe(pCanvas.parentElement);
+  }
+
+})();
 </script>
 
 <!-- DESKRIPSI -->
@@ -825,7 +995,7 @@
 </script>
 
 <!-- YOUTUBE -->
-<section class="{{ $bleed }} py-24 md:py-32 bg-white">
+<section class="{{ $bleed }} py-24 md:py-32" style="background: linear-gradient(180deg, #ffffff 0%, #f2f8fd 35%, #eaf4fb 70%, #ffffff 100%);">
   <div class="{{ $inner }}">
 
     <div class="mb-8">
@@ -843,21 +1013,10 @@
           function extractYoutubeIdSimple($url) {
               if (!$url) return null;
 
-              if (preg_match('/youtu\.be\/([^\?&]+)/', $url, $match)) {
-                  return $match[1];
-              }
-
-              if (preg_match('/watch\?v=([^\?&]+)/', $url, $match)) {
-                  return $match[1];
-              }
-
-              if (preg_match('/live\/([^\?&]+)/', $url, $match)) {
-                  return $match[1];
-              }
-
-              if (preg_match('/embed\/([^\?&]+)/', $url, $match)) {
-                  return $match[1];
-              }
+              if (preg_match('/youtu\.be\/([^\?&]+)/', $url, $match)) return $match[1];
+              if (preg_match('/watch\?v=([^\?&]+)/', $url, $match)) return $match[1];
+              if (preg_match('/live\/([^\?&]+)/', $url, $match)) return $match[1];
+              if (preg_match('/embed\/([^\?&]+)/', $url, $match)) return $match[1];
 
               return null;
           }
