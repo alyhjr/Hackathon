@@ -1,8 +1,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
 
-<nav id="main-nav" class="sticky top-0 z-50 w-full nav-entrance" style="padding: 10px 24px; background: transparent;">
-  <div id="nav-pill" class="max-w-7xl mx-auto px-5 transition-all duration-300" style="border-radius: 9999px;">
+<nav id="main-nav" class="sticky top-0 z-50 w-full nav-entrance" style="padding: 10px 24px;">
+  <div id="nav-pill" class="max-w-7xl mx-auto px-5 transition-all duration-300 pill-white" style="border-radius: 9999px;">
     <div class="flex items-center h-14">
 
       {{-- LEFT --}}
@@ -517,14 +517,24 @@
   function applyState() {
     const scrolled = window.scrollY > SCROLL_Y;
 
-    if (isHome && !scrolled) {
-      pill.classList.remove('pill-navy');
-      pill.classList.add('pill-white');
-    } else {
+   function applyState() {
+  const scrolled = window.scrollY > SCROLL_Y;
+
+  if (isHome) {
+    // BERANDA SELALU PUTIH
+    pill.classList.remove('pill-navy');
+    pill.classList.add('pill-white');
+  } else {
+    // HALAMAN LAIN BARU IKUT SCROLL
+    if (scrolled) {
       pill.classList.remove('pill-white');
       pill.classList.add('pill-navy');
+    } else {
+      pill.classList.remove('pill-navy');
+      pill.classList.add('pill-white');
     }
   }
+}
 
   applyState();
   window.addEventListener('scroll', applyState, { passive: true });
