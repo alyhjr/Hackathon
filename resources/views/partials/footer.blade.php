@@ -1,7 +1,7 @@
-<footer class="footer-wrap">
+<footer class="footer-wrap {{ request()->is('/') ? '' : 'footer-navy' }}"> 
   <div class="footer-container">
 
-    <div class="grid md:grid-cols-[0.7fr_1.3fr] gap-20 items-start">
+    <div class="grid md:grid-cols-[0.7fr_1.3fr] gap-16 items-start">
 
       <!-- LEFT (LOGO) -->
       <div class="footer-left">
@@ -13,7 +13,7 @@
       </div>
 
       <!-- RIGHT -->
-      <div class="grid md:grid-cols-[1.6fr_0.8fr] gap-x-20">
+      <div class="grid md:grid-cols-[1.6fr_0.8fr] gap-x-18">
 
         <!-- KONTAK -->
         <div class="footer-col">
@@ -26,7 +26,7 @@
                class="footer-item footer-link">
 
               <svg xmlns="http://www.w3.org/2000/svg"
-                   class="footer-icon"
+                   class="footer-icon location-icon"
                    viewBox="0 0 24 24"
                    fill="none" stroke="currentColor"
                    stroke-width="2.2"
@@ -121,10 +121,28 @@
   </div>
 
 <style>
+
+/* DEFAULT HOME */
 .footer-wrap {
     background: #ffffff;
     margin-top: 0 !important;
-    padding: 60px 0 40px;
+    padding: 40px 0 28px; /* dipendekin lagi */
+}
+
+/* NAVY HALAMAN LAIN */
+.footer-navy {
+    background: #0f172a;
+}
+
+.footer-navy .footer-heading,
+.footer-navy .footer-text,
+.footer-navy .footer-icon {
+    color: #ffffff;
+}
+
+.footer-navy .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.15);
+    color: #cbd5f5;
 }
 
 .footer-container {
@@ -134,14 +152,14 @@
 }
 
 .footer-logo {
-    height: 60px;
+    height: 55px;
 }
 
 /* heading */
 .footer-heading {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
-    margin-bottom: 18px;
+    margin-bottom: 14px;
     color: #0f172a;
 }
 
@@ -149,26 +167,31 @@
 .footer-list {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 14px;
 }
 
 /* item */
 .footer-item {
     display: flex;
-    gap: 14px;
+    gap: 12px;
     align-items: flex-start;
-    padding: 10px 12px;
-    border-radius: 12px;
+    padding: 6px 8px;
+    border-radius: 10px;
     transition: all 0.3s ease;
 }
 
-/* icon */
+/* icon default */
 .footer-icon {
     width: 22px;
     height: 22px;
     margin-top: 2px;
     color: #334155;
-    transition: 0.3s;
+}
+
+/* LOCATION ICON LEBIH BESAR */
+.location-icon {
+    width: 28px;
+    height: 28px;
 }
 
 /* text */
@@ -178,11 +201,10 @@
     line-height: 1.5;
 }
 
-/* hover PREMIUM */
+/* hover */
 .footer-item:hover {
-    background: #f8fafc;
-    transform: translateY(-3px);
-    box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+    background: rgba(255,255,255,0.05);
+    transform: translateY(-2px);
 }
 
 .footer-item:hover .footer-text {
@@ -191,13 +213,13 @@
 
 .footer-item:hover .footer-icon {
     color: #2563eb;
-    transform: scale(1.1);
+    transform: scale(1.08);
 }
 
 /* bottom */
 .footer-bottom {
-    margin-top: 40px;
-    padding-top: 16px;
+    margin-top: 28px;
+    padding-top: 12px;
     border-top: 1px solid #e5e7eb;
     text-align: center;
     font-size: 12px;
@@ -208,6 +230,7 @@
 footer {
     margin-top: 0 !important;
 }
+
 </style>
 
 </footer>

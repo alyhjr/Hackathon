@@ -54,6 +54,29 @@ class PesertaSeeder extends Seeder
                 'status'        => 'pending',
                 'password'      => null,
             ],
+
+            [
+                'nuptk'         => '2005050500000001',
+                'tanggal_lahir' => '2005-05-05',
+                'nama'          => 'Aqeela Ulth',
+                'sekolah'       => 'SMA Negeri 2 Jakarta',
+                'email'         => 'aqeela@gmail.com',
+                'kota'          => 'Jakarta',
+                'provinsi'      => 'DKI Jakarta',
+                'status'        => 'pending',
+                'password'      => null,
+            ],
+            [
+                'nuptk'         => '2004040400000002',
+                'tanggal_lahir' => '2004-04-04',
+                'nama'          => 'Aurela',
+                'sekolah'       => 'SMA Negeri 5 Bandung',
+                'email'         => 'aurela@gmail.com',
+                'kota'          => 'Bandung',
+                'provinsi'      => 'Jawa Barat',
+                'status'        => 'pending',
+                'password'      => null,
+            ],
         ];
 
         foreach ($data as $item) {
