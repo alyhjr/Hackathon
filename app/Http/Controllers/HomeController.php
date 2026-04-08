@@ -7,6 +7,7 @@ use App\Models\SiteSetting;
 use App\Models\Faq;
 use App\Models\Timeline;
 use App\Models\InformasiPenting;
+use App\Models\News;
 
 class HomeController extends Controller
 {
@@ -30,7 +31,13 @@ class HomeController extends Controller
             ->orderBy('id')
             ->get();
 
+          
+        $newsItems = News::where('is_active', true)
+    ->orderByDesc('is_featured')
+    ->orderBy('sort_order')
+    ->orderByDesc('published_at')
+    ->get();
 
-        return view('pages.home', compact('setting', 'faqs', 'timeline', 'informasiPentingItems'));
+        return view('pages.home', compact('setting', 'faqs', 'timeline', 'informasiPentingItems', 'newsItems'));
     }
 }

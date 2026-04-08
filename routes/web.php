@@ -12,6 +12,8 @@ use App\Models\PengumumanGroup;
 use App\Http\Controllers\RegistrasiController;
 use App\Http\Controllers\PesertaSubmissionController;
 use App\Http\Controllers\PesertaAuthController;
+use App\Http\Controllers\Admin\NewsController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -163,6 +165,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('/site-settings/pengumuman-groups/{group}',    [SiteSettingController::class, 'updatePengumumanGroup'])->name('site-settings.pengumuman-groups.update');
     Route::delete('/site-settings/pengumuman-groups/{group}', [SiteSettingController::class, 'destroyPengumumanGroup'])->name('site-settings.pengumuman-groups.destroy');
 
+    // NEWS
+Route::post('/site-settings/news', [NewsController::class, 'store'])->name('news.store');
+Route::put('/site-settings/news/{id}', [NewsController::class, 'update'])->name('news.update');
+Route::delete('/site-settings/news/{id}', [NewsController::class, 'destroy'])->name('news.destroy');
+
     Route::post('/site-settings/pengumuman-entries',          [SiteSettingController::class, 'storePengumumanEntry'])->name('site-settings.pengumuman-entries.store');
     Route::put('/site-settings/pengumuman-entries/{entry}',   [SiteSettingController::class, 'updatePengumumanEntry'])->name('site-settings.pengumuman-entries.update');
     Route::delete('/site-settings/pengumuman-entries/{entry}',[SiteSettingController::class, 'destroyPengumumanEntry'])->name('site-settings.pengumuman-entries.destroy');
@@ -203,3 +210,5 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::patch('/profile/email', [ProfileController::class, 'updateEmail'])->name('profile.email');
 });
+
+

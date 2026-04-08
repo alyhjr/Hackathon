@@ -17,7 +17,7 @@ use App\Models\Timeline;
 use App\Models\InformasiPenting;
 use App\Models\PesertaSubmission;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-
+use App\Models\News;
 
 
 
@@ -46,6 +46,11 @@ class SiteSettingController extends Controller
             ->pluck('category')
             ->toArray();
 
+
+            $news = News::orderByDesc('is_featured')
+    ->orderBy('sort_order')
+    ->orderByDesc('published_at')
+    ->get();
 
         // Peserta Registrasi
         $pesertaRegistrasi = Peserta::orderBy('created_at', 'desc')->get();
@@ -125,6 +130,7 @@ class SiteSettingController extends Controller
             'informasiPentingItems',
             'pesertaSubmissions',
             'pesertaRegistrasi',
+            'news',
         ));
     }
 

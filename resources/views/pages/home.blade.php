@@ -1066,5 +1066,285 @@
 
   </div>
 </section>
+
+{{-- ============================================================
+     NEWS / BERITA SECTION
+     ============================================================ --}}
+
+<section id="news-section" class="news-full">
+    <div class="news-inner">
+
+        {{-- HEADER --}}
+        <div class="news-header">
+            <h2 class="news-title">Berita & Informasi</h2>
+            <p class="news-desc">Update terbaru seputar Hackathon Rumah Pendidikan</p>
+        </div>
+
+        {{-- DATA --}}
+        @php
+            $displayNews = (isset($newsItems) && $newsItems->count())
+                ? $newsItems
+                : collect([]);
+
+            $badgeClass = [
+                'Pengumuman' => 'b-pengumuman',
+                'Kegiatan'   => 'b-kegiatan',
+                'Update'     => 'b-update',
+                'Tips'       => 'b-tips',
+                'Info'       => 'b-info',
+            ];
+        @endphp
+
+        {{-- GRID --}}
+        <div class="news-grid">
+
+            @forelse($displayNews->take(3) as $news)
+            <div class="news-card">
+
+                {{-- IMAGE --}}
+                <div class="news-img">
+                    @if(!empty($news->image))
+                        <img src="{{ asset('storage/'.$news->image) }}" alt="{{ $news->title }}">
+                    @else
+                        <div class="news-img-empty"></div>
+                    @endif
+                </div>
+
+                <div class="news-body">
+
+                    {{-- BADGE --}}
+                    @if(!empty($news->category))
+                    <span class="news-badge {{ $badgeClass[$news->category] ?? 'b-default' }}">
+                        {{ $news->category }}
+                    </span>
+                    @endif
+
+                    {{-- TITLE (NO HOVER LAGI) --}}
+                    <h3 class="news-card-title">{{ $news->title }}</h3>
+
+                    {{-- EXCERPT --}}
+                    @if(!empty($news->excerpt))
+                    <p class="news-excerpt">
+                        {{ $news->excerpt }}
+                    </p>
+                    @endif
+
+                    {{-- FOOTER --}}
+                    <div class="news-footer">
+                        @if(!empty($news->published_at))
+                        <span class="news-date">
+                            {{ \Carbon\Carbon::parse($news->published_at)->translatedFormat('d M Y') }}
+                        </span>
+                        @endif
+
+                        @if(!empty($news->source_url))
+                        <a href="{{ $news->source_url }}" target="_blank" class="news-link">
+                            Selengkapnya →
+                        </a>
+                        @endif
+                    </div>
+
+                </div>
+            </div>
+            @empty
+                <div class="news-empty">
+                    <p>Belum ada berita</p>
+                </div>
+            @endforelse
+
+        </div>
+    </div>
+</section>
+
+<style>
+/* ── SECTION ── */
+.news-full {
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    width: 100vw;
+    background: #080f1e;
+}
+
+.news-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 60px 28px;
+}
+
+/* ── HEADER ── */
+.news-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.news-title {
+    font-size: 31px;
+    font-weight: 800;
+    color: #f0f4ff;
+}
+
+.news-desc {
+    font-size: 13px;
+    color: white;
+    font: bold;
+}
+
+/* ── GRID ── */
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+@media (max-width: 768px) {
+    .news-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 480px) {
+    .news-grid { grid-template-columns: 1fr; }
+}
+
+/* ── CARD PREMIUM GLOW ── */
+.news-card {
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.35s cubic-bezier(.16,1,.3,1);
+
+    /* 🔥 glow dasar */
+    box-shadow: 
+        0 6px 18px rgba(0,0,0,0.08),
+        0 2px 6px rgba(0,0,0,0.05);
+}
+
+.news-card:hover {
+    transform: translateY(-6px) scale(1.01);
+
+    /* 🔥 efek "ngambang + sinar" */
+    box-shadow: 
+        0 20px 40px rgba(0,0,0,0.18),
+        0 0 0 1px rgba(59,130,246,0.08),
+        0 0 25px rgba(59,130,246,0.15);
+}
+
+/* ── IMAGE ── */
+.news-img {
+    height: 150px;
+    overflow: hidden;
+}
+
+.news-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.news-card:hover .news-img img {
+    transform: scale(1.06);
+}
+
+.news-img-empty {
+    width: 100%;
+    height: 100%;
+    background: #e2e8f0;
+}
+
+/* ── BODY ── */
+.news-body {
+    padding: 16px;
+}
+
+/* 🔥 BADGE LEBIH GEDE & PREMIUM */
+.news-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+    display: inline-block;
+    letter-spacing: 0.03em;
+}
+
+.b-pengumuman { background: #fee2e2; color: #dc2626; }
+.b-kegiatan   { background: #dcfce7; color: #16a34a; }
+.b-update     { background: #e0f2fe; color: #0284c7; }
+.b-tips       { background: #fef9c3; color: #ca8a04; }
+.b-info       { background: #ede9fe; color: #7c3aed; }
+.b-default    { background: #f1f5f9; color: #64748b; }
+
+/* ── TITLE (NO HOVER) ── */
+.news-card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 6px;
+    line-height: 1.4;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ── EXCERPT ── */
+.news-excerpt {
+    font-size: 12.5px;
+    color: #64748b;
+    line-height: 1.55;
+    margin-bottom: 12px;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ── FOOTER ── */
+.news-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 10px;
+}
+
+.news-date {
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+/* 🔥 BALIKIN OVAL HOVER */
+.news-link {
+    font-size: 11px;
+    font-weight: 600;
+    color: #2563eb;
+    text-decoration: none;
+
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+
+    transition: all 0.25s ease;
+}
+
+.news-link:hover {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    box-shadow: 0 4px 10px rgba(37,99,235,0.15);
+}
+
+/* ── EMPTY ── */
+.news-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 48px;
+    color: #475569;
+}
+</style>
       
 @endsection

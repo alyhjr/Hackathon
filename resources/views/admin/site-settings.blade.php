@@ -548,6 +548,7 @@
                 'label'=>'Beranda – YouTube',
                 'desc'=>'Embed video'
               ],
+              ['key'=>'news', 'label'=>'Berita / News', 'desc'=>'Kelola artikel berita & info']
             ]
           ]
         ];
@@ -1625,6 +1626,200 @@
     </form>
   </div>
 </div>
+
+
+
+{{-- ============================================================
+     NEWS MANAGEMENT (FIXED + USED LABEL)
+     ============================================================ --}}
+
+<div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+
+  {{-- HEADER --}}
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <h2 class="text-lg font-bold text-slate-800">Manajemen Berita</h2>
+      <p class="text-sm text-slate-400">Kelola berita yang tampil di halaman utama</p>
+    </div>
+  </div>
+
+  {{-- DATA --}}
+  @php
+    $newsAdmin = $news ?? collect();
+    $usedOrders = $newsAdmin->pluck('sort_order')->filter()->toArray();
+  @endphp
+
+  {{-- FORM TAMBAH --}}
+  <form action="{{ route('admin.news.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4 mb-8">
+    @csrf
+
+    <div class="grid md:grid-cols-2 gap-4">
+
+      <div>
+        <label class="field-label">Judul</label>
+        <input type="text" name="title" class="field-input" required>
+      </div>
+
+      <div>
+        <label class="field-label">Kategori</label>
+        <select name="category" class="field-input">
+          <option value="">-- Pilih --</option>
+          @foreach(['Pengumuman','Kegiatan','Update','Tips','Info'] as $cat)
+            <option value="{{ $cat }}">{{ $cat }}</option>
+          @endforeach
+        </select>
+      </div>
+
+    </div>
+
+    <div>
+      <label class="field-label">Excerpt</label>
+      <textarea name="excerpt" class="field-input min-h-[80px]" required></textarea>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4">
+
+      <div>
+        <label class="field-label">Link</label>
+        <input type="url" name="source_url" class="field-input">
+      </div>
+
+      <div>
+        <label class="field-label">Tanggal</label>
+        <input type="date" name="published_at" class="field-input">
+      </div>
+
+    </div>
+
+    {{-- 🔥 SORT ORDER + USED LABEL --}}
+    <div>
+      <label class="field-label">Nomor Urutan</label>
+      <select name="sort_order" class="field-input">
+        <option value="">-- Pilih Urutan --</option>
+        @for($i=1; $i<=10; $i++)
+          <option value="{{ $i }}">
+            {{ $i }} {{ in_array($i, $usedOrders) ? '(USED)' : '' }}
+          </option>
+        @endfor
+      </select>
+    </div>
+
+    <div>
+      <label class="field-label">Gambar</label>
+      <input type="file" name="image" class="field-input">
+    </div>
+
+    <div class="flex gap-5">
+      <label><input type="checkbox" name="is_active" value="1" checked> Aktif</label>
+      <label><input type="checkbox" name="is_featured" value="1"> Featured</label>
+    </div>
+
+    <button type="submit" class="btn-primary">+ Tambah Berita</button>
+
+  </form>
+
+  {{-- LIST --}}
+  <div class="space-y-4">
+
+    @forelse($newsAdmin->sortByDesc('is_featured')->sortBy('sort_order') as $item)
+
+    <div class="news-item-card" x-data="{ edit:false }">
+
+      {{-- VIEW --}}
+      <div x-show="!edit" class="p-4 flex justify-between items-start">
+
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-1">
+
+            @if($item->category)
+            <span class="news-badge-preview">{{ $item->category }}</span>
+            @endif
+
+            @if($item->is_featured)
+            <span class="text-amber-500 text-xs font-bold">★ Featured</span>
+            @endif
+
+            {{-- 🔥 NOMOR --}}
+            @if($item->sort_order)
+            <span class="text-xs text-blue-600 font-semibold">
+              #{{ $item->sort_order }}
+            </span>
+            @endif
+
+          </div>
+
+          <h3 class="font-semibold text-slate-800 text-sm">
+            {{ $item->title }}
+          </h3>
+
+          <p class="text-xs text-slate-500 mt-1 line-clamp-2">
+            {{ $item->excerpt }}
+          </p>
+
+          <div class="text-xs text-slate-400 mt-2">
+            {{ $item->published_at ? \Carbon\Carbon::parse($item->published_at)->format('d M Y') : '-' }}
+          </div>
+        </div>
+
+        <div class="flex gap-2 ml-4">
+          <button @click="edit=true" class="btn-edit">Edit</button>
+        </div>
+
+      </div>
+
+      {{-- EDIT --}}
+      <div x-show="edit" class="news-item-body">
+
+        <form action="{{ route('admin.news.update',$item->id) }}" method="POST" enctype="multipart/form-data" class="space-y-3">
+          @csrf
+          @method('PUT')
+
+          <input type="text" name="title" value="{{ $item->title }}" class="field-input">
+          <textarea name="excerpt" class="field-input">{{ $item->excerpt }}</textarea>
+
+          {{-- 🔥 EDIT SORT --}}
+          <select name="sort_order" class="field-input">
+            @for($i=1; $i<=10; $i++)
+              <option value="{{ $i }}" {{ $item->sort_order == $i ? 'selected' : '' }}>
+                {{ $i }} {{ in_array($i, $usedOrders) && $item->sort_order != $i ? '(USED)' : '' }}
+              </option>
+            @endfor
+          </select>
+
+          <div class="flex gap-4">
+            <label><input type="checkbox" name="is_active" value="1" {{ $item->is_active?'checked':'' }}> Aktif</label>
+            <label><input type="checkbox" name="is_featured" value="1" {{ $item->is_featured?'checked':'' }}> Featured</label>
+          </div>
+
+          <div class="flex gap-2">
+            <button type="button" @click="edit=false" class="btn-ghost">Batal</button>
+            <button type="submit" class="btn-primary">Simpan</button>
+          </div>
+
+        </form>
+
+        {{-- DELETE --}}
+        <form action="{{ route('admin.news.destroy',$item->id) }}" method="POST" class="mt-2"
+              onsubmit="return confirm('Hapus berita ini?')">
+          @csrf
+          @method('DELETE')
+          <button class="btn-danger">Hapus</button>
+        </form>
+
+      </div>
+
+    </div>
+
+    @empty
+      <div class="text-center text-slate-400 py-10">
+        Belum ada berita
+      </div>
+    @endforelse
+
+  </div>
+
+</div>
+
 
     {{-- ===========================
     TAB: TIMELINE
