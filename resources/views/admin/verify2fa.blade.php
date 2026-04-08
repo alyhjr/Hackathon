@@ -13,14 +13,14 @@
       font-family:'Segoe UI',sans-serif;
     }
     .card {
-      background:rgba(15,25,50,0.9);
-      border:1px solid rgba(255,255,255,0.08);
-      border-radius:16px;
-      padding:40px 36px;
-      width:400px;
-      max-width:95%;
-      text-align:center;
-    }
+  background: linear-gradient(160deg, #1f3b64, #2b518a);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px;
+  padding:40px 36px;
+  width:400px;
+  max-width:95%;
+  text-align:center;
+}
     .icon { font-size:44px; margin-bottom:14px; display:block; }
     h1 { color:#fff; font-size:22px; font-weight:700; margin-bottom:8px; }
     .sub { color:rgba(255,255,255,0.4); font-size:13px; line-height:1.6; margin-bottom:24px; }
