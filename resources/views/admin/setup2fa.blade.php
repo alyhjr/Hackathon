@@ -1,244 +1,303 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Setup Google Authenticator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-  background: #ffffff;
-  min-height: 100vh;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Inter', sans-serif;
-  padding: 40px 20px;
-  overflow-y: auto;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Setup Google Authenticator</title>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  background: linear-gradient(135deg,#f8fafc,#eef2ff);
+  font-family:'DM Sans',sans-serif;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  padding:40px 20px;
 }
-  .card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 24px;
-  padding: 20px 40px 40px;
-  width: 860px;
-  max-width: 100%;
-  margin: auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto;
-  gap: 0 32px;
+
+.wrapper{max-width:900px;width:100%}
+
+.top{display:none;}
+
+h1{font-size:26px;font-weight:700;color:#1e293b}
+.subtitle{color:#94a3b8;font-size:14px}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1.2fr;
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,0.08);
+  background:#fff;
 }
-.top { grid-column: 1 / -1; }
-.steps { grid-column: 1; }
-.qr-box { grid-column: 2; }
-form { grid-column: 1 / -1; }
-.warning { grid-column: 1 / -1; }
-  .top { text-align:center; margin-bottom:28px; margin-top:0; }
-    .icon { font-size:40px; margin-bottom:12px; display:block; }
-    h1 { color:#111; font-size:22px; font-weight:800; margin-bottom:6px; }
-    p { color:#888; font-size:13px; }
-    .steps {
-      background: #f8fafc;
-      border: 1px solid #e5e7eb;
-      border-radius:12px;
-      padding:16px;
-      margin-bottom:20px;
-    }
-    .step { display:flex; gap:12px; align-items:flex-start; margin-bottom:10px; }
-    .step:last-child { margin-bottom:0; }
-    .num {
-      background: rgba(29,78,143,0.1);
-      color:#1d4e8f;
-      border-radius:50%;
-      width:24px; height:24px;
-      display:flex; align-items:center; justify-content:center;
-      font-size:12px; font-weight:700; flex-shrink:0;
-    }
-    .step p { color:#555; font-size:13px; line-height:1.5; margin:0; }
-    .step p strong { color:#111; }
-    .qr-box {
-      text-align:center;
-      background: #f8fafc;
-      border:1px solid #e5e7eb;
-      border-radius:12px;
-      padding:20px;
-      margin-bottom:20px;
-    }
-    .qr-box img {
-      width:170px; height:170px;
-      border-radius:8px;
-      border:4px solid white;
-      background:white;
-      display:block;
-      margin: 0 auto 14px;
-    }
-    .qr-box .label { color:#888; font-size:12px; margin-bottom:8px; }
-    .secret-key {
-      display:inline-block;
-      font-family:'Courier New',monospace;
-      font-size:15px; font-weight:700;
-      color:#1d4e8f;
-      background:rgba(29,78,143,0.08);
-      border:1px solid rgba(29,78,143,0.2);
-      padding:8px 16px;
-      border-radius:8px;
-      letter-spacing:2px;
-      cursor:pointer;
-      word-break:break-all;
-    }
-    .secret-key:hover { background:rgba(29,78,143,0.15); }
-    .copy-hint { font-size:11px; color:#bbb; margin-top:6px; }
-    #copied { display:none; color:#16a34a; font-size:12px; margin-top:4px; }
-    .alert {
-      background:#fef2f2;
-      border:1px solid #fecaca;
-      color:#dc2626;
-      padding:12px 14px;
-      border-radius:8px;
-      font-size:13px;
-      margin-bottom:16px;
-    }
-   label {
-  display:block;
-  font-size:11.5px; font-weight:700;
-  color:#111;
-  letter-spacing:0; text-transform:uppercase;
-  margin-bottom:10px;
+
+/* LEFT PREMIUM (⬅️ NAIK KE ATAS) */
+.card:first-child{
+  background: linear-gradient(160deg,#1f3b64,#2b518a);
+  color:#fff;
+  padding:40px 30px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start; /* ⬅️ FIX NAIK */
+}
+
+.card:first-child p{
+  color:rgba(255,255,255,0.85);
+  font-size:14px;
+}
+
+.card:first-child strong{color:#fff}
+
+/* STEP */
+.step{
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  margin-bottom:18px;
+}
+
+.num{
+  min-width:32px;
+  height:32px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.15);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:13px;
+  font-weight:700;
+  backdrop-filter: blur(6px);
+}
+
+/* RIGHT */
+.card{
+  padding:35px;
+}
+
+.qr-card{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* QR */
+.qr-frame{
+  background:#f8fafc;
+  padding:16px;
+  border-radius:18px;
+  margin-bottom:18px;
+  box-shadow: inset 0 0 0 1px #e2e8f0;
+}
+
+.qr-frame img{width:150px}
+
+.qr-hint{font-size:12px;color:#94a3b8}
+
+/* SECRET */
+.secret-key{
+  margin-top:12px;
+  background:#f8fafc;
+  padding:12px;
+  border-radius:12px;
+  font-family:'JetBrains Mono',monospace;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.secret-key:hover{
+  background:#eef2ff;
+}
+
+.copy-hint{font-size:11px;color:#cbd5e1;margin-top:5px}
+#copied{display:none;color:green;font-size:12px}
+
+/* OTP */
+.divider{
+  width:100%;
+  height:1px;
+  background:#e2e8f0;
+  margin:25px 0;
+}
+
+.otp-label{
+  font-size:11px;
+  color:#94a3b8;
+  margin-bottom:15px;
   text-align:center;
 }
-    .otp-row { display:flex; justify-content:center; gap:10px; margin-bottom:20px; }
-    .otp-box {
-      width:52px; height:58px;
-      background:#f9fafb;
-      border:1.5px solid #e5e7eb;
-      border-radius:10px;
-      color:#111; font-size:22px; font-weight:700;
-      text-align:center;
-      font-family:'Courier New',monospace;
-      outline:none; transition:all 0.2s;
-    }
-    .otp-box:focus {
-      border-color:#1d4e8f;
-      background:#fff;
-      box-shadow:0 0 0 3px rgba(29,78,143,0.1);
-    }
-    .otp-box.filled { border-color:#1d4e8f; }
-   .btn {
-  width: auto;
-  min-width: 320px;
-  max-width: 320px;
-  display: block;
-  margin: 0 auto;
-  background:#1d4e8f;
-  color:#fff; border:none;
-  padding:14px; border-radius:12px;
-  font-size:15px; font-weight:700;
-  cursor:pointer; transition:all 0.2s;
-  letter-spacing:0.3px;
+
+.otp-row{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-bottom:20px;
 }
-    .warning {
-  background:#fffbeb;
-  border:1px solid #fde68a;
+
+.otp-box{
+  width:50px;
+  height:58px;
+  border-radius:14px;
+  border:1px solid #e2e8f0;
+  background:#f8fafc;
+  text-align:center;
+  font-size:22px;
+  transition:0.2s;
+}
+
+.otp-box:focus{
+  border-color:#2b518a;
+  background:#eef2ff;
+  outline:none;
+  transform:translateY(-2px);
+}
+
+/* BUTTON */
+.btn{
+  width:100%;
+  background:linear-gradient(135deg,#2b518a,#1f3b64);
+  color:#fff;
+  border:none;
+  padding:14px;
+  border-radius:14px;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.2s;
+}
+
+.btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 10px 20px rgba(43,81,138,0.25);
+}
+
+/* WARNING */
+.warning{
+  margin-top:18px;
+  background:#fff7ed;
+  padding:14px;
+  border-radius:14px;
+  font-size:13px;
+  text-align:center;
+  color:#9a3412;
+}
+
+.alert{
+  margin-top:15px;
+  background:#fee2e2;
+  padding:12px;
   border-radius:10px;
-  padding:14px; font-size:12px;
-  color:#92400e;
-  margin-top:16px; line-height:1.7;
-  max-width: 320px;
-  margin-left: auto;
-  margin-right: auto;
+  color:#dc2626;
 }
-  </style>
+
+@media(max-width:600px){
+  .grid{grid-template-columns:1fr}
+}
+</style>
 </head>
+
 <body>
+<div class="wrapper">
+
+<div class="top">
+<h1>Setup Google Authenticator</h1>
+<p class="subtitle">Lakukan sekali saja — login berikutnya cukup input kode 6 digit</p>
+</div>
+
+<div class="grid">
+
+<!-- LEFT -->
 <div class="card">
-  <div class="top">
-    <h1>Setup Google Authenticator</h1>
-    <p>Lakukan sekali saja, login berikutnya cukup input kode 6 digit</p>
-  </div>
+<div class="card-label" style="margin-bottom:10px;">SECURITY SETUP</div>
 
-  <div class="steps">
-    <div class="step">
-      <div class="num">1</div>
-      <p>Install <strong>Google Authenticator</strong> atau <strong>Authy</strong> di HP kamu</p>
-    </div>
-    <div class="step">
-      <div class="num">2</div>
-      <p>Tap <strong>+</strong> → pilih <strong>Scan kode QR</strong>, lalu scan gambar di bawah</p>
-    </div>
-    <div class="step">
-      <div class="num">3</div>
-      <p>Masukkan <strong>6 digit kode</strong> yang muncul di aplikasi untuk konfirmasi</p>
-    </div>
-  </div>
+<h1 style="font-size:24px; margin-bottom:6px; color:#fff;">
+Setup Google Authenticator
+</h1>
 
-  <div class="qr-box">
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=170x170&data={{ urlencode($qr_uri) }}" alt="QR Code 2FA">
-    <div class="label">Tidak bisa scan? Masukkan kode ini secara manual:</div>
-    <div class="secret-key" onclick="copySecret(this)" title="Klik untuk copy">{{ $secret }}</div>
-    <div class="copy-hint">klik untuk menyalin</div>
-    <div id="copied"> Kode berhasil disalin!</div>
-  </div>
+<p style="margin-bottom:20px;">
+Lakukan sekali saja — login berikutnya cukup input kode 6 digit
+</p>
 
-  @if(session('error'))
-  <div class="alert">⚠ {{ session('error') }}</div>
-  @endif
+<h2 style="margin-bottom:10px;">Aktifkan 2FA</h2>
+<p style="margin-bottom:25px;">Lindungi akun admin dengan verifikasi dua langkah</p>
 
-  <form method="POST" action="{{ route('admin.2fa.setup.post') }}">
-    @csrf
-    <label>Masukkan Kode dari Aplikasi (6 digit)</label>
-    <div class="otp-row">
-      <input class="otp-box" type="text" id="d0" maxlength="1" inputmode="numeric" autocomplete="off">
-      <input class="otp-box" type="text" id="d1" maxlength="1" inputmode="numeric" autocomplete="off">
-      <input class="otp-box" type="text" id="d2" maxlength="1" inputmode="numeric" autocomplete="off">
-      <input class="otp-box" type="text" id="d3" maxlength="1" inputmode="numeric" autocomplete="off">
-      <input class="otp-box" type="text" id="d4" maxlength="1" inputmode="numeric" autocomplete="off">
-      <input class="otp-box" type="text" id="d5" maxlength="1" inputmode="numeric" autocomplete="off">
-    </div>
-    <input type="hidden" name="otp_code" id="otpFull">
-    <button type="submit" class="btn" onclick="submitCode()">
-       Aktifkan Google Authenticator
-    </button>
-  </form>
+<div class="step"><div class="num">1</div><p>Install <strong>Google Authenticator</strong> atau <strong>Authy</strong></p></div>
+<div class="step"><div class="num">2</div><p>Scan QR di kanan</p></div>
+<div class="step"><div class="num">3</div><p>Masukkan kode 6 digit</p></div>
 
-  <div class="warning">
-    ⚠️ <strong>Simpan kode manual di tempat aman.</strong>
-    Jika HP hilang, kode ini dibutuhkan untuk pemulihan akses.
-  </div>
+</div>
+
+<!-- RIGHT -->
+<div class="card qr-card">
+
+<div class="qr-frame">
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=148x148&data={{ urlencode($qr_uri) }}">
+</div>
+
+<div class="qr-hint">Manual code:</div>
+<div class="secret-key" onclick="copySecret(this)">{{ $secret }}</div>
+<div class="copy-hint">klik untuk copy</div>
+<div id="copied">✓ copied</div>
+
+<div class="divider"></div>
+
+<form method="POST" action="{{ route('admin.2fa.setup.post') }}">
+@csrf
+
+<div class="otp-label">Masukkan kode</div>
+
+<div class="otp-row">
+<input class="otp-box" id="d0" maxlength="1">
+<input class="otp-box" id="d1" maxlength="1">
+<input class="otp-box" id="d2" maxlength="1">
+<input class="otp-box" id="d3" maxlength="1">
+<input class="otp-box" id="d4" maxlength="1">
+<input class="otp-box" id="d5" maxlength="1">
+</div>
+
+<input type="hidden" name="otp_code" id="otpFull">
+
+<button class="btn" onclick="submitCode()">Aktifkan</button>
+</form>
+
+<div class="warning">
+⚠ Simpan kode manual untuk backup
+</div>
+
+</div>
+
+</div>
+
+@if(session('error'))
+<div class="alert">⚠ {{ session('error') }}</div>
+@endif
+
 </div>
 
 <script>
-  const boxes = [0,1,2,3,4,5].map(i => document.getElementById('d'+i));
-  boxes.forEach((box, i) => {
-    box.addEventListener('input', () => {
-      box.value = box.value.replace(/\D/g,'').slice(-1);
-      box.classList.toggle('filled', !!box.value);
-      if (box.value && i < 5) boxes[i+1].focus();
-    });
-    box.addEventListener('keydown', e => {
-      if (e.key === 'Backspace' && !box.value && i > 0) {
-        boxes[i-1].value = '';
-        boxes[i-1].classList.remove('filled');
-        boxes[i-1].focus();
-      }
-    });
-    box.addEventListener('paste', e => {
-      e.preventDefault();
-      const txt = (e.clipboardData||window.clipboardData).getData('text').replace(/\D/g,'').slice(0,6);
-      txt.split('').forEach((ch,j) => { boxes[j].value=ch; boxes[j].classList.add('filled'); });
-    });
-  });
-  boxes[0].focus();
-
-  function submitCode() {
-    document.getElementById('otpFull').value = boxes.map(b => b.value).join('');
-  }
-
-  function copySecret(el) {
-    navigator.clipboard.writeText(el.innerText.trim()).then(() => {
-      document.getElementById('copied').style.display = 'block';
-      setTimeout(() => document.getElementById('copied').style.display = 'none', 2000);
-    });
-  }
+const boxes=[0,1,2,3,4,5].map(i=>document.getElementById('d'+i));
+boxes.forEach((b,i)=>{
+b.addEventListener('input',()=>{
+b.value=b.value.replace(/\D/g,'').slice(-1);
+if(b.value&&i<5)boxes[i+1].focus();
+});
+b.addEventListener('keydown',e=>{
+if(e.key==='Backspace'&&!b.value&&i>0)boxes[i-1].focus();
+});
+});
+function submitCode(){
+document.getElementById('otpFull').value=boxes.map(b=>b.value).join('');
+}
+function copySecret(el){
+navigator.clipboard.writeText(el.innerText.trim()).then(()=>{
+document.getElementById('copied').style.display='block';
+setTimeout(()=>document.getElementById('copied').style.display='none',2000);
+});
+}
 </script>
+
 </body>
 </html>

@@ -7,7 +7,7 @@
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      background: linear-gradient(135deg, #0d1b2a, #1a2a4a, #0d2137);
+      background: ffffff;
       min-height:100vh;
       display:flex; align-items:center; justify-content:center;
       font-family:'Segoe UI',sans-serif;
@@ -19,7 +19,6 @@
       padding:40px 36px;
       width:400px;
       max-width:95%;
-      box-shadow:0 20px 60px rgba(0,0,0,0.5);
       text-align:center;
     }
     .icon { font-size:44px; margin-bottom:14px; display:block; }
@@ -102,7 +101,6 @@
 <body>
 <div class="card">
 
-  <span class="icon">🔐</span>
   <h1>Verifikasi 2 Langkah</h1>
   <p class="sub">
     Buka <strong>Google Authenticator</strong> di HP kamu<br>
@@ -149,7 +147,7 @@
   <a href="{{ route('admin.login') }}" class="back">← Kembali ke Login</a>
 
   <div class="tip">
-    💡 Pastikan waktu HP sinkron otomatis. Kode hanya berlaku <strong>30 detik</strong> dan tidak bisa dipakai dua kali.
+  Pastikan waktu HP sinkron otomatis. Kode hanya berlaku <strong>30 detik</strong> dan tidak bisa dipakai dua kali.
   </div>
 
 </div>
