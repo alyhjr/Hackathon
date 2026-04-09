@@ -23,7 +23,7 @@ class PengumumanSeeder extends Seeder
         */
         $lolos = Pengumuman::create([
             'type' => 'lolos',
-            'title' => 'Pengumuman Peserta Lolos Seleksi Proposal Hackathon Rumah Pendidikan 2025',
+            'title' => 'Pengumuman Peserta Lolos Seleksi Proposal Hackathon Rumah Pendidikan 2026',
             'content' => null,
             'sort_order' => 1,
             'is_active' => 1,
