@@ -1171,7 +1171,7 @@
 .news-inner {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 60px 28px;
+    padding: 80px 28px;
 }
 
 /* ── HEADER ── */

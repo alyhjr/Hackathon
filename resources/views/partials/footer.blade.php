@@ -114,7 +114,7 @@
     <div class="footer-bottom">
       <p>
         © 2026 Hackathon Rumah Pendidikan |
-        Pusat Data dan Teknologi Informasi Kementerian Pendidikan Dasar dan Menengah
+        Pusat Data dan Teknologi Informasi Kementerian Pendidikan Dasar dan Menengah RI
       </p>
     </div>
 

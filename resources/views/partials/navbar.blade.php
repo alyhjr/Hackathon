@@ -517,24 +517,19 @@
   function applyState() {
     const scrolled = window.scrollY > SCROLL_Y;
 
-   function applyState() {
-  const scrolled = window.scrollY > SCROLL_Y;
-
-  if (isHome) {
-    // BERANDA SELALU PUTIH
-    pill.classList.remove('pill-navy');
-    pill.classList.add('pill-white');
-  } else {
-    // HALAMAN LAIN BARU IKUT SCROLL
-    if (scrolled) {
-      pill.classList.remove('pill-white');
-      pill.classList.add('pill-navy');
-    } else {
+    if (isHome) {
       pill.classList.remove('pill-navy');
       pill.classList.add('pill-white');
+    } else {
+      if (scrolled) {
+        pill.classList.remove('pill-white');
+        pill.classList.add('pill-navy');
+      } else {
+        pill.classList.remove('pill-navy');
+        pill.classList.add('pill-white');
+      }
     }
   }
-}
 
   applyState();
   window.addEventListener('scroll', applyState, { passive: true });
@@ -563,7 +558,14 @@
       if (page.title.toLowerCase().includes(q)) score += 7;
       if (score > bestScore) { bestScore = score; matched = page; }
     }
-    if (matched) window.location.href = matched.url;
+    if (matched) {
+      if (matched.url.startsWith('#')) {
+        var el = document.querySelector(matched.url);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.location.href = matched.url;
+      }
+    }
   }
 
   ['navSearchForm','mobileSearchForm'].forEach(function (id) {
