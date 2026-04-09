@@ -1633,7 +1633,7 @@
      NEWS MANAGEMENT (FIXED + USED LABEL)
      ============================================================ --}}
 
-<div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+<div x-show="tab==='news'" x-cloak class="tab-content bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
 
   {{-- HEADER --}}
   <div class="flex items-center justify-between mb-6">
