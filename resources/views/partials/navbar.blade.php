@@ -251,12 +251,12 @@
 >
   <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md"></div>
 
-  <div class="relative w-full max-w-3xl bg-white rounded-3xl shadow-[0_32px_80px_rgba(0,0,0,0.18)] overflow-hidden flex"
+  <div class="relative w-full max-w-3xl bg-white rounded-3xl shadow-[0_32px_80px_rgba(0,0,0,0.18)] overflow-visible flex"
        style="min-height:420px; animation: modalPop 0.25s cubic-bezier(0.34,1.56,0.64,1) both;">
 
     {{-- LEFT PANEL --}}
-    <div class="hidden md:flex w-2/5 flex-col justify-center items-center relative overflow-hidden"
-         style="background: linear-gradient(160deg, #1a6bb5 0%, #2196F3 55%, #64B5F6 100%);">
+   <div class="hidden md:flex w-2/5 flex-col justify-center items-center relative overflow-hidden rounded-3xl"
+     style="background: linear-gradient(160deg, #1a6bb5 0%, #2196F3 55%, #64B5F6 100%);">
       <div style="position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,0.10);top:-80px;left:-80px;"></div>
       <div style="position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.10);top:80px;left:40px;"></div>
       <div style="position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,0.10);bottom:-90px;left:10px;"></div>
@@ -267,8 +267,8 @@
     {{-- RIGHT PANEL --}}
     <div class="flex-1 px-10 py-10 flex flex-col justify-center">
 
-      <button type="button" onclick="closeLoginModal()"
-        class="absolute top-5 right-5 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 transition"
+      <button type="button" onclick="window.location.href='{{ route('home') }}'"
+        class="absolute top-5 right-5 z-9999 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 transition"
         aria-label="Tutup">
         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M18 6 6 18M6 6l12 12"/>
