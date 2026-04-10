@@ -54,7 +54,6 @@ class PesertaSeeder extends Seeder
                 'status'        => 'pending',
                 'password'      => null,
             ],
-
             [
                 'nuptk'         => '2005050500000001',
                 'tanggal_lahir' => '2005-05-05',
@@ -77,7 +76,7 @@ class PesertaSeeder extends Seeder
                 'status'        => 'pending',
                 'password'      => null,
             ],
-             [
+            [
                 'nuptk'         => '2222000000003333',
                 'tanggal_lahir' => '2003-03-03',
                 'nama'          => 'Vanessa',
@@ -85,6 +84,40 @@ class PesertaSeeder extends Seeder
                 'email'         => 'vanessa@gmail.com',
                 'kota'          => 'Yogyakarta',
                 'provinsi'      => 'Daerah Istimewa Yogyakarta (DIY)',
+                'status'        => 'pending',
+                'password'      => null,
+            ],
+            // ── 3 data dummy tambahan ──
+            [
+                'nuptk'         => '3301010100000001',
+                'tanggal_lahir' => '1992-07-17',
+                'nama'          => 'Budi Santoso',
+                'sekolah'       => 'SMP Negeri 2 Semarang',
+                'email'         => 'budi.santoso@gmail.com',
+                'kota'          => 'Semarang',
+                'provinsi'      => 'Jawa Tengah',
+                'status'        => 'pending',
+                'password'      => null,
+            ],
+            [
+                'nuptk'         => '3401020200000002',
+                'tanggal_lahir' => '1997-09-25',
+                'nama'          => 'Dewi Lestari',
+                'sekolah'       => 'SMA Negeri 3 Medan',
+                'email'         => 'dewi.lestari@gmail.com',
+                'kota'          => 'Medan',
+                'provinsi'      => 'Sumatera Utara',
+                'status'        => 'pending',
+                'password'      => null,
+            ],
+            [
+                'nuptk'         => '6401030300000003',
+                'tanggal_lahir' => '1993-12-10',
+                'nama'          => 'Rizky Pratama',
+                'sekolah'       => 'SD Negeri 1 Makassar',
+                'email'         => 'rizky.pratama@gmail.com',
+                'kota'          => 'Makassar',
+                'provinsi'      => 'Sulawesi Selatan',
                 'status'        => 'pending',
                 'password'      => null,
             ],
