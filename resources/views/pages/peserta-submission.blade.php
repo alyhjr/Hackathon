@@ -169,6 +169,17 @@
     margin-bottom: .18rem;
   }
 
+  .ps-menu-logout {
+    margin-bottom: 0;
+    color: var(--pf-red);
+  }
+  .ps-menu-logout .ps-menu-sub {
+    color: #fca5a5;
+  }
+  .ps-menu-logout:hover {
+    background: var(--pf-red-light);
+  }
+
   .ps-menu-sub {
     font-size: .77rem;
     line-height: 1.35;
@@ -401,6 +412,24 @@
           <div class="ps-menu-title">Upload Karya</div>
           <div class="ps-menu-sub">Upload file karya tim</div>
         </button>
+
+        {{-- Logout --}}
+        <div style="margin-top:.8rem; padding-top:.8rem; border-top:1px solid var(--pf-border);">
+          <button type="button" class="ps-menu-item ps-menu-logout"
+            onclick="document.getElementById('logout-form').submit()">
+              <div style="display:flex; align-items:center; gap:.6rem;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16 17 21 12 16 7"></polyline>
+                  <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                <div>
+                  <div class="ps-menu-title">Logout</div>
+                  <div class="ps-menu-sub">Keluar dari akun peserta</div>
+                </div>
+              </div>
+          </button>
+        </div>
       </div>
 
       {{-- Content kanan --}}
@@ -481,7 +510,12 @@
 </div>
       </div>
     </div>
+ </form>
+
+  <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
+    @csrf
   </form>
+
 </div>
 
 @endsection
