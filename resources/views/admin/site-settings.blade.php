@@ -143,7 +143,7 @@
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
 
-{{-- ===== PAGE HEADER (PREMIUM + ACCOUNT PANEL) ===== --}}
+{{-- ===== ADMIN ===== --}}
 <div class="mb-5" x-data="{ openProfile: false }">
 
   <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 
@@ -699,11 +699,42 @@
 
     @if(session('success'))
       <div class="flex items-center gap-2 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-green-800 text-sm font-semibold mb-4">
-        <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+        <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
         {{ session('success') }}
       </div>
     @endif
 
+    {{-- Stat Cards --}}
+    @php
+      $all        = $pesertaRegistrasi ?? collect();
+      $total      = $all->count();
+      $jmlPending = $all->where('status', 'pending')->count();
+      $jmlLolos   = $all->where('status', 'lolos')->count();
+      $jmlTolak   = $all->where('status', 'tidak_lolos')->count();
+    @endphp
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:1.5rem;">
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;">
+        <div style="font-size:1.6rem;font-weight:800;color:#1565C0;line-height:1;">{{ $total }}</div>
+        <div style="font-size:0.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-top:4px;">Total Peserta</div>
+      </div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;">
+        <div style="font-size:1.6rem;font-weight:800;color:#b45309;line-height:1;">{{ $jmlPending }}</div>
+        <div style="font-size:0.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-top:4px;">Pending</div>
+      </div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;">
+        <div style="font-size:1.6rem;font-weight:800;color:#16a34a;line-height:1;">{{ $jmlLolos }}</div>
+        <div style="font-size:0.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-top:4px;">Lolos</div>
+      </div>
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;">
+        <div style="font-size:1.6rem;font-weight:800;color:#dc2626;line-height:1;">{{ $jmlTolak }}</div>
+        <div style="font-size:0.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-top:4px;">Tidak Lolos</div>
+      </div>
+    </div>
+
+    {{-- Tabel --}}
     <div class="overflow-x-auto">
       <table class="w-full text-sm" style="border-collapse:collapse;min-width:600px;">
         <thead>
@@ -762,564 +793,515 @@
 </div>
 
 {{-- ===========================
-    TAB: PESERTA SUBMISSION
-    Design: Premium Clean — selaras tema biru/hijau existing
+   Kelola Peserta — Submission
+   Blade Component (Alpine.js)
 ============================ --}}
 
 @once
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
 <style>
-  :root {
-    --ps-blue:        #1565C0;
-    --ps-blue-mid:    #1976D2;
-    --ps-blue-light:  #E3F0FF;
-    --ps-blue-soft:   #EEF5FF;
-    --ps-green:       #16a34a;
-    --ps-green-light: #dcfce7;
-    --ps-green-mid:   #bbf7d0;
-    --ps-text:        #0f172a;
-    --ps-text-2:      #334155;
-    --ps-text-3:      #64748b;
-    --ps-text-4:      #94a3b8;
-    --ps-border:      #e2e8f0;
-    --ps-border-2:    #f1f5f9;
-    --ps-bg:          #ffffff;
-    --ps-bg-2:        #f8fafc;
-    --ps-red:         #dc2626;
-    --ps-red-light:   #fef2f2;
-    --ps-red-mid:     #fecaca;
-    --ps-shadow:      0 1px 3px rgba(15,23,42,0.08), 0 4px 16px rgba(15,23,42,0.06);
-    --ps-shadow-md:   0 4px 24px rgba(15,23,42,0.10), 0 1px 4px rgba(15,23,42,0.06);
-    --ps-font:        'Plus Jakarta Sans', sans-serif;
-    --ps-radius:      16px;
-    --ps-radius-sm:   10px;
-  }
+*{box-sizing:border-box;margin:0;padding:0}
 
-  .ps-wrap * { box-sizing: border-box; }
+.kp-wrap{padding:1.75rem 2rem;font-family:inherit;color:#0f172a;background:#fff;border-radius:16px;border:1px solid #e2e8f0}
 
-  .ps-wrap {
-    font-family: var(--ps-font);
-    background: var(--ps-bg);
-    border: 1px solid var(--ps-border);
-    border-radius: var(--ps-radius);
-    padding: 2rem 2rem 2.25rem;
-    box-shadow: var(--ps-shadow);
-    animation: ps-in 0.45s cubic-bezier(.22,1,.36,1) both;
-  }
+/* ── Header ── */
+.kp-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:10px}
+.kp-hdr h1{font-size:18px;font-weight:600;color:var(--ps-text,#0f172a)}
+.kp-hdr p{font-size:13px;color:#64748b;margin-top:2px}
 
-  @keyframes ps-in {
-    from { opacity: 0; transform: translateY(10px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+/* ── Buttons ── */
+.kp-btn-export{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;background:#dcfce7;border:0.5px solid #86efac;color:#166534;font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s;text-decoration:none}
+.kp-btn-export:hover{opacity:.75}
 
-  /* ── Header ── */
-  .ps-header {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--ps-border);
-    margin-bottom: 1.5rem;
-  }
+/* ── Alert ── */
+.kp-alert{display:flex;align-items:center;gap:8px;background:#dcfce7;border:0.5px solid #86efac;border-radius:8px;padding:9px 13px;color:#166534;font-size:13px;font-weight:600;margin-bottom:14px}
 
-  @media (min-width: 640px) {
-    .ps-header { flex-direction: row; align-items: center; justify-content: space-between; }
-  }
+/* ── Stats ── */
+.kp-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:8px;margin-bottom:1.25rem}
+.kp-sc{background:#f8fafc;border-radius:8px;padding:10px 12px;text-align:center;cursor:pointer;border:1.5px solid transparent;transition:border-color .15s}
+.kp-sc:hover,.kp-sc.active{border-color:#93c5fd}
+.kp-sc .n{font-size:20px;font-weight:700;color:#1d4ed8}
+.kp-sc .l{font-size:11px;font-weight:600;color:#64748b;margin-top:3px;text-transform:uppercase;letter-spacing:.05em}
 
-  .ps-title {
-    font-size: 1.35rem;
-    font-weight: 800;
-    color: var(--ps-text);
-    margin: 0 0 0.2rem;
-    letter-spacing: -0.025em;
-    line-height: 1.2;
-  }
+/* ── Toolbar ── */
+.kp-toolbar{display:flex;gap:8px;margin-bottom:10px;align-items:center}
+.kp-srch{position:relative;flex:1}
+.kp-srch svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:#94a3b8;pointer-events:none}
+.kp-srch input{padding:7px 10px 7px 32px;font-size:13px;font-weight:500;width:100%;border-radius:8px;border:0.5px solid #cbd5e1;background:#fff;color:#0f172a;outline:none}
+.kp-srch input:focus{border-color:#93c5fd}
+.kp-toolbar select{padding:7px 10px;font-size:13px;font-weight:500;border-radius:8px;border:0.5px solid #cbd5e1;background:#fff;color:#0f172a;flex-shrink:0;outline:none;cursor:pointer}
+.kp-toolbar select:focus{border-color:#93c5fd}
 
-  .ps-subtitle {
-    font-size: 0.82rem;
-    color: var(--ps-text-3);
-    margin: 0;
-    font-weight: 400;
-  }
+/* ── Table ── */
+.kp-tw{border:0.5px solid #e2e8f0;border-radius:12px;overflow:hidden;overflow-x:auto}
+.kp-tw table{width:100%;border-collapse:collapse;min-width:520px;table-layout:fixed}
+/* c1 diperkecil, c2 diperkecil → jarak nama tim & kategori lebih rapat */
+.kp-tw col.c0{width:38px}.kp-tw col.c1{width:22%}.kp-tw col.c2{width:10%}
+.kp-tw col.c3{width:22%}.kp-tw col.c4{width:13%}.kp-tw col.c5{width:13%}.kp-tw col.c6{width:10%}
+.kp-tw thead tr{background:#f8fafc}
+.kp-tw thead th{padding:9px 10px;text-align:left;font-size:11px;font-weight:700;color:#64748b;letter-spacing:.06em;text-transform:uppercase;border-bottom:0.5px solid #e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kp-tw tbody tr{border-bottom:0.5px solid #f1f5f9;transition:background .1s}
+.kp-tw tbody tr:last-child{border-bottom:none}
+.kp-tw tbody tr:hover{background:#f8fafc}
+/* padding horizontal kolom dikurangi dari 12px → 10px agar kolom lebih rapat */
+.kp-tw tbody td{padding:10px 10px;font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle;color:#334155}
+.kp-tnm{font-weight:700;font-size:13px;color:#0f172a}
+.kp-date-m{font-size:12px;font-weight:700;color:#334155}
+.kp-date-t{font-size:11px;font-weight:500;color:#94a3b8}
 
-  /* ── Export Button ── */
-  .ps-export-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.6rem 1.3rem;
-    border-radius: 99px;
-    background: var(--ps-green);
-    color: #fff;
-    font-family: var(--ps-font);
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.01em;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
-    box-shadow: 0 2px 10px rgba(22,163,74,0.25);
-  }
+/* ── Badges ── */
+.kp-badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:8px;white-space:nowrap}
+.kp-bp{background:#FAEEDA;color:#854F0B}
+.kp-bt{background:#E6F1FB;color:#185FA5}
+.kp-bs{background:#EAF3DE;color:#3B6D11}
+.kp-bm{background:#EEEDFE;color:#534AB7}
+.kp-ba{background:#FBEAF0;color:#993556}
+.kp-bk{background:#FCEBEB;color:#A32D2D}
 
-  .ps-export-btn:hover {
-    background: #15803d;
-    box-shadow: 0 4px 18px rgba(22,163,74,0.35);
-    transform: translateY(-1px);
-  }
+/* ── Detail button ── */
+.kp-btn-d{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:8px;border:0.5px solid #cbd5e1;background:transparent;font-size:12px;font-weight:600;cursor:pointer;color:#0f172a;transition:background .1s;white-space:nowrap}
+.kp-btn-d:hover{background:#f1f5f9}
 
-  .ps-export-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+/* ── Pagination ── */
+.kp-pgbar{display:flex;align-items:center;justify-content:space-between;margin-top:12px;flex-wrap:wrap;gap:8px}
+.kp-pginfo{font-size:12px;font-weight:500;color:#64748b}
+.kp-pgbtns{display:flex;gap:5px}
+.kp-pb{padding:5px 10px;border-radius:8px;border:0.5px solid #cbd5e1;background:transparent;font-size:12px;font-weight:600;cursor:pointer;color:#0f172a;transition:background .1s}
+.kp-pb:hover{background:#f1f5f9}
+.kp-pb:disabled{opacity:.3;cursor:not-allowed}
+.kp-pb.active{background:#dbeafe;border-color:#93c5fd;color:#1d4ed8}
 
-  /* ── Alert ── */
-  .ps-alert {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    background: var(--ps-green-light);
-    border: 1px solid var(--ps-green-mid);
-    border-radius: var(--ps-radius-sm);
-    padding: 0.7rem 1rem;
-    color: #166534;
-    font-size: 0.82rem;
-    font-weight: 500;
-    margin-bottom: 1.25rem;
-    animation: ps-in 0.35s ease both;
-  }
+/* ── Empty ── */
+.kp-empty{text-align:center;padding:2.5rem;font-size:13px;font-weight:500;color:#64748b}
 
-  .ps-alert svg { width: 15px; height: 15px; flex-shrink: 0; }
+/* ── Modal backdrop ── */
+.kp-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
+.kp-ov.open{display:flex}
+.kp-mbox{background:#fff;border:0.5px solid #e2e8f0;border-radius:12px;width:100%;max-width:560px;overflow:hidden;margin:auto}
 
-  /* ── Stats ── */
-  .ps-stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
-  }
+/* ── Modal top ── */
+.kp-mtop{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:0.5px solid #e2e8f0}
+.kp-mtop-l{display:flex;align-items:center;gap:10px}
+.kp-mav{width:38px;height:38px;border-radius:50%;background:#dbeafe;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#1d4ed8;flex-shrink:0}
+.kp-mname{font-size:15px;font-weight:700;color:#0f172a}
+.kp-msub{font-size:12px;font-weight:500;color:#64748b;margin-top:2px}
+.kp-mclose{background:none;border:none;cursor:pointer;color:#94a3b8;padding:4px;border-radius:8px;line-height:1;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background .1s}
+.kp-mclose:hover{color:#0f172a;background:#f1f5f9}
 
-  @media (max-width: 640px) {
-    .ps-stats { grid-template-columns: repeat(2, 1fr); }
-  }
+/* ── Modal body ── */
+.kp-mbody{padding:18px}
+.kp-msec{margin-bottom:18px}
+.kp-msec:last-child{margin-bottom:0}
+.kp-mschd{font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+.kp-mgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kp-mf{background:#f8fafc;border-radius:8px;padding:9px 11px}
+.kp-mf .fl{font-size:11px;font-weight:500;color:#64748b;margin-bottom:3px}
+.kp-mf .fv{font-size:13px;font-weight:700;color:#0f172a}
+.kp-members{display:flex;flex-direction:column;gap:6px}
+.kp-mem{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:600;color:#334155}
+.kp-memav{width:28px;height:28px;border-radius:50%;background:#dbeafe;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#1d4ed8;flex-shrink:0}
+.kp-ketua{font-size:11px;font-weight:500;color:#94a3b8;margin-left:2px}
 
-  .ps-stat {
-    background: var(--ps-bg-2);
-    border: 1px solid var(--ps-border);
-    border-radius: var(--ps-radius-sm);
-    padding: 1rem 1.1rem;
-    position: relative;
-    overflow: hidden;
-    transition: box-shadow 0.2s, transform 0.2s;
-  }
+/* ── File cards ── */
+.kp-fcards{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kp-fc{border:0.5px solid #e2e8f0;border-radius:8px;padding:12px 13px;background:#f8fafc}
+.kp-fctop{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.kp-fcicon{width:32px;height:32px;border-radius:8px;background:#dbeafe;display:flex;align-items:center;justify-content:center;color:#1d4ed8;font-size:16px;flex-shrink:0}
+.kp-fcname{font-size:13px;font-weight:700;color:#0f172a}
+.kp-fctype{font-size:11px;font-weight:500;color:#64748b}
+.kp-fc-empty .kp-fcicon{background:#f1f5f9;color:#94a3b8}
+.kp-fc-empty .kp-fcname{color:#94a3b8}
+.kp-fcbtns{display:flex;gap:6px}
+.kp-btn-pv{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:8px;background:#dbeafe;border:0.5px solid #93c5fd;color:#1d4ed8;font-size:12px;font-weight:600;cursor:pointer;transition:opacity .15s;text-decoration:none}
+.kp-btn-pv:hover{opacity:.75}
+.kp-btn-dl{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:8px;background:transparent;border:0.5px solid #cbd5e1;color:#334155;font-size:12px;font-weight:600;cursor:pointer;transition:background .1s;text-decoration:none}
+.kp-btn-dl:hover{background:#f1f5f9}
 
-  .ps-stat:hover {
-    box-shadow: var(--ps-shadow-md);
-    transform: translateY(-2px);
-  }
-
-  .ps-stat::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, var(--ps-blue-mid), var(--ps-blue));
-    border-radius: 99px 99px 0 0;
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-
-  .ps-stat:hover::after { opacity: 1; }
-
-  .ps-stat-num {
-    font-size: 1.75rem;
-    font-weight: 800;
-    color: var(--ps-blue);
-    line-height: 1;
-    letter-spacing: -0.03em;
-  }
-
-  .ps-stat-label {
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--ps-text-3);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-top: 0.3rem;
-  }
-
-  /* ── Table Wrapper ── */
-  .ps-table-wrap {
-    border: 1px solid var(--ps-border);
-    border-radius: var(--ps-radius-sm);
-    overflow: hidden;
-    overflow-x: auto;
-  }
-
-  .ps-table-wrap::-webkit-scrollbar { height: 4px; }
-  .ps-table-wrap::-webkit-scrollbar-track { background: var(--ps-bg-2); }
-  .ps-table-wrap::-webkit-scrollbar-thumb { background: var(--ps-border); border-radius: 99px; }
-
-  /* ── Table ── */
-  .ps-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 700px;
-  }
-
-  .ps-table thead tr {
-    background: var(--ps-bg-2);
-    border-bottom: 1px solid var(--ps-border);
-  }
-
-  .ps-table thead th {
-    padding: 0.8rem 1rem;
-    text-align: left;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ps-text-3);
-    white-space: nowrap;
-  }
-
-  .ps-table tbody tr {
-    border-bottom: 1px solid var(--ps-border-2);
-    transition: background 0.15s;
-    animation: ps-row-in 0.38s cubic-bezier(.22,1,.36,1) both;
-  }
-
-  @keyframes ps-row-in {
-    from { opacity: 0; transform: translateY(5px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .ps-table tbody tr:nth-child(1) { animation-delay: 0.04s; }
-  .ps-table tbody tr:nth-child(2) { animation-delay: 0.08s; }
-  .ps-table tbody tr:nth-child(3) { animation-delay: 0.12s; }
-  .ps-table tbody tr:nth-child(4) { animation-delay: 0.16s; }
-  .ps-table tbody tr:nth-child(n+5) { animation-delay: 0.20s; }
-
-  .ps-table tbody tr:last-child { border-bottom: none; }
-  .ps-table tbody tr:hover { background: var(--ps-blue-soft); }
-
-  .ps-table td {
-    padding: 0.9rem 1rem;
-    vertical-align: top;
-    font-size: 0.82rem;
-    color: var(--ps-text-2);
-  }
-
-  /* ── Team name ── */
-  .ps-team-name {
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: var(--ps-text);
-  }
-
-  .ps-badge {
-    display: inline-block;
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    background: var(--ps-blue-light);
-    color: var(--ps-blue);
-    padding: 0.15rem 0.55rem;
-    border-radius: 99px;
-    margin-top: 0.25rem;
-  }
-
-  /* ── Members ── */
-  .ps-member {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-    color: var(--ps-text-2);
-    font-size: 0.8rem;
-    margin-bottom: 0.12rem;
-    font-weight: 400;
-  }
-
-  .ps-member-dot {
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: var(--ps-blue-mid);
-    opacity: 0.4;
-    flex-shrink: 0;
-  }
-
-  /* ── File link ── */
-  .ps-file-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.3rem 0.7rem;
-    border-radius: 7px;
-    background: var(--ps-blue-light);
-    color: var(--ps-blue);
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-decoration: none;
-    border: 1px solid rgba(21,101,192,0.12);
-    transition: all 0.18s;
-    white-space: nowrap;
-  }
-
-  .ps-file-link:hover {
-    background: var(--ps-blue-mid);
-    color: #fff;
-    border-color: var(--ps-blue-mid);
-    text-decoration: none;
-    box-shadow: 0 3px 10px rgba(21,101,192,0.2);
-  }
-
-  .ps-file-link svg { width: 12px; height: 12px; flex-shrink: 0; }
-
-  .ps-file-none {
-    color: var(--ps-text-4);
-    font-size: 0.78rem;
-    font-style: italic;
-  }
-
-  /* ── Date ── */
-  .ps-date-main {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--ps-text-2);
-  }
-
-  .ps-date-time {
-    font-size: 0.72rem;
-    color: var(--ps-text-4);
-    font-weight: 400;
-    margin-top: 0.1rem;
-  }
-
-  /* ── Delete ── */
-  .ps-delete-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.38rem 0.85rem;
-    border-radius: 8px;
-    background: var(--ps-red-light);
-    border: 1px solid var(--ps-red-mid);
-    color: var(--ps-red);
-    font-family: var(--ps-font);
-    font-size: 0.75rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.18s;
-    white-space: nowrap;
-  }
-
-  .ps-delete-btn:hover {
-    background: var(--ps-red);
-    border-color: var(--ps-red);
-    color: #fff;
-    box-shadow: 0 3px 12px rgba(220,38,38,0.25);
-    transform: translateY(-1px);
-  }
-
-  .ps-delete-btn svg { width: 12px; height: 12px; }
-
-  /* ── Empty ── */
-  .ps-empty-cell {
-    text-align: center;
-    padding: 3.5rem 1rem !important;
-  }
-
-  .ps-empty-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .ps-empty-icon {
-    width: 40px; height: 40px;
-    color: var(--ps-text-4);
-    opacity: 0.5;
-    margin-bottom: 0.25rem;
-  }
-
-  .ps-empty-title {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--ps-text-3);
-  }
-
-  .ps-empty-desc {
-    font-size: 0.76rem;
-    color: var(--ps-text-4);
-  }
+/* ── Modal nav ── */
+.kp-mnav{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-top:0.5px solid #e2e8f0}
+.kp-mcounter{font-size:12px;font-weight:500;color:#64748b;text-align:center}
+.kp-mcounter strong{font-weight:700;color:#0f172a}
+.kp-btn-nav{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:8px;border:0.5px solid #cbd5e1;background:transparent;font-size:12px;font-weight:600;cursor:pointer;color:#0f172a;transition:background .1s;white-space:nowrap}
+.kp-btn-nav:hover{background:#f1f5f9}
+.kp-btn-nav:disabled{opacity:.3;cursor:not-allowed}
 </style>
 @endonce
 
-<div x-show="tab==='peserta-submission'" x-cloak class="ps-wrap">
+{{-- ============================================================
+     SECTION: Kelola Peserta
+     Tampil saat tab aktif = 'peserta-submission'
+============================================================ --}}
+<div x-show="tab === 'peserta-submission'" x-cloak class="kp-wrap">
 
-  {{-- Header --}}
-  <div class="ps-header">
+  {{-- ── Header ── --}}
+  <div class="kp-hdr">
     <div>
-      <h2 class="ps-title">Kelola Peserta</h2>
-      <p class="ps-subtitle">Daftar tim peserta beserta proposal dan karya yang diupload.</p>
+      <h1>Kelola Peserta</h1>
+      <p>Data tim peserta, proposal, dan karya</p>
     </div>
-    <a href="{{ route('admin.site-settings.peserta-submission.export') }}" class="ps-export-btn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-        <polyline points="7 10 12 15 17 10"/>
-        <line x1="12" y1="15" x2="12" y2="3"/>
-      </svg>
+    <a href="{{ route('admin.site-settings.peserta-submission.export') }}" class="kp-btn-export">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/><line x1="8" y1="17" x2="16" y2="17"/><line x1="9" y1="13" x2="10" y2="13"/><path d="M12 13v4"/></svg>
       Export Excel
     </a>
   </div>
 
-  {{-- Alert --}}
+  {{-- ── Alert session ── --}}
   @if(session('success'))
-    <div class="ps-alert">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-      </svg>
+    <div class="kp-alert">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg>
       {{ session('success') }}
     </div>
   @endif
 
-  {{-- Stats --}}
+  {{-- ── Stat cards ── --}}
   @php
-    $all       = $pesertaSubmissions ?? collect();
-    $total     = $all->count();
-    $pProposal = $all->whereNotNull('proposal_file')->count();
-    $pKarya    = $all->whereNotNull('karya_file')->count();
-    $pct       = $total > 0 ? round(($pKarya / $total) * 100) : 0;
+    $all = $pesertaSubmissions ?? collect();
+    $categories = ['PAUD','TK','SD','SMP','SMA','SMK'];
   @endphp
-  <div class="ps-stats">
-    <div class="ps-stat">
-      <div class="ps-stat-num">{{ $total }}</div>
-      <div class="ps-stat-label">Total Tim</div>
+
+  <div class="kp-stats" id="kpStats">
+    <div class="kp-sc" onclick="kpFilterCat('all')" id="kpStat-all">
+      <div class="n">{{ $all->count() }}</div>
+      <div class="l">Total</div>
     </div>
-    <div class="ps-stat">
-      <div class="ps-stat-num">{{ $pProposal }}</div>
-      <div class="ps-stat-label">Total Proposal</div>
+    @foreach($categories as $cat)
+    <div class="kp-sc" onclick="kpFilterCat('{{ $cat }}')" id="kpStat-{{ $cat }}">
+      <div class="n">{{ $all->where('kategori', $cat)->count() }}</div>
+      <div class="l">{{ $cat }}</div>
     </div>
-    <div class="ps-stat">
-      <div class="ps-stat-num">{{ $pKarya }}</div>
-      <div class="ps-stat-label">Total Karya</div>
-    </div>
-    <div class="ps-stat">
-      <div class="ps-stat-num">{{ $pct }}%</div>
-      <div class="ps-stat-label">Submission Lengkap</div>
-    </div>
+    @endforeach
   </div>
 
-  {{-- Table --}}
-  <div class="ps-table-wrap">
-    <table class="ps-table">
+  {{-- ── Toolbar ── --}}
+  <div class="kp-toolbar">
+    <div class="kp-srch">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="kpSearch" placeholder="Cari nama tim atau sekolah…" oninput="kpFilter()">
+    </div>
+    <select id="kpKat" onchange="kpFilter()">
+      <option value="all">Semua kategori</option>
+      @foreach($categories as $cat)
+        <option value="{{ $cat }}">{{ $cat }}</option>
+      @endforeach
+    </select>
+  </div>
+
+  {{-- ── Table ── --}}
+  <div class="kp-tw">
+    <table>
+      <colgroup>
+        <col class="c0"><col class="c1"><col class="c2">
+        <col class="c3"><col class="c4"><col class="c5"><col class="c6">
+      </colgroup>
       <thead>
         <tr>
-          <th>Nama Tim</th>
-          <th>Anggota</th>
-          <th>Proposal</th>
-          <th>Karya</th>
+          <th>#</th>
+          <th>Nama tim</th>
+          <th>Kategori</th>
+          <th>Asal sekolah</th>
+          <th>Kota</th>
           <th>Tanggal</th>
           <th>Aksi</th>
         </tr>
       </thead>
-      <tbody>
-        @forelse(($pesertaSubmissions ?? collect()) as $item)
-          <tr>
-            <td>
-              <div class="ps-team-name">{{ $item->nama_tim }}</div>
-              <span class="ps-badge">Tim</span>
-            </td>
-
-            <td>
-              <div class="ps-member">
-                <span class="ps-member-dot"></span>{{ $item->anggota_1 }}
-              </div>
-              @if($item->anggota_2)
-                <div class="ps-member">
-                  <span class="ps-member-dot"></span>{{ $item->anggota_2 }}
-                </div>
-              @endif
-              @if($item->anggota_3)
-                <div class="ps-member">
-                  <span class="ps-member-dot"></span>{{ $item->anggota_3 }}
-                </div>
-              @endif
-            </td>
-
-            <td>
-              @if($item->proposal_file)
-                <a href="{{ asset('storage/' . $item->proposal_file) }}" target="_blank" class="ps-file-link">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                  </svg>
-                  Lihat / Download
-                </a>
-              @else
-                <span class="ps-file-none">Belum diupload</span>
-              @endif
-            </td>
-
-            <td>
-              @if($item->karya_file)
-                <a href="{{ asset('storage/' . $item->karya_file) }}" target="_blank" class="ps-file-link">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="12 2 2 7 12 12 22 7 12 2"/>
-                    <polyline points="2 17 12 22 22 17"/>
-                    <polyline points="2 12 12 17 22 12"/>
-                  </svg>
-                  Lihat / Download
-                </a>
-              @else
-                <span class="ps-file-none">Belum diupload</span>
-              @endif
-            </td>
-
-            <td>
-              <div class="ps-date-main">{{ $item->created_at?->format('d M Y') }}</div>
-              <div class="ps-date-time">{{ $item->created_at?->format('H:i') }} WIB</div>
-            </td>
-
-            <td>
-              <form action="{{ route('admin.site-settings.peserta-submission.destroy', $item->id) }}"
-                    method="POST"
-                    onsubmit="return confirm('Yakin ingin menghapus submission peserta ini?')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="ps-delete-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="3 6 5 6 21 6"/>
-                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                    <path d="M10 11v6"/><path d="M14 11v6"/>
-                    <path d="M9 6V4h6v2"/>
-                  </svg>
-                  Hapus
-                </button>
-              </form>
-            </td>
-          </tr>
-        @empty
-          <tr>
-            <td colspan="6" class="ps-empty-cell">
-              <div class="ps-empty-inner">
-                <svg class="ps-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z"/>
-                </svg>
-                <div class="ps-empty-title">Belum ada submission peserta</div>
-                <div class="ps-empty-desc">Data akan muncul setelah peserta mengupload karya mereka.</div>
-              </div>
-            </td>
-          </tr>
-        @endforelse
-      </tbody>
+      <tbody id="kpTbody"></tbody>
     </table>
   </div>
 
+  {{-- ── Pagination ── --}}
+  <div class="kp-pgbar">
+    <span class="kp-pginfo" id="kpPgInfo"></span>
+    <div class="kp-pgbtns" id="kpPgBtns"></div>
+  </div>
+
+</div>{{-- end wrap --}}
+
+
+{{-- ============================================================
+     MODAL DETAIL PESERTA
+============================================================ --}}
+<div class="kp-ov" id="kpModal">
+  <div class="kp-mbox">
+
+    {{-- top bar --}}
+    <div class="kp-mtop">
+      <div class="kp-mtop-l">
+        <div class="kp-mav" id="kpMAv"></div>
+        <div>
+          <div class="kp-mname" id="kpMName"></div>
+          <div class="kp-msub" id="kpMSub"></div>
+        </div>
+      </div>
+      <button class="kp-mclose" onclick="kpCloseModal()" aria-label="Tutup">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    {{-- body --}}
+    <div class="kp-mbody" id="kpMBody"></div>
+
+    {{-- nav --}}
+    <div class="kp-mnav">
+      <button class="kp-btn-nav" id="kpBPrev" onclick="kpNavModal(-1)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Sebelumnya
+      </button>
+      <div class="kp-mcounter" id="kpMCounter"></div>
+      <button class="kp-btn-nav" id="kpBNext" onclick="kpNavModal(1)">
+        Selanjutnya
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+
+  </div>
 </div>
+
+
+{{-- ============================================================
+     JAVASCRIPT
+============================================================ --}}
+<script>
+(function(){
+
+  /* ── Raw data dari Laravel ── */
+  const kpRaw = @json($all);
+
+  /* ── Konstanta ── */
+  const KP_PER   = 10;
+  const KP_BC    = { PAUD:'kp-bp', TK:'kp-bt', SD:'kp-bs', SMP:'kp-bm', SMA:'kp-ba', SMK:'kp-bk' };
+  const KP_MONTH = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+
+  /* ── State ── */
+  let kpFiltered = [...kpRaw];
+  let kpPage     = 1;
+  let kpMIdx     = 0;
+
+  /* ── Helpers ── */
+  function kpInitials(name) {
+    return (name || '').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+  }
+
+  function kpFmt(dt) {
+    if (!dt) return { m: '-', t: '' };
+    const d = new Date(dt);
+    return {
+      m: `${String(d.getDate()).padStart(2,'0')} ${KP_MONTH[d.getMonth()]} ${d.getFullYear()}`,
+      t: `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`
+    };
+  }
+
+  function kpBadge(kat) {
+    const cls = KP_BC[kat] || '';
+    return `<span class="kp-badge ${cls}">${kat || '-'}</span>`;
+  }
+
+  /* ── Filter ── */
+  window.kpFilterCat = function(val) {
+    document.getElementById('kpKat').value = val;
+    kpFilter();
+  };
+
+  window.kpFilter = function() {
+    const s   = (document.getElementById('kpSearch').value || '').toLowerCase();
+    const kat = document.getElementById('kpKat').value;
+    kpFiltered = kpRaw.filter(d =>
+      (kat === 'all' || d.kategori === kat) &&
+      (!s || (d.nama_tim || '').toLowerCase().includes(s) || (d.asal_sekolah || '').toLowerCase().includes(s))
+    );
+    kpPage = 1;
+    kpRender();
+  };
+
+  /* ── Render table ── */
+  function kpRender() {
+    const tot   = kpFiltered.length;
+    const pages = Math.max(1, Math.ceil(tot / KP_PER));
+    const st    = (kpPage - 1) * KP_PER;
+    const items = kpFiltered.slice(st, st + KP_PER);
+    const tb    = document.getElementById('kpTbody');
+
+    if (!items.length) {
+      tb.innerHTML = `<tr><td colspan="7" class="kp-empty">Belum ada data peserta</td></tr>`;
+    } else {
+      tb.innerHTML = items.map((d, i) => {
+        const dt = kpFmt(d.created_at);
+        return `<tr>
+          <td style="color:#94a3b8;font-size:12px;font-weight:500">${st + i + 1}</td>
+          <td><div class="kp-tnm" title="${d.nama_tim || ''}">${d.nama_tim || '-'}</div></td>
+          <td>${kpBadge(d.kategori)}</td>
+          <td>${d.asal_sekolah || '-'}</td>
+          <td>${d.kota_kabupaten || '-'}</td>
+          <td>
+            <div class="kp-date-m">${dt.m}</div>
+            <div class="kp-date-t">${dt.t}</div>
+          </td>
+          <td>
+            <button class="kp-btn-d" onclick="kpOpenModal(${d.id})">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Detail
+            </button>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    /* info */
+    document.getElementById('kpPgInfo').textContent = tot
+      ? `Menampilkan ${st + 1}–${Math.min(st + KP_PER, tot)} dari ${tot} peserta`
+      : '0 peserta';
+
+    /* pagination */
+    const pb = document.getElementById('kpPgBtns');
+    pb.innerHTML = '';
+    const mk = (lbl, cb, dis, act) => {
+      const b = document.createElement('button');
+      b.className = 'kp-pb' + (act ? ' active' : '');
+      b.textContent = lbl;
+      b.disabled = dis;
+      b.onclick = cb;
+      pb.appendChild(b);
+    };
+    mk('←', () => { kpPage--; kpRender(); }, kpPage === 1, false);
+    for (let p = 1; p <= pages; p++) {
+      mk(p, ((pp) => () => { kpPage = pp; kpRender(); })(p), false, p === kpPage);
+    }
+    mk('→', () => { kpPage++; kpRender(); }, kpPage === pages, false);
+  }
+
+  /* ── Modal ── */
+  function kpRenderModal() {
+    const d = kpFiltered[kpMIdx];
+    if (!d) return;
+
+    document.getElementById('kpMAv').textContent    = kpInitials(d.nama_tim);
+    document.getElementById('kpMName').textContent  = d.nama_tim || '-';
+    document.getElementById('kpMSub').innerHTML     =
+      `${kpBadge(d.kategori)} &nbsp;${d.asal_sekolah || ''} · ${d.kota_kabupaten || ''}`;
+    document.getElementById('kpMCounter').innerHTML =
+      `<strong>${kpMIdx + 1}</strong> / ${kpFiltered.length}`;
+    document.getElementById('kpBPrev').disabled = kpMIdx === 0;
+    document.getElementById('kpBNext').disabled = kpMIdx === kpFiltered.length - 1;
+
+    const members = [d.anggota_1, d.anggota_2, d.anggota_3].filter(Boolean);
+    const dt = kpFmt(d.created_at);
+
+    /* file card helper */
+    const fileCard = (label, path, svgPath) => {
+      if (!path) return `
+        <div class="kp-fc kp-fc-empty">
+          <div class="kp-fctop">
+            <div class="kp-fcicon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/><line x1="9" y1="17" x2="15" y2="17"/><line x1="9" y1="13" x2="13" y2="13"/></svg>
+            </div>
+            <div>
+              <div class="kp-fcname">${label}</div>
+              <div class="kp-fctype">Belum diupload</div>
+            </div>
+          </div>
+        </div>`;
+
+      const url = `/storage/${path}`;
+      return `
+        <div class="kp-fc">
+          <div class="kp-fctop">
+            <div class="kp-fcicon">${svgPath}</div>
+            <div>
+              <div class="kp-fcname">${label}</div>
+              <div class="kp-fctype">PDF</div>
+            </div>
+          </div>
+          <div class="kp-fcbtns">
+            <a href="${url}" target="_blank" class="kp-btn-pv">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              Preview
+            </a>
+            <a href="${url}" download class="kp-btn-dl">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><polyline points="7 11 12 16 17 11"/><line x1="12" y1="4" x2="12" y2="16"/></svg>
+              Unduh
+            </a>
+          </div>
+        </div>`;
+    };
+
+    const iconProposal = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/><line x1="9" y1="9" x2="10" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>`;
+    const iconKarya    = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/><line x1="9" y1="17" x2="15" y2="17"/><polyline points="9 13 11 15 15 11"/></svg>`;
+
+    document.getElementById('kpMBody').innerHTML = `
+      <div class="kp-msec">
+        <div class="kp-mschd">Informasi tim</div>
+        <div class="kp-mgrid">
+          <div class="kp-mf">
+            <div class="fl">Kategori</div>
+            <div class="fv">${kpBadge(d.kategori)}</div>
+          </div>
+          <div class="kp-mf">
+            <div class="fl">Kota</div>
+            <div class="fv">${d.kota_kabupaten || '-'}</div>
+          </div>
+          <div class="kp-mf" style="grid-column:span 2">
+            <div class="fl">Asal sekolah</div>
+            <div class="fv">${d.asal_sekolah || '-'}</div>
+          </div>
+          <div class="kp-mf" style="grid-column:span 2">
+            <div class="fl">Tanggal daftar</div>
+            <div class="fv">${dt.m} · ${dt.t}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kp-msec">
+        <div class="kp-mschd">
+          Anggota tim
+          <span style="font-size:12px;font-weight:500;color:#94a3b8;margin-left:4px">${members.length} orang</span>
+        </div>
+        <div class="kp-members">
+          ${members.map((m, i) => `
+            <div class="kp-mem">
+              <div class="kp-memav">${kpInitials(m)}</div>
+              <span>${m}</span>
+              ${i === 0 ? '<span class="kp-ketua">(Ketua)</span>' : ''}
+            </div>`).join('')}
+        </div>
+      </div>
+
+      <div class="kp-msec">
+        <div class="kp-mschd">File submission</div>
+        <div class="kp-fcards">
+          ${fileCard('Proposal', d.proposal_file, iconProposal)}
+          ${fileCard('Karya', d.karya_file, iconKarya)}
+        </div>
+      </div>`;
+  }
+
+  window.kpOpenModal = function(id) {
+    kpMIdx = kpFiltered.findIndex(d => d.id === id);
+    kpRenderModal();
+    document.getElementById('kpModal').classList.add('open');
+  };
+
+  window.kpCloseModal = function() {
+    document.getElementById('kpModal').classList.remove('open');
+  };
+
+  window.kpNavModal = function(dir) {
+    kpMIdx = Math.max(0, Math.min(kpFiltered.length - 1, kpMIdx + dir));
+    kpRenderModal();
+  };
+
+  /* close on backdrop click */
+  document.getElementById('kpModal').addEventListener('click', function(e) {
+    if (e.target === this) kpCloseModal();
+  });
+
+  /* close on Escape key */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') kpCloseModal();
+  });
+
+  /* ── Init ── */
+  kpFilter();
+
+})();
+</script>
 
       {{-- ===========================
           TAB: HOME IMAGES

@@ -399,7 +399,7 @@
         </button>
 
         <button type="button" class="ps-menu-item" :class="{ 'active': tab === 'anggota' }" @click="tab='anggota'">
-          <div class="ps-menu-title">Anggota Tim</div>
+          <div class="ps-menu-title">Tim</div>
           <div class="ps-menu-sub">Isi nama tim dan anggota tim</div>
         </button>
 
@@ -450,31 +450,96 @@
           @endforelse
         </div>
 
-        {{-- Anggota Tim --}}
-        <div x-show="tab==='anggota'" x-cloak>
-          <h2 class="ps-section-title">Anggota Tim</h2>
-          <p class="ps-section-desc">Lengkapi data tim dan nama anggota sebelum mengunggah berkas.</p>
+       {{-- Informasi Tim --}}
+<div x-show="tab==='anggota'" x-cloak>
+    <h2 class="ps-section-title">Informasi Tim</h2>
+    <p class="ps-section-desc">
+        Lengkapi data tim, sekolah, kategori, dan anggota sebelum mengunggah berkas.
+    </p>
 
-          <div class="ps-block">
-            <label class="ps-label">Nama Tim</label>
-            <input type="text" name="nama_tim" value="{{ old('nama_tim') }}" class="ps-input" placeholder="Masukkan nama tim" required>
-          </div>
+    {{-- Nama Tim --}}
+    <div class="ps-block">
+        <label class="ps-label">Nama Tim</label>
+        <input
+            type="text"
+            name="nama_tim"
+            value="{{ old('nama_tim') }}"
+            class="ps-input"
+            placeholder="Masukkan nama tim"
+            required>
+    </div>
 
-          <div class="ps-block">
-            <label class="ps-label">Nama Anggota 1</label>
-            <input type="text" name="anggota_1" value="{{ old('anggota_1') }}" class="ps-input" placeholder="Nama anggota pertama" required>
-          </div>
+    {{-- Kategori --}}
+    <div class="ps-block">
+        <label class="ps-label">Kategori</label>
+        <select name="kategori" class="ps-input" required>
+            <option value="">Pilih Kategori</option>
+            <option value="PAUD" {{ old('kategori') == 'PAUD' ? 'selected' : '' }}>PAUD</option>
+            <option value="SD" {{ old('kategori') == 'SD' ? 'selected' : '' }}>SD</option>
+            <option value="SMP" {{ old('kategori') == 'SMP' ? 'selected' : '' }}>SMP</option>
+            <option value="SMA" {{ old('kategori') == 'SMA' ? 'selected' : '' }}>SMA</option>
+            <option value="SMK" {{ old('kategori') == 'SMK' ? 'selected' : '' }}>SMK</option>
+        </select>
+    </div>
 
-          <div class="ps-block">
-            <label class="ps-label">Nama Anggota 2</label>
-            <input type="text" name="anggota_2" value="{{ old('anggota_2') }}" class="ps-input" placeholder="Nama anggota kedua">
-          </div>
+    {{-- Asal Sekolah --}}
+    <div class="ps-block">
+        <label class="ps-label">Asal Sekolah</label>
+        <input
+            type="text"
+            name="asal_sekolah"
+            value="{{ old('asal_sekolah') }}"
+            class="ps-input"
+            placeholder="Contoh: SMKN 1 Bandung"
+            required>
+    </div>
 
-          <div class="ps-block">
-            <label class="ps-label">Nama Anggota 3</label>
-            <input type="text" name="anggota_3" value="{{ old('anggota_3') }}" class="ps-input" placeholder="Nama anggota ketiga">
-          </div>
-        </div>
+    {{-- Kota / Kabupaten --}}
+    <div class="ps-block">
+        <label class="ps-label">Kota / Kabupaten</label>
+        <input
+            type="text"
+            name="kota_kabupaten"
+            value="{{ old('kota_kabupaten') }}"
+            class="ps-input"
+            placeholder="Contoh: Kota Bandung"
+            required>
+    </div>
+
+    {{-- Ketua Tim --}}
+    <div class="ps-block">
+        <label class="ps-label">Ketua Tim</label>
+        <input
+            type="text"
+            name="anggota_1"
+            value="{{ old('anggota_1') }}"
+            class="ps-input"
+            placeholder="Masukkan nama ketua tim"
+            required>
+    </div>
+
+    {{-- Anggota 2 --}}
+    <div class="ps-block">
+        <label class="ps-label">Anggota Tim 2</label>
+        <input
+            type="text"
+            name="anggota_2"
+            value="{{ old('anggota_2') }}"
+            class="ps-input"
+            placeholder="Masukkan nama anggota kedua">
+    </div>
+
+    {{-- Anggota 3 --}}
+    <div class="ps-block">
+        <label class="ps-label">Anggota Tim 3</label>
+        <input
+            type="text"
+            name="anggota_3"
+            value="{{ old('anggota_3') }}"
+            class="ps-input"
+            placeholder="Masukkan nama anggota ketiga">
+    </div>
+</div>
 
         {{-- Proposal --}}
         <div x-show="tab==='proposal'" x-cloak>

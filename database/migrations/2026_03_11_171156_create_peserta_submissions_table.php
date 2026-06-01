@@ -26,5 +26,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('peserta_submissions');
+         $table->dropForeignIdFor(\App\Models\Peserta::class);
+            $table->dropColumn('peserta_id');
     }
 };
