@@ -348,7 +348,7 @@
   $infoItems = collect($informasiPentingItems ?? [])->values();
 @endphp
 
-<div class="ps-page" x-data="{ tab: 'informasi' }">
+<div class="ps-page" x-data="{ tab: 'informasi', showLogout: false }">
 
   <div class="ps-header">
     <div class="ps-eyebrow">Peserta Hackathon</div>
@@ -365,6 +365,53 @@
       <span>{{ session('success') }}</span>
     </div>
   @endif
+
+  <!-- LOGOUT MODAL -->
+<div x-show="showLogout"
+     x-transition
+     x-cloak
+     class="fixed inset-0 flex items-center justify-center z-50"
+     style="background: rgba(15,23,42,.55); backdrop-filter: blur(6px);">
+
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6">
+
+    <div class="flex items-center gap-3 mb-3">
+      <div style="width:42px;height:42px;border-radius:12px;background:#fef2f2;display:flex;align-items:center;justify-content:center;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2">
+          <path d="M10 11V6"></path>
+          <path d="M14 11V6"></path>
+          <path d="M4 6h16"></path>
+          <path d="M6 6l1 14a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-14"></path>
+        </svg>
+      </div>
+
+      <div>
+        <h3 style="font-weight:800;font-size:1.05rem;color:#0f172a;">Konfirmasi Logout</h3>
+        <p style="font-size:.85rem;color:#64748b;margin:0;">
+         Apakah Anda yakin ingin keluar dari panel peserta?
+        </p>
+      </div>
+    </div>
+
+    <div class="flex gap-3 justify-end mt-5">
+
+      <button
+        @click="showLogout = false"
+        class="px-4 py-2 rounded-xl"
+        style="background:#f1f5f9;color:#0f172a;font-weight:600;">
+        Batal
+      </button>
+
+      <button
+        @click="document.getElementById('logout-form').submit()"
+        class="px-4 py-2 rounded-xl"
+        style="background:#dc2626;color:white;font-weight:700;box-shadow:0 8px 20px rgba(220,38,38,.25);">
+        Logout
+      </button>
+
+    </div>
+  </div>
+</div>
 
   @if($errors->any())
     <div class="ps-alert ps-alert-error">
@@ -416,7 +463,7 @@
         {{-- Logout --}}
         <div style="margin-top:.8rem; padding-top:.8rem; border-top:1px solid var(--pf-border);">
           <button type="button" class="ps-menu-item ps-menu-logout"
-            onclick="document.getElementById('logout-form').submit()">
+  @click="showLogout = true">
               <div style="display:flex; align-items:center; gap:.6rem;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>

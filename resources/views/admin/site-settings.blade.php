@@ -143,159 +143,197 @@
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
 
-{{-- ===== ADMIN ===== --}}
+{{-- ===== ADMIN HEADER ===== --}}
 <div class="mb-5" x-data="{ openProfile: false }">
 
-  <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 
-              bg-white border border-slate-200 rounded-2xl px-6 py-5 shadow-sm">
+  <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4
+              bg-white border border-slate-200 rounded-2xl px-6 py-4 shadow-sm">
 
     {{-- LEFT --}}
-    <div class="flex items-center gap-4">
-
-      
-
-      {{-- TEXT --}}
+    <div class="flex items-center gap-3">
       <div>
-        <div class="text-[10px] font-semibold tracking-widest uppercase text-slate-800 mb-1">
+        <div class="text-[10px] font-semibold tracking-widest uppercase text-slate-400 mb-0.5">
           Admin Panel
         </div>
-
-        <h1 class="text-xl font-bold text-slate-900">
+        <h1 class="text-lg font-bold text-slate-900 leading-tight">
           CMS Informasi Website
         </h1>
-
-        <p class="text-sm text-slate-500">
+        <p class="text-xs text-slate-400 mt-0.5">
           Kelola konten website & data peserta
         </p>
       </div>
-
     </div>
 
-   {{-- RIGHT (ACCOUNT - ULTRA CLEAN) --}}
-<div class="relative" @click.away="openProfile=false">
+    {{-- RIGHT (ACCOUNT) --}}
+    <div class="relative shrink-0" @click.away="openProfile=false">
 
-  {{-- BUTTON --}}
-  <button @click="openProfile = !openProfile"
-    class="flex items-center justify-center w-10 h-10 rounded-full
-           hover:bg-slate-100/70 transition-all duration-200">
-
-    {{-- AVATAR --}}
-    <div class="w-9 h-9 rounded-full 
-                bg-gradient-to-br from-slate-400 to-slate-900 
-                flex items-center justify-center 
-                text-white text-sm font-medium">
-      A
-    </div>
-
-  </button>
-
-  {{-- DROPDOWN --}}
-  <div x-show="openProfile"
-       x-transition:enter="transition ease-out duration-200"
-       x-transition:enter-start="opacity-0 translate-y-2 scale-95"
-       x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-       x-transition:leave="transition ease-in duration-150"
-       x-transition:leave-start="opacity-100"
-       x-transition:leave-end="opacity-0 translate-y-1"
-       class="absolute right-0 mt-3 w-52 
-              bg-white/90 backdrop-blur-xl
-              border border-slate-200/50
-              rounded-xl shadow-lg
-              overflow-hidden z-50">
-
-    <div class="p-2">
-
-      <button type="button"
-          @click="openProfile = false; $dispatch('open-modal', 'modal-password')"
-          class="w-full text-left flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600
-                 hover:bg-slate-100/70 transition">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-          </svg>
-          Ganti Password
+      {{-- BUTTON --}}
+      <button @click="openProfile = !openProfile"
+        class="flex items-center justify-center w-9 h-9 rounded-full
+               hover:bg-slate-100 transition-all duration-200">
+        <div class="w-9 h-9 rounded-full
+                    bg-gradient-to-br from-slate-400 to-slate-800
+                    flex items-center justify-center
+                    text-white text-sm font-semibold select-none">
+          A
+        </div>
       </button>
 
-      <button type="button"
-          @click="openProfile = false; $dispatch('open-modal', 'modal-email')"
-          class="w-full text-left flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600
-                 hover:bg-slate-100/70 transition">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-          </svg>
-          Ganti Email
-      </button>
+      {{-- DROPDOWN --}}
+      <div x-show="openProfile"
+           x-transition:enter="transition ease-out duration-150"
+           x-transition:enter-start="opacity-0 translate-y-1 scale-95"
+           x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+           x-transition:leave="transition ease-in duration-100"
+           x-transition:leave-start="opacity-100"
+           x-transition:leave-end="opacity-0 translate-y-1"
+           class="absolute right-0 mt-2 w-48
+                  bg-white border border-slate-200
+                  rounded-xl shadow-md
+                  overflow-hidden z-50"
+           style="display:none">
 
-    </div>
+        <div class="p-1.5 border-b border-slate-100">
 
-    <div class="border-t border-slate-100 p-2">
-      <form method="POST" action="{{ route('admin.logout') }}">
-          @csrf
-          <button type="submit"
-              class="w-full text-left flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-red-500 hover:bg-red-50 transition">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-              </svg>
-              Logout
+          <button type="button"
+              @click="openProfile = false; $dispatch('open-modal', 'modal-password')"
+              class="w-full text-left flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-slate-600
+                     hover:bg-slate-50 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+            Ubah Password
           </button>
-      </form>
+
+          <button type="button"
+              @click="openProfile = false; $dispatch('open-modal', 'modal-email')"
+              class="w-full text-left flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-slate-600
+                     hover:bg-slate-50 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-slate-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+            Ubah Email
+          </button>
+
+        </div>
+
+        <div class="p-1.5">
+          {{-- Trigger logout confirm modal, bukan langsung submit --}}
+          <button type="button"
+              @click="openProfile = false; $dispatch('open-modal', 'modal-logout')"
+              class="w-full text-left flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-red-500
+                     hover:bg-red-50 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+            </svg>
+            Logout
+          </button>
+        </div>
+
+      </div>
     </div>
 
   </div>
 
+  {{-- TOAST NOTIFICATION --}}
+  @if(session('success') || $errors->any())
+  <div
+      x-data="{ show: true }"
+      x-init="setTimeout(() => show = false, 8000)"
+      x-show="show"
+      x-transition:enter="transition ease-out duration-300"
+      x-transition:enter-start="opacity-0 -translate-y-3"
+      x-transition:enter-end="opacity-100 translate-y-0"
+      x-transition:leave="transition ease-in duration-200"
+      x-transition:leave-start="opacity-100 translate-y-0"
+      x-transition:leave-end="opacity-0 -translate-y-3"
+      class="fixed top-4 left-1/2 -translate-x-1/2 z-[200] w-full max-w-sm"
+      style="display:none">
+
+      @if(session('success'))
+          <div class="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700 shadow-sm">
+              <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span class="flex-1">{{ session('success') }}</span>
+              <button @click="show = false" class="text-emerald-400 hover:text-emerald-600 transition">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+              </button>
+          </div>
+      @endif
+
+      @if($errors->any())
+          <div class="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 shadow-sm">
+              <svg class="w-4 h-4 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+              </svg>
+              <div class="flex-1">
+                  <div class="font-semibold mb-1">Ada error:</div>
+                  <ul class="list-disc pl-4 space-y-0.5">
+                      @foreach($errors->all() as $err)
+                          <li>{{ $err }}</li>
+                      @endforeach
+                  </ul>
+              </div>
+              <button @click="show = false" class="text-red-400 hover:text-red-600 transition shrink-0">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+              </button>
+          </div>
+      @endif
+  </div>
+  @endif
+
 </div>
 
-{{-- TOAST NOTIFICATION --}}
-@if(session('success') || $errors->any())
-<div
-    x-data="{ show: true }"
-    x-init="setTimeout(() => show = false, 8000)"
-    x-show="show"
-    x-transition:enter="transition ease-out duration-300"
-    x-transition:enter-start="opacity-0 -translate-y-4"
-    x-transition:enter-end="opacity-100 translate-y-0"
-    x-transition:leave="transition ease-in duration-200"
-    x-transition:leave-start="opacity-100 translate-y-0"
-    x-transition:leave-end="opacity-0 -translate-y-4"
-    class="fixed top-5 left-1/2 -translate-x-1/2 z-[200] w-full max-w-sm shadow-lg"
-    style="display:none">
 
-    @if(session('success'))
-        <div class="flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
-            <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+{{-- ===== MODAL KONFIRMASI LOGOUT ===== --}}
+<div x-data="{ show: false }"
+     @open-modal.window="show = ($event.detail === 'modal-logout')"
+     x-show="show"
+     x-transition:enter="transition ease-out duration-200"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-150"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0"
+     class="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm"
+     style="display:none">
+
+    <div @click.outside="show = false"
+         class="bg-white rounded-2xl shadow-xl w-full max-w-sm mx-4 p-6">
+
+        {{-- Icon --}}
+        <div class="flex items-center justify-center w-12 h-12 rounded-full bg-red-50 mx-auto mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
             </svg>
-            <span class="flex-1">{{ session('success') }}</span>
-            <button @click="show = false" class="text-emerald-400 hover:text-emerald-600 transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
         </div>
-    @endif
 
-    @if($errors->any())
-        <div class="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-            <svg class="w-4 h-4 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-            </svg>
-            <div class="flex-1">
-                <div class="font-semibold mb-1">Ada error:</div>
-                <ul class="list-disc pl-4 space-y-0.5">
-                    @foreach($errors->all() as $err)
-                        <li>{{ $err }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            <button @click="show = false" class="text-red-400 hover:text-red-600 transition shrink-0">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
+        <h2 class="text-base font-semibold text-slate-800 text-center mb-1">Konfirmasi Logout</h2>
+        <p class="text-sm text-slate-500 text-center mb-6">
+            Apakah Anda yakin ingin keluar dari panel admin?
+        </p>
+
+        <div class="flex gap-3">
+            <button type="button"
+                @click="show = false"
+                class="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 transition">
+                Batal
             </button>
+            <form method="POST" action="{{ route('admin.logout') }}" class="flex-1">
+                @csrf
+                <button type="submit"
+                    class="w-full px-4 py-2.5 rounded-xl bg-red-500 text-sm font-semibold text-white hover:bg-red-600 transition">
+                    Ya, Logout
+                </button>
+            </form>
         </div>
-    @endif
-</div>
-@endif
 
+    </div>
 </div>
 
 
@@ -317,7 +355,7 @@
          x-data="{ showLama: false, showBaru: false, showKonfirmasi: false }">
 
         <div class="flex items-center justify-between mb-5">
-            <h2 class="text-base font-semibold text-slate-800">Ganti Password</h2>
+            <h2 class="text-base font-semibold text-slate-800">Ubah Password</h2>
             <button @click="show = false" class="text-slate-400 hover:text-slate-600 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -418,7 +456,7 @@
          x-data="{ showPass: false }">
 
         <div class="flex items-center justify-between mb-5">
-            <h2 class="text-base font-semibold text-slate-800">Ganti Email</h2>
+            <h2 class="text-base font-semibold text-slate-800">Ubah Email</h2>
             <button @click="show = false" class="text-slate-400 hover:text-slate-600 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -475,6 +513,7 @@
         </form>
     </div>
 </div>
+
 
   {{-- ===== MAIN LAYOUT ===== --}}
   <div class="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-6"
@@ -833,18 +872,21 @@
 
 /* ── Table ── */
 .kp-tw{border:0.5px solid #e2e8f0;border-radius:12px;overflow:hidden;overflow-x:auto}
-.kp-tw table{width:100%;border-collapse:collapse;min-width:520px;table-layout:fixed}
-/* c1 diperkecil, c2 diperkecil → jarak nama tim & kategori lebih rapat */
-.kp-tw col.c0{width:38px}.kp-tw col.c1{width:22%}.kp-tw col.c2{width:10%}
-.kp-tw col.c3{width:22%}.kp-tw col.c4{width:13%}.kp-tw col.c5{width:13%}.kp-tw col.c6{width:10%}
+.kp-tw table{width:100%;border-collapse:collapse;min-width:520px}
+.kp-tw col.c0{width:36px}
+.kp-tw col.c1{width:150px}
+.kp-tw col.c2{width:90px}
+.kp-tw col.c3{width:auto}
+.kp-tw col.c4{width:100px}
+.kp-tw col.c5{width:110px}
+.kp-tw col.c6{width:80px}
 .kp-tw thead tr{background:#f8fafc}
-.kp-tw thead th{padding:9px 10px;text-align:left;font-size:11px;font-weight:700;color:#64748b;letter-spacing:.06em;text-transform:uppercase;border-bottom:0.5px solid #e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kp-tw thead th{padding:9px 10px;text-align:left;font-size:11px;font-weight:700;color:#64748b;letter-spacing:.06em;text-transform:uppercase;border-bottom:0.5px solid #e2e8f0;white-space:nowrap}
 .kp-tw tbody tr{border-bottom:0.5px solid #f1f5f9;transition:background .1s}
 .kp-tw tbody tr:last-child{border-bottom:none}
 .kp-tw tbody tr:hover{background:#f8fafc}
-/* padding horizontal kolom dikurangi dari 12px → 10px agar kolom lebih rapat */
-.kp-tw tbody td{padding:10px 10px;font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle;color:#334155}
-.kp-tnm{font-weight:700;font-size:13px;color:#0f172a}
+.kp-tw tbody td{padding:10px;font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle;color:#334155}
+.kp-tnm{font-weight:700;font-size:13px;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .kp-date-m{font-size:12px;font-weight:700;color:#334155}
 .kp-date-t{font-size:11px;font-weight:500;color:#94a3b8}
 
@@ -858,7 +900,7 @@
 .kp-bk{background:#FCEBEB;color:#A32D2D}
 
 /* ── Detail button ── */
-.kp-btn-d{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:8px;border:0.5px solid #cbd5e1;background:transparent;font-size:12px;font-weight:600;cursor:pointer;color:#0f172a;transition:background .1s;white-space:nowrap}
+.kp-btn-d{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:8px;border:0.5px solid #cbd5e1;background:transparent;font-size:12px;font-weight:600;cursor:pointer;color:#0f172a;transition:background .1s;white-space:nowrap}
 .kp-btn-d:hover{background:#f1f5f9}
 
 /* ── Pagination ── */
@@ -876,7 +918,8 @@
 /* ── Modal backdrop ── */
 .kp-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
 .kp-ov.open{display:flex}
-.kp-mbox{background:#fff;border:0.5px solid #e2e8f0;border-radius:12px;width:100%;max-width:560px;overflow:hidden;margin:auto}
+/* DIUBAH: max-width diperlebar ke 680px agar konten & tombol nav tidak perlu scroll */
+.kp-mbox{background:#fff;border:0.5px solid #e2e8f0;border-radius:12px;width:100%;max-width:680px;overflow:hidden;margin:auto}
 
 /* ── Modal top ── */
 .kp-mtop{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:0.5px solid #e2e8f0}
@@ -994,7 +1037,7 @@
       </colgroup>
       <thead>
         <tr>
-          <th>#</th>
+          <th>No.</th>
           <th>Nama tim</th>
           <th>Kategori</th>
           <th>Asal sekolah</th>
