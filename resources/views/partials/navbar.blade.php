@@ -255,8 +255,8 @@
        style="min-height:420px; animation: modalPop 0.25s cubic-bezier(0.34,1.56,0.64,1) both;">
 
     {{-- LEFT PANEL --}}
-   <div class="hidden md:flex w-2/5 flex-col justify-center items-center relative overflow-hidden rounded-3xl"
-     style="background: linear-gradient(160deg, #1a6bb5 0%, #2196F3 55%, #64B5F6 100%);">
+    <div class="hidden md:flex w-2/5 flex-col justify-center items-center relative overflow-hidden rounded-3xl"
+      style="background: linear-gradient(160deg, #1a6bb5 0%, #2196F3 55%, #64B5F6 100%);">
       <div style="position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,0.10);top:-80px;left:-80px;"></div>
       <div style="position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.10);top:80px;left:40px;"></div>
       <div style="position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,0.10);bottom:-90px;left:10px;"></div>
@@ -340,6 +340,13 @@
           <label for="modal_remember" class="text-sm text-slate-900 cursor-pointer select-none">Ingat saya</label>
         </div>
 
+        <div class="flex justify-end mb-3 -mt-8">
+             <button type="button" onclick="openForgot(event)"
+             class="text-xs font-semibold text-sky-600 hover:text-sky-800 transition">
+            Lupa Password?
+          </a>
+        </div>
+
         <div class="mb-5">
           <div class="g-recaptcha"
             data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"
@@ -363,6 +370,91 @@
   </div>
 </div>
 
+{{-- ============================================================ --}}
+{{-- MODAL LUPA PASSWORD PESERTA                                   --}}
+{{-- ============================================================ --}}
+<div id="forgotModal"
+  class="hidden fixed inset-0 z-[1000] flex items-center justify-center p-4"
+  onclick="if(event.target===this) closeForgot()"
+>
+  <div class="absolute inset-0 bg-slate-950/60 backdrop-blur-md"></div>
+
+  <div class="relative w-full max-w-md bg-white rounded-3xl shadow-[0_32px_80px_rgba(0,0,0,0.18)] overflow-hidden p-10"
+       style="animation: modalPop 0.25s cubic-bezier(0.34,1.56,0.64,1) both;">
+
+    <button type="button" onclick="closeForgot()"
+      class="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 transition"
+      aria-label="Tutup">
+      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M18 6 6 18M6 6l12 12"/>
+      </svg>
+    </button>
+
+    <div class="mb-7">
+      <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight" style="font-family:'Plus Jakarta Sans',sans-serif;">Lupa Password?</h2>
+      <p class="text-sm mt-1 font-medium text-slate-500" style="font-family:'Plus Jakarta Sans',sans-serif;">Masukkan email dan password baru Anda.</p>
+    </div>
+
+    <form method="POST" action="{{ route('peserta.password.reset') }}">
+      @csrf
+
+      <div class="mb-4">
+        <label class="block text-xs font-bold uppercase tracking-widest mb-2" style="font-family:'Plus Jakarta Sans',sans-serif;color:#000;font-size:11px;">EMAIL PESERTA</label>
+        <input type="email" name="email" required placeholder="nama@email.com"
+          class="w-full h-11 rounded-xl border-2 border-slate-100 bg-slate-50 px-4 text-sm text-slate-900 placeholder-slate-300 outline-none transition-all duration-150 focus:border-sky-400 focus:bg-white focus:shadow-[0_0_0_4px_rgba(56,189,248,0.1)]" />
+      </div>
+
+      <div class="mb-4">
+        <label class="block text-xs font-bold uppercase tracking-widest mb-2" style="font-family:'Plus Jakarta Sans',sans-serif;color:#000;font-size:11px;">PASSWORD BARU</label>
+        <div class="relative">
+          <input id="forgot_password" type="password" name="password" required placeholder="••••••••"
+            class="w-full h-11 rounded-xl border-2 border-slate-100 bg-slate-50 px-4 pr-11 text-sm text-slate-900 placeholder-slate-300 outline-none transition-all duration-150 focus:border-sky-400 focus:bg-white focus:shadow-[0_0_0_4px_rgba(56,189,248,0.1)]" />
+          <button type="button" onclick="toggleForgotPwd('forgot_password','forgotEyeOpen','forgotEyeClosed')"
+            class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500 transition">
+            <svg id="forgotEyeOpen" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+            <svg id="forgotEyeClosed" style="width:18px;height:18px;display:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="mb-7">
+        <label class="block text-xs font-bold uppercase tracking-widest mb-2" style="font-family:'Plus Jakarta Sans',sans-serif;color:#000;font-size:11px;">KONFIRMASI PASSWORD BARU</label>
+        <div class="relative">
+          <input id="forgot_confirm" type="password" name="password_confirmation" required placeholder="••••••••"
+            class="w-full h-11 rounded-xl border-2 border-slate-100 bg-slate-50 px-4 pr-11 text-sm text-slate-900 placeholder-slate-300 outline-none transition-all duration-150 focus:border-sky-400 focus:bg-white focus:shadow-[0_0_0_4px_rgba(56,189,248,0.1)]" />
+          <button type="button" onclick="toggleForgotPwd('forgot_confirm','forgotEyeOpen2','forgotEyeClosed2')"
+            class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-300 hover:text-slate-500 transition">
+            <svg id="forgotEyeOpen2" style="width:18px;height:18px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+            <svg id="forgotEyeClosed2" style="width:18px;height:18px;display:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/>
+              <line x1="1" y1="1" x2="23" y2="23"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button type="button" onclick="closeForgot()"
+          class="flex-1 h-12 rounded-xl text-sm font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition">
+          Batal
+        </button>
+        <button type="submit"
+          class="flex-1 h-12 rounded-xl text-sm font-bold text-white transition-all duration-150 active:scale-[0.98]"
+          style="background: linear-gradient(135deg,#1565C0,#1e88e5); box-shadow:0 4px 16px rgba(21,101,192,0.35);">
+          Simpan
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
 
 {{-- ============================================================ --}}
 {{-- STYLES                                                        --}}
@@ -605,7 +697,27 @@ function onCaptchaExpired()  { document.getElementById('btnMasuk').disabled = tr
 document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape') closeLoginModal();
 });
-
+function openForgot(e) {
+   e.preventDefault();
+  document.getElementById('forgotModal').classList.remove('hidden');
+}
+function closeForgot() {
+  document.getElementById('forgotModal').classList.add('hidden');
+}
+function toggleForgotPwd(inputId, eyeOpenId, eyeClosedId) {
+  var input  = document.getElementById(inputId);
+  var open   = document.getElementById(eyeOpenId);
+  var closed = document.getElementById(eyeClosedId);
+  if (input.type === 'password') {
+    input.type = 'text';
+    open.style.display   = 'none';
+    closed.style.display = 'block';
+  } else {
+    input.type = 'password';
+    open.style.display   = 'block';
+    closed.style.display = 'none';
+  }
+}
 @if($errors->any())
   document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('loginModal').classList.remove('hidden');

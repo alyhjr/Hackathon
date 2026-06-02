@@ -99,7 +99,7 @@ Route::post('/registrasi/submit', [RegistrasiController::class, 'submit'])->name
 Route::get('/peserta/login', fn() => view('pages.peserta-login'))->name('peserta.login');
 Route::post('/peserta/login', [PesertaAuthController::class, 'login'])->name('peserta.login.post');
 Route::post('/peserta/logout', [PesertaAuthController::class, 'logout'])->name('peserta.logout');
-
+Route::post('/peserta/password/reset', [PesertaAuthController::class, 'resetPassword'])->name('peserta.password.reset');
 Route::get('/peserta-submission', [PesertaSubmissionController::class, 'create'])->name('peserta-submission.create');
 Route::post('/peserta-submission', [PesertaSubmissionController::class, 'store'])->name('peserta-submission.store');
 
