@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Login</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;700&display=swap" rel="stylesheet">
   <script src="https://www.google.com/recaptcha/api.js?hl=id"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     :root { --border: rgba(255,255,255,.08); --blue: #1d6fff; }
 
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Poppins', sans-serif;
       background: #ffffff;
       display: flex;
       align-items: center;
@@ -251,7 +251,7 @@
 <div id="forgotModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:999; align-items:center; justify-content:center;">
   <div style="background:#fff; border-radius:20px; width:100%; max-width:440px; padding:36px; position:relative;">
 
-    <button onclick="closeForgot()" style="position:absolute; top:14px; right:14px; width:28px; height:28px; border-radius:50%; border:none; background:rgba(0,0,0,.06); color:#999; font-size:16px; cursor:pointer;">×</button>
+    <button type="button" onclick="openForgot(event)" style="position:absolute; top:14px; right:14px; width:28px; height:28px; border-radius:50%; border:none; background:rgba(0,0,0,.06); color:#999; font-size:16px; cursor:pointer;">×</button>
 
     <div style="font-size:22px; font-weight:700; color:#111; margin-bottom:4px;">Lupa Password?</div>
    <div style="font-size:14px; color:#111; margin-bottom:24px;">Masukkan email dan password baru Anda.</div>

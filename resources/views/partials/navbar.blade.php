@@ -1,5 +1,5 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
 
 <nav id="main-nav" class="sticky top-0 z-50 w-full nav-entrance" style="padding: 10px 24px;">
   <div id="nav-pill" class="max-w-7xl mx-auto px-5 transition-all duration-300 pill-white" style="border-radius: 9999px;">
@@ -265,7 +265,7 @@
     </div>
 
     {{-- RIGHT PANEL --}}
-    <div class="flex-1 px-10 py-10 flex flex-col justify-center">
+<div class="flex-1 px-10 py-10 flex flex-col justify-center" style="font-family: 'Poppins', sans-serif;">
 
       <button type="button" onclick="window.location.href='{{ route('home') }}'"
         class="absolute top-5 right-5 z-9999 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 transition"
@@ -276,8 +276,8 @@
       </button>
 
       <div class="mb-7">
-        <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight" style="font-family:'Plus Jakarta Sans',sans-serif;">Login Peserta</h2>
-        <p class="text-sm mt-1 font-medium" style="font-family:'Plus Jakarta Sans',sans-serif;color:#000;">Masuk ke akun peserta Hackathon Rumah Pendidikan</p>
+    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight" style="font-family:'Poppins',sans-serif;">Login Peserta</h2>
+        <p class="text-sm mt-1 font-normal whitespace-nowrap" style="font-family:'Poppins',sans-serif;color:#000;">Masuk ke akun peserta Hackathon Rumah Pendidikan</p>
       </div>
 
       @if($errors->any())
@@ -302,7 +302,7 @@
         @csrf
 
         <div class="mb-4">
-          <label for="modal_email" class="block text-xs font-bold uppercase tracking-widest mb-2" style="font-family:'Plus Jakarta Sans',sans-serif;color:#000;font-size:11px;">Email</label>
+<label for="modal_email" class="block text-xs font-bold uppercase tracking-widest mb-2" style="font-family:'Poppins',sans-serif;color:#000;font-size:11px;">Email</label>
           <input
             id="modal_email" type="email" name="email"
             value="{{ old('email') }}" required autofocus
@@ -313,7 +313,7 @@
         </div>
 
         <div class="mb-5">
-          <label for="modal_password" class="block font-bold uppercase tracking-widest mb-2" style="font-family:'Plus Jakarta Sans',sans-serif;color:#000;font-size:11px;letter-spacing:0.07em;">PASSWORD</label>
+          <label for="modal_password" class="block font-bold uppercase tracking-widest mb-2" style="font-family:'Poppins',sans-serif;color:#000;font-size:11px;letter-spacing:0.07em;">PASSWORD</label>
           <div class="relative">
             <input
               id="modal_password" type="password" name="password"
@@ -342,9 +342,9 @@
 
         <div class="flex justify-end mb-3 -mt-8">
              <button type="button" onclick="openForgot(event)"
-             class="text-xs font-semibold text-sky-600 hover:text-sky-800 transition">
+             class="text-xs text-sky-600 hover:text-sky-800 transition">
             Lupa Password?
-          </a>
+          </button>
         </div>
 
         <div class="mb-5">
