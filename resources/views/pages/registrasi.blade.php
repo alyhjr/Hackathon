@@ -59,7 +59,7 @@
     </div>
 
     <div class="form-side">
-      <div class="f-title">Registrasi Peserta</div>
+      <div class="f-title">Data Peserta</div>
       <div class="f-sub">Verifikasi NUPTK dan tanggal lahir Anda</div>
 
       @if(session('gagal'))
