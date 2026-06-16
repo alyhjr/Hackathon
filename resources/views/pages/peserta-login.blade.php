@@ -19,7 +19,20 @@
   .field input::placeholder{color:#B0BEC5;}
   .eye-btn{position:absolute;right:14px;top:34px;background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;}
   .hint{font-size:11px;color:black;margin-top:5px;}
-  .btn{width:100%;height:46px;border:none;border-radius:12px;background:linear-gradient(90deg,#1558A8,#1E90D6);color:#fff;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:1.5rem;letter-spacing:0.02em;transition:opacity 0.15s;}
+  .row-extras{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+  .remember-label{display:flex;align-items:center;gap:8px;font-size:13px;color:#334155;cursor:pointer;user-select:none;}
+  .remember-label input[type="checkbox"]{width:16px;height:16px;accent-color:#1558A8;cursor:pointer;}
+  .forgot-link{font-size:13px;color:#1558A8;font-weight:600;text-decoration:none;}
+  .forgot-link:hover{text-decoration:underline;}
+  .recaptcha-box{border:1px solid #D1D5DB;border-radius:4px;background:#F9FAFB;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
+  .recaptcha-left{display:flex;align-items:center;gap:12px;}
+  .recaptcha-left input[type="checkbox"]{width:24px;height:24px;accent-color:#1558A8;cursor:pointer;flex-shrink:0;}
+  .recaptcha-left span{font-size:14px;color:#333;}
+  .recaptcha-right{display:flex;flex-direction:column;align-items:center;gap:2px;}
+  .recaptcha-right img{width:32px;height:32px;}
+  .recaptcha-right .rc-label{font-size:8px;color:#555;line-height:1.2;text-align:center;}
+  .recaptcha-right .rc-links{font-size:7px;color:#999;text-align:center;}
+  .btn{width:100%;height:46px;border:none;border-radius:12px;background:linear-gradient(90deg,#1558A8,#1E90D6);color:#fff;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:0.5rem;letter-spacing:0.02em;transition:opacity 0.15s;}
   .btn:hover{opacity:0.9;}
   .foot{text-align:center;font-size:12px;color:black;margin-top:1.25rem;}
   .foot a{color:#1558A8;font-weight:600;text-decoration:none;}
@@ -85,6 +98,18 @@
           <div class="hint">Format ddmmyyyy · contoh: 15051990</div>
         </div>
 
+        {{-- Ingat Saya + Lupa Password --}}
+        <div class="row-extras">
+          <label class="remember-label">
+            <input type="checkbox" name="remember">
+            Ingat saya
+          </label>
+          <a href="{{ route('password.request') }}" class="forgot-link">Lupa Password?</a>
+        </div>
+
+        {{-- reCAPTCHA Visual (ganti dengan Google reCAPTCHA v2 jika sudah punya site key) --}}
+        <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.key') }}"></div>
+
         <button type="submit" class="btn">Masuk</button>
       </form>
 
@@ -95,6 +120,7 @@
   </div>
 </div>
 
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
   function togglePass() {
     const input = document.getElementById('password');

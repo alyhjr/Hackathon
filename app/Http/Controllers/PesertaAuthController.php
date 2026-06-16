@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Peserta;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 
 class PesertaAuthController extends Controller
 {
@@ -15,6 +16,14 @@ class PesertaAuthController extends Controller
             'email'    => 'required|email',
             'password' => 'required',
         ]);
+        $recaptcha = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+        'secret'   => config('services.recaptcha.secret'),
+        'response' => $request->input('g-recaptcha-response'),
+    ])->json();
+
+    if (empty($recaptcha['success']) || !$recaptcha['success']) {
+        return back()->with('gagal', 'Verifikasi reCAPTCHA gagal. Silakan coba lagi.')->withInput();
+    }
 
         $peserta = Peserta::where('email', $request->email)->first();
 
