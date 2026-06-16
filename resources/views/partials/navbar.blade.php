@@ -105,55 +105,58 @@
           </button>
         </form>
 
-        {{-- Login Button / Nama User --}}
-        @guest
-          <button
-            type="button"
-            onclick="document.getElementById('loginModal').classList.remove('hidden')"
-            class="nav-user-btn shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-150 active:scale-95"
-            onmouseover="this.style.opacity='0.85'"
-            onmouseout="this.style.opacity='1'"
-            title="Masuk"
-          >
-            <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;">
-              <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
-            </svg>
-          </button>
-        @endguest
+       {{-- Login Button / Nama User --}}
+@guest
+  <button
+    type="button"
+    onclick="document.getElementById('loginModal').classList.remove('hidden')"
+    class="nav-user-btn shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-150 active:scale-95"
+    onmouseover="this.style.opacity='0.85'"
+    onmouseout="this.style.opacity='1'"
+    title="Masuk"
+  >
+    <svg viewBox="0 0 24 24" fill="currentColor" style="width:18px;height:18px;">
+      <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+    </svg>
+  </button>
+@endguest
 
-        @auth
-          <div class="relative group">
-            <button type="button" class="nav-link inline-flex items-center gap-2 text-sm font-semibold transition focus:outline-none">
-              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
-              </svg>
-              {{ Auth::user()->nama }}
-              <svg class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 011.08 1.04l-4.25 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
-              </svg>
-            </button>
-            <div class="absolute right-0 top-full z-50 pt-2
-                        opacity-0 invisible translate-y-2
-                        group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
-                        group-focus-within:opacity-100 group-focus-within:visible group-focus-within:translate-y-0
-                        transition-all duration-200">
-              <div class="w-48 rounded-xl bg-white border border-slate-200 shadow-md overflow-hidden">
-                <a href="{{ route('peserta-submission.create') }}" class="dropdown-item flex items-center gap-2 px-4 py-3 text-sm text-slate-700 hover:bg-sky-50 hover:text-sky-700 transition-colors duration-150">
-                  <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-                  Dashboard
-                </a>
-                <form method="POST" action="{{ route('logout') }}">
-                  @csrf
-                  <button type="submit" class="dropdown-item flex w-full items-center gap-2 px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-colors duration-150">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                    Logout
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-        @endauth
+@auth
+  <div class="relative group">
+    <button type="button" class="nav-link inline-flex items-center gap-2 text-sm font-semibold transition focus:outline-none">
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+      {{ Auth::user()->nama }}
+      <svg class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 011.08 1.04l-4.25 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
+      </svg>
+    </button>
+    <div class="absolute right-0 top-full z-50 pt-2
+                opacity-0 invisible translate-y-2
+                group-hover:opacity-100 group-hover:visible group-hover:translate-y-0
+                group-focus-within:opacity-100 group-focus-within:visible group-focus-within:translate-y-0
+                transition-all duration-200">
+      <div class="w-48 rounded-xl bg-white border border-slate-200 shadow-md overflow-hidden">
+        <a href="{{ route('peserta-submission.create') }}" class="dropdown-item flex items-center gap-2 px-4 py-3 text-sm text-slate-700 hover:bg-sky-50 hover:text-sky-700 transition-colors duration-150">
+          <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+
+        {{-- ✅ Hapus <form>, ganti jadi button biasa dengan onclick --}}
+        <button
+          type="button"
+          onclick="fetch('{{ route('logout') }}', { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Content-Type': 'application/json' } }).then(() => window.location.href = '/')"
+          class="dropdown-item flex w-full items-center gap-2 px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-colors duration-150"
+        >
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
+@endauth
 
         {{-- Rumah Pendidikan --}}
         <a href="#" class="shrink-0 flex items-center nav-logo">
