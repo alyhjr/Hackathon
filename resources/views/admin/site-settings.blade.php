@@ -734,6 +734,21 @@
     <div class="card-title">Kelola Registrasi Peserta</div>
     <div class="card-sub">Tentukan status lolos atau tidak lolos untuk setiap peserta yang mendaftar.</div>
 
+    {{-- Toolbar: Export Button --}}
+    <div style="display:flex;justify-content:flex-end;margin-bottom:1rem;">
+      <button
+        onclick="exportExcelRegistrasi()"
+        style="display:inline-flex;align-items:center;gap:8px;background:#16a34a;color:#fff;font-size:0.8rem;font-weight:700;padding:0.45rem 1.1rem;border-radius:8px;border:none;cursor:pointer;transition:background .15s;"
+        onmouseover="this.style.background='#15803d'"
+        onmouseout="this.style.background='#16a34a'"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Export Excel
+      </button>
+    </div>
+
     <hr class="section-divider">
 
     @if(session('success'))
@@ -745,6 +760,8 @@
       </div>
     @endif
 
+  
+
     {{-- Stat Cards --}}
     @php
       $all        = $pesertaRegistrasi ?? collect();
@@ -753,6 +770,7 @@
       $jmlLolos   = $all->where('status', 'lolos')->count();
       $jmlTolak   = $all->where('status', 'tidak_lolos')->count();
     @endphp
+
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:1.5rem;">
       <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:1rem 1.1rem;">
@@ -773,11 +791,14 @@
       </div>
     </div>
 
+   
+
     {{-- Tabel --}}
     <div class="overflow-x-auto">
-      <table class="w-full text-sm" style="border-collapse:collapse;min-width:600px;">
+      <table id="tabel-registrasi" class="w-full text-sm" style="border-collapse:collapse;min-width:600px;">
         <thead>
           <tr style="background:#f8fafc;border-bottom:1.5px solid #e2e8f0;">
+            <th class="text-left px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">No.</th>
             <th class="text-left px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Nama</th>
             <th class="text-left px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Sekolah</th>
             <th class="text-left px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Email</th>
@@ -787,13 +808,14 @@
           </tr>
         </thead>
         <tbody>
-          @forelse($pesertaRegistrasi ?? collect() as $p)
+          @forelse($pesertaRegistrasi ?? collect() as $i => $p)
             <tr style="border-bottom:1px solid #f1f5f9;" class="hover:bg-slate-50 transition">
+              <td class="px-4 py-3 text-slate-500 text-xs">{{ $i + 1 }}</td>
               <td class="px-4 py-3 font-semibold text-slate-800">{{ $p->nama }}</td>
               <td class="px-4 py-3 text-slate-600">{{ $p->sekolah }}</td>
               <td class="px-4 py-3 text-slate-600">{{ $p->email }}</td>
-              <td class="px-4 py-3 text-slate-500 text-xs">{{ $p->created_at?->format('d M Y') }}</td>
-              <td class="px-4 py-3">
+              <td class="px-4 py-3 text-slate-500 text-xs" data-tgl="{{ $p->created_at?->format('d M Y') }}">{{ $p->created_at?->format('d M Y') }}</td>
+              <td class="px-4 py-3" data-status="{{ $p->status }}">
                 @if($p->status === 'pending')
                   <span class="badge" style="background:#fef9c3;color:#854d0e;">Pending</span>
                 @elseif($p->status === 'lolos')
@@ -819,7 +841,7 @@
             </tr>
           @empty
             <tr>
-              <td colspan="6" class="px-4 py-12 text-center">
+              <td colspan="7" class="px-4 py-12 text-center">
                 <div class="text-slate-400 text-sm">Belum ada peserta yang mendaftar.</div>
               </td>
             </tr>
@@ -830,6 +852,95 @@
 
   </div>
 </div>
+
+{{-- SheetJS CDN --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script>
+function exportExcelRegistrasi() {
+  const rows = document.querySelectorAll('#tabel-registrasi tbody tr');
+
+  // Ambil tanggal sekarang untuk nama file
+  const now = new Date();
+  const tglFile = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+
+  // Header laporan
+  const judulLaporan = [['LAPORAN DATA REGISTRASI PESERTA']];
+  const subJudul     = [[`Diekspor pada: ${now.toLocaleDateString('id-ID', { day:'2-digit', month:'long', year:'numeric' })}`]];
+  const kosong       = [[]];
+  const header       = [['No.', 'Nama', 'Sekolah', 'Email', 'Tanggal Daftar', 'Status']];
+
+  // Baca data dari baris tabel (skip baris "kosong/empty")
+  const data = [];
+  let no = 1;
+  rows.forEach(tr => {
+    const cells = tr.querySelectorAll('td');
+    if (cells.length < 6) return; // skip empty state row
+
+    const statusRaw = cells[5].getAttribute('data-status') || cells[5].innerText.trim();
+    let statusLabel = 'Pending';
+    if (statusRaw === 'lolos')         statusLabel = 'Lolos';
+    else if (statusRaw === 'tidak_lolos') statusLabel = 'Tidak Lolos';
+
+    data.push([
+      no++,
+      cells[1].innerText.trim(),
+      cells[2].innerText.trim(),
+      cells[3].innerText.trim(),
+      cells[4].getAttribute('data-tgl') || cells[4].innerText.trim(),
+      statusLabel,
+    ]);
+  });
+
+  // Ringkasan di bawah
+  const totalPeserta  = data.length;
+  const totalLolos    = data.filter(r => r[5] === 'Lolos').length;
+  const totalPending  = data.filter(r => r[5] === 'Pending').length;
+  const totalTolak    = data.filter(r => r[5] === 'Tidak Lolos').length;
+
+  const ringkasan = [
+    [],
+    ['Ringkasan'],
+    ['Total Peserta', totalPeserta],
+    ['Lolos',         totalLolos],
+    ['Pending',       totalPending],
+    ['Tidak Lolos',   totalTolak],
+  ];
+
+  // Gabung semua baris
+  const allRows = [
+    ...judulLaporan,
+    ...subJudul,
+    ...kosong,
+    ...header,
+    ...data,
+    ...ringkasan,
+  ];
+
+  const ws = XLSX.utils.aoa_to_sheet(allRows);
+
+  // --- Styling (lebar kolom) ---
+  ws['!cols'] = [
+    { wch: 5  },  // No.
+    { wch: 28 },  // Nama
+    { wch: 30 },  // Sekolah
+    { wch: 32 },  // Email
+    { wch: 15 },  // Tgl Daftar
+    { wch: 14 },  // Status
+  ];
+
+  // Merge judul (A1:F1)
+  ws['!merges'] = [
+    { s: { r: 0, c: 0 }, e: { r: 0, c: 5 } },
+    { s: { r: 1, c: 0 }, e: { r: 1, c: 5 } },
+  ];
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Data Registrasi');
+
+  XLSX.writeFile(wb, `Laporan_Registrasi_${tglFile}.xlsx`);
+}
+</script>
 
 {{-- ===========================
    Kelola Peserta — Submission
