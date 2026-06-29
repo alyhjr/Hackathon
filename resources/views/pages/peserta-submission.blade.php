@@ -714,7 +714,7 @@
       {{-- ── FOOTER SUBMIT ── --}}
       <div class="cms-footer">
         <p class="cms-footer-note">
-          Pastikan semua data sudah benar sebelum mengirim. Upload proposal & karya bersifat opsional.
+          Pastikan semua data sudah benar sebelum mengirim. Upload proposal & karya harus sesuai dengan syarat dan ketentuan.
         </p>
         <button type="submit" class="cms-submit-btn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
